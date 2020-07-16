@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Problem_List</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="problem_list.css">
+</head>
+
+<body>
+
+
+
+  <section id="nav-bar">
+   <nav class="navbar navbar-expand-md navbar-light bg-white sticky-top">
+     <div class="container-fluid">
+       <a href="#" class="navbar-brand"><img src="images/logo.png" style="width:80%; height:70%" ></a>
+       <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=#navbarResponsive>
+         <span class="navbar-toggler-icon"></span>
+       </button>
+       <div class="collapse navbar-collapse" id=navbarResponsive>
+
+         <ul class="navbar-nav mr-auto">
+             <li class="nav-item active">
+                 <a class="nav-link" href="#">Practice<span class="sr-only">(current)</span></a>
+             </li>
+             <li class="nav-item">
+                 <a class="nav-link" href="problem_list.html">Problems</a>
+             </li>
+             <li class="nav-item">
+                 <a class="nav-link" href="problem_list.html">Contests</a>
+             </li>
+         </ul>
+
+
+
+                           <ul class="navbar-nav mr-5">
+                               <div class="dropdown" style="float: right; padding: 13px">
+                                   <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1"
+                                       data-target="#" style="float: left" aria-expanded="true">
+                                       <i class="fa fa-bell-o" style="font-size: 20px; float: left; color: black">
+                                       </i>
+                                   </a>
+                                   <span class="badge badge-danger badge-notification">6</span>
+                                   <ul class="dropdown-menu dropdown-menu-left pull-right" role="menu" aria-labelledby="dropdownMenu1">
+                                       <h6 class = "text-center mb-2">Notifications</h6>
+                                       <ul class="timeline timeline-icons timeline-sm" style="margin:10px;width:210px">
+                                           <li>
+                                               <p> <span>hello world</span> </p>
+                                           </li>
+                                           <li>
+                                               <p> <span>hello bangladesh</span> </p>
+                                           </li>
+                                       </ul>
+                                       <li role="presentation">
+                                           <a href="#" class="dropdown-menu-header"></a>
+                                       </li>
+                                   </ul>
+                               </div>
+                               <li class="nav-item dropdown my-auto">
+                                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                       <span><i class="fa fa-user"></i></span>
+                                       username
+                                   </a>
+                                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                       <a class="dropdown-item" href="#">Profile</a>
+                                       <a class="dropdown-item" href="#">Settings</a>
+                                   </div>
+                               </li>
+
+                           </ul>
+
+</div>
+     </div>
+
+   </nav>
+
+
+
+
+  <div style="margin-left:10%;margin-top:1%">
+    <p>
+      <h7>
+        <a href="F:/`Study/Project Website/practice.html"> Practice</a>
+        &nbsp;< &nbsp; <a href="#">Data Structure</a>
+          &nbsp;< &nbsp; <a href="#">Arrays</a>
+            &nbsp; < &nbsp; <a style="color:grey">1D</a>
+
+      </h7>
+    </p>
+
+
+  </div>
+
+
+
+  <div class="container mt-5">
+
+
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="pills-tutorial-tab" data-toggle="pill" href="#pills-tutorial" role="tab" aria-controls="pills-tutorial" aria-selected="true">Tutorial</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="pills-problem-tab" data-toggle="pill" href="#pills-problem" role="tab" aria-controls="pills-problem" aria-selected="false">Problems</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+      <div class="tab-pane fade show active" id="pills-tutorial" role="tabpanel" aria-labelledby="pills-tutorial-tab">
+        <div class="row">
+
+          <form class="d-flex col-lg-8 col-xl-8" style="background-color:#EBF5F6">
+            <p style="margin-top:2%">
+              An array is a sequential collection of elements of same data type and stores data elements in a continuous memory location. The elements of an array are accessed by using an index. The index of an array of size N can range from to . For
+              example, if your array size is , then your index will range from 0 to 4 (5-1). Each element of an array can be accessed by using .
+              Consider following array. The size of this array is . If you want to access , then you can access it by using arr[ 1 ] i.e. .
+
+              enter image description here
+
+              Array declaration Declaring an array is language-specific.
+              For example, in C/C++, to declare an array, you must specify, the following:
+
+              Size of the array: This defines the number of elements that can be stored in the array.
+              Type of array: This defines the type of each element i.e. number, character, or any other data type.
+              A C++ example would be:
+              int arr[5];
+              This is a static array and the other kind is dynamic array, where type is just enough for declaration. In dynamic arrays, size increases as more elements are added to the array.
+              Array Initialization:
+              Array can be initialized either at the time of declaration or after that.
+              The sample format if an array is initialized at the time of declaration is
+              type arr[size] = {elements}
+              The sample format of an array that is initialized in C++, is
+              int arr[5] = {4, 12, 7, 15, 9};
+              An array can be initialized after declaration by assigning values to each index of the array as follows
+              type arr[size]
+              Size of the array: This defines the number of elements that can be stored in the array.
+              Type of array: This defines the type of each element i.e. number, character, or any other data type.
+              A C++ example would be:
+              int arr[5];
+              This is a static array and the other kind is dynamic array, where type is just enough for declaration. In dynamic arrays, size increases as more elements are added to the array.
+              Array Initialization:
+              Array can be initialized either at the time of declaration or after that.
+              The sample format if an array is initialized at the time of declaration is
+              type arr[size] = {elements}
+              The sample format of an array that is initialized in C++, is
+              int arr[5] = {4, 12, 7, 15, 9};
+              An array can be initialized after declaration by assigning values to each index of the array as follows
+              type arr[size]
+              Size of the array: This defines the number of elements that can be stored in the array.
+              Type of array: This defines the type of each element i.e. number, character, or any other data type.
+              A C++ example would be:
+              int arr[5];
+              This is a static array and the other kind is dynamic array, where type is just enough for declaration. In dynamic arrays, size increases as more elements are added to the array.
+              Array Initialization:
+              Array can be initialized either at the time of declaration or after that.
+              The sample format if an array is initialized at the time of declaration is
+              type arr[size] = {elements}
+              The sample format of an array that is initialized in C++, is
+              int arr[5] = {4, 12, 7, 15, 9};
+              An array can be initialized after declaration by assigning values to each index of the array as follows
+              type arr[size]
+              arr[index] = 12
+              C++ example:
+              int arr[5];
+              arr[0] = 4;
+              arr[1] = 12;
+              Processing an Array:
+              The most basic form of processing an array is to loop over the array and print all its elements.
+              A sample of processing an array by looping over the array and printing its elements is as follows:
+              int arr[5];
+              arr[0] = 4; </p>
+
+
+          </form>
+          <div class="col-lg-2 col-xl-2">
+            <div class="card mb-5 card-tutorial-sidebar">
+              <div class="card-header text-center card-header-tutorial">
+                Data Structures
+              </div>
+              <div class="card-body text-center card-body-tutorial-sidebar">
+                <p>Solve Data Structures problems</p>
+              </div>
+            </div>
+            <div id="accordion">
+              <div class="card">
+                <div class="card-header" id="headingOne">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      Arrays
+                    </button>
+                  </h5>
+                </div>
+
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                  <div class="card-body">
+                    <ul>
+                      <li><a href="#">1 Dimensional Arrays</a>
+                      <li><a href="#">2 Dimensional Arrays</a>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header" id="headingTwo">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                      Linked Lists
+                    </button>
+                  </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                  <div class="card-body">
+                    <ul>
+                      <li><a href="#">Singly Linked List</a></li>
+                      <li><a href="#">Doubly Linked List</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header" id="headingThree">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                      Tree
+                    </button>
+                  </h5>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                  <div class="card-body">
+                    <ul>
+                      <li><a href="#">Binary Search Tree</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="pills-problem" role="tabpanel" aria-labelledby="pills-problem-tab">
+        <div class="row">
+          <div class="col-lg-9 col-xl-9">
+            <div class="card mt-4 shadow-lg">
+              <div class="card-body card-design">
+                <div class="row">
+                  <div class="col-lg-9 col-xl-9">
+                    <h5 class="card-title">Hello World!</h5>
+                    <span class="badge badge-success">Easy</span>
+                    <span class="badge badge-primary">Max Score: 10</span>
+                    <span class="badge badge-secondary">Success Rate: 80%</span>
+                    <p class="card-text mt-3">printf function practice</p>
+                  </div>
+                  <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
+                    <a href="#" class="btn btn-outline-primary btn-block btn-border" id="btn-solve">Solve
+                      Challenge</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="card mt-4">
+              <div class="card-body card-design">
+                <div class="row">
+                  <div class="col-lg-9 col-xl-9">
+                    <h5 class="card-title">Hello World!</h5>
+                    <span class="badge badge-success">Easy</span>
+                    <span class="badge badge-primary">Max Score: 10</span>
+                    <span class="badge badge-secondary">Success Rate: 80%</span>
+                    <p class="card-text mt-3">printf function practice</p>
+                  </div>
+                  <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
+                    <a href="#" class="btn btn-outline-primary btn-block btn-border" id="btn-solve">Solve
+                      Challenge</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="card mt-4">
+              <div class="card-body card-design">
+                <div class="row">
+                  <div class="col-lg-9 col-xl-9">
+                    <h5 class="card-title">Hello World!</h5>
+                    <span class="badge badge-warning">Medium</span>
+                    <span class="badge badge-primary">Max Score: 10</span>
+                    <span class="badge badge-secondary">Success Rate: 80%</span>
+                    <p class="card-text mt-3">printf function practice</p>
+                  </div>
+                  <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
+                    <a href="#" class="btn btn-outline-primary btn-block btn-border" id="btn-solve">Solve
+                      Challenge</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card mt-4">
+              <div class="card-body card-design">
+                <div class="row">
+                  <div class="col-lg-9 col-xl-9">
+                    <h5 class="card-title">Hello World!</h5>
+                    <span class="badge badge-danger">Hard</span>
+                    <span class="badge badge-primary">Max Score: 10</span>
+                    <span class="badge badge-secondary">Success Rate: 80%</span>
+                    <p class="card-text mt-3">printf function practice</p>
+                  </div>
+                  <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
+                    <a href="#" class="btn btn-outline-primary btn-block btn-border" id="btn-solve">Solve
+                      Challenge</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="center-block">
+              <nav aria-label="..." class="mt-5">
+                <ul class="pagination">
+                  <li class="page-item">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                  </li>
+                  <li class="page-item active">
+                    <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+
+
+
+          <div class="col-lg-3 col-xl-3">
+            <div class="card mt-4 card-sidebar">
+              <article class="card-group-item card-item-sidebar">
+                <header class="card-header card-title-header text-center">
+                  <h6 class="title my-auto">Status</h6>
+                </header>
+                <div class="filter-content">
+                  <div class="card-body">
+                    <form>
+                      <label class="form-check">
+                        <input class="form-check-input" type="checkbox" value="">
+                        <span class="form-check-label">
+                          Solved
+                        </span>
+                      </label> <!-- form-check.// -->
+                      <label class="form-check">
+                        <input class="form-check-input" type="checkbox" value="">
+                        <span class="form-check-label">
+                          Unsolved
+                        </span>
+                      </label> <!-- form-check.// -->
+                    </form>
+
+                  </div> <!-- card-body.// -->
+                </div>
+              </article> <!-- card-group-item.// -->
+
+              <article class="card-group-item">
+                <header class="card-header card-title-header text-center">
+                  <h6 class="title my-auto">Difficulty</h6>
+                </header>
+                <div class="filter-content">
+                  <div class="card-body">
+                    <form>
+                      <label class="form-check">
+                        <input class="form-check-input" type="checkbox" value="">
+                        <span class="form-check-label">
+                          Easy
+                        </span>
+                      </label> <!-- form-check.// -->
+                      <label class="form-check">
+                        <input class="form-check-input" type="checkbox" value="">
+                        <span class="form-check-label">
+                          Medium
+                        </span>
+                      </label> <!-- form-check.// -->
+                      <label class="form-check">
+                        <input class="form-check-input" type="checkbox" value="">
+                        <span class="form-check-label">
+                          Hard
+                        </span>
+                      </label>
+                    </form>
+                  </div>
+                </div>
+              </article>
+
+              <article class="card-group-item">
+                <header class="card-header card-title-header text-center">
+                  <h6 class="title my-auto">Time</h6>
+                </header>
+                <div class="filter-content">
+                  <div class="card-body">
+                    <label class="form-check">
+                      <input class="form-check-input" type="radio" name="exampleRadio" value="">
+                      <span class="form-check-label">
+                        Recently Added
+                      </span>
+                    </label>
+                    <label class="form-check">
+                      <input class="form-check-input" type="radio" name="exampleRadio" value="">
+                      <span class="form-check-label">
+                        Alphabetical
+                      </span>
+                    </label>
+                    <label class="form-check">
+                      <input class="form-check-input" type="radio" name="exampleRadio" value="">
+                      <span class="form-check-label">
+                        Oldest Added
+                      </span>
+                    </label>
+                    <label class="form-check">
+                      <input class="form-check-input" type="radio" name="exampleRadio" value="">
+                      <span class="form-check-label">
+                        Most Popular
+                      </span>
+                    </label>
+                    <label class="form-check">
+                      <input class="form-check-input" type="radio" name="exampleRadio" value="">
+                      <span class="form-check-label">
+                        Least Popular
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </article>
+
+              <article class="card-group-item">
+                <header class="card-header card-title-header text-center">
+                  <h6 class="title my-auto">Tags</h6>
+                </header>
+                <div class="filter-content">
+                  <div class="card-body">
+                    <p><a href="#">c</a>, <a href="#">data-structure</a>, <a href="#">c++</a>,
+                      <a href="#">java</a>
+                      , <a href="#">dyanmic-programming</a>, <a href="#">graphs</a>, <a href="#">python</a>, <a href="#">tree</a>,
+                      <a href="#">algorithms</a>, <a href="#">linked-lists</a>
+                      ,<a href="#">strings</a>, <a href="#">greedy</a></p>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="d-flex" style="background-color: #1a53ff;margin-top:15px">
+    <div class="mr-auto p-2">
+      <h5><a style="color : #fff ; margin-left:10px"> &copy;2020 codebie</a></h5>
+    </div>
+    <div class="p-2"><a style="color : #fff" href="#">Privacy Policy</a></div>
+    <div class="vl"></div>
+    <div class="p-2" style="margin-right:10px"><a style="color : #fff" href="#">About Us</a></div>
+  </div>
+
+
+
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+
+</html>
