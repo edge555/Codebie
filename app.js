@@ -1,6 +1,20 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
+const mongoose = require('mongoose');
 const app = express();
+
+// Connect to mongoose
+mongoose.Promise=global.Promise;
+mongoose.connect('mongodb://localhost/codebie',{
+    useNewUrlParser: true,
+    useUnifiedTopology : true
+})
+.then(()=> console.log('MongoDB Connected'))
+.catch(err => console.log(err));
+
+// Load User Model
+require('./models/User');
+const User = mongoose.model('users')
 
 // Handlebars Middleware
 app.engine('handlebars', exphbs({
