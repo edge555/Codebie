@@ -1,5 +1,6 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
+const path = require('path');
 const mongoose = require('mongoose');
 const app = express();
 
@@ -14,13 +15,14 @@ mongoose.connect('mongodb://localhost/codebie',{
 
 // Load User Model
 require('./models/User');
-const User = mongoose.model('users')
+const User = mongoose.model('users');
 
 // Handlebars Middleware
 app.engine('handlebars', exphbs({
     defaultLayout:'main'
 }));
 app.set('view engine', 'handlebars');
+app.use(express.static(path.join(__dirname,'public')));
 
 // Middleware
 app.use(function(req,res,next){
@@ -36,6 +38,11 @@ app.get('/',function(req,res){
 app.get('/about',function(req,res){
    res.render('about');
 });
+
+// Login/Signup Route
+app.get('/enter',function(req,res){
+    res.render('enter');
+ });
 
 app.listen(3000,function(){
     console.log("Server started on port 3000");
