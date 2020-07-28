@@ -102,7 +102,7 @@ img {
 .space {
   padding: 1%;
   margin-left: 100px;
-  .display: none;
+  display: none;
 }
 
 span {
