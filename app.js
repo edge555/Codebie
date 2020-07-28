@@ -1,9 +1,11 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
 const path = require('path');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const Handlebars = require('handlebars');
 const mongoose = require('mongoose');
 const app = express();
+const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
 
 // Connect to mongoose
 mongoose.Promise=global.Promise;
@@ -24,7 +26,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 // Handlebars Middleware
 app.engine('handlebars', exphbs({
-    defaultLayout:'main'
+    defaultLayout:'main',
+    handlebars: allowInsecurePrototypeAccess(Handlebars)
 }));
 app.set('view engine', 'handlebars');
 
