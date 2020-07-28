@@ -53,13 +53,30 @@ app.get('/enter',function(req,res){
 
 // Practice Route
 app.get('/practice',function(req,res){
-    res.render('practice');
+    // Searching all users
+    User.find({})
+    .then(users=>{
+        res.render('practice',{
+            users : users
+        });
+    });    
 });
 
 app.post('/enter',function(req,res){
     // Check login/signup validity here then direct
     console.log(req.body);
-    res.send('OK');
+    
+    const newUser = {
+        email : req.body.signinemail,
+        password : req.body.signinpass
+        
+    };
+    new User(newUser)
+    .save()
+    .then(user => {
+        res.redirect('/practice');
+    });
+    
 });
 
 app.listen(3000,function(){
