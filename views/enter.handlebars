@@ -42,69 +42,71 @@
                     <div class="tab-pane fade show active" id="pills-signin" role="tabpanel"
                       aria-labelledby="pills-signin-tab">
                       <div class="col-sm-12">
-                        <form method="post" id="signinform" class="text-left mt-5 text-white">
-                          <div class="input-group mb-4 text-white">
+                        
+                        <form action="/enter" method="post" id="signinform" class="text-left mt-5 text-white">
+                          <div class="form-group mb-4 text-white">
                             <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
-                            <input class="form-control text-white" type="text" placeholder="Email address" required>
+                            <input class="form-control text-white" name = "signinemail" type="text" placeholder="Email address" required>
                           </div>
 
-                          <div class="input-group mb-4">
+                          <div class="form-group mb-4">
                             <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
-                            <input class="form-control text-white" type="password" placeholder="Password" required>
+                            <input class="form-control text-white" name="signinpassword" type="password" placeholder="Password" required>
                           </div>
 
                           <div class="form-group">
                             <div class="row">
                               <div class="col">
-                                <label><input type="checkbox" name="condition" id="condition"> Remember me</label>
+                                <label><input type="checkbox" name="signincondition" id="condition"> Remember me</label>
                               </div>
                               <div class="col text-right"> <a href="javascript:;" data-toggle="modal"
                                   data-target="#forgotPass">Forgot Password?</a> </div>
                             </div>
                           </div>
-                          <form action="/enter" method="post">
-                            <div class="form-group">
-                              <input type="submit" name="submit" value="Sign In"
-                                class="btn btn-block btn-primary btn-signin">
-                            </div>
-                          </form>
-
+                          <div class="form-group">
+                            <button type="submit" name="submit" class="btn btn-block btn-primary btn-signin">Sign In</button>
+                          </div>
+                          
                         </form>
                       </div>
                     </div>
                     <div class="tab-pane fade" id="pills-signup" role="tabpanel" aria-labelledby="pills-signup-tab">
                       <div class="col-sm-12 pt-2">
 
-                        <form method="post" id="signupform" class="text-left">
-                          <div class="input-group mb-4 text-white">
+                        <form action="/enter" method="post" id="signupform" class="text-left">
+                          
+                          <div class="form-group mb-4 text-white">
                             <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
-                            <input class="form-control text-white" type="text" placeholder="Email address">
+                            <input class="form-control text-white" name="signupemail" type="text" placeholder="Email address">
                           </div>
-                          <div class="input-group mb-4 text-white">
+                          
+                          <div class="form-group mb-4 text-white">
                             <span class="input-group-addon"><i class="fa fa-user mr-2"></i></i></span>
-                            <input type="text" name="signupusername" id="signupusername" class="form-control text-white"
+                            <input type="text" name="signupusername" name="signupname" class="form-control text-white"
                               placeholder="Choose your user name" required>
                           </div>
 
-                          <div class="input-group mb-4">
+                          <div class="form-group mb-4">
                             <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
-                            <input class="form-control text-white" type="password" placeholder="Password" required>
+                            <input class="form-control text-white" name="signuppass" type="password" placeholder="Password" required>
                           </div>
-                          <div class="input-group mb-4">
+                          
+                          <div class="form-group mb-4">
                             <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
-                            <input class="form-control text-white" type="password" placeholder="Confirm Password"
+                            <input class="form-control text-white" name="signuppass2" type="password" placeholder="Confirm Password"
                               required>
                           </div>
+                          
                           <div class="form-group mt-4">
                             <label><input type="checkbox" name="signupcondition" id="signupcondition" required> I agree
                               with the <a href="javascript:;">Terms &amp; Conditions</a> for Registration.</label>
                           </div>
-                          <form action="/enter" method="post">
-                            <div class="form-group">
-                              <input type="submit" name="signupsubmit" value="Sign Up"
-                                class="btn btn-block btn-primary btn-signin">
-                            </div>
-                          </form>
+                
+                          <div class="form-group">
+                            <button type="submit" name="signupsubmit" class="btn btn-block btn-primary btn-signin">Sign Up</button>
+                    
+                          </div>
+                         
                         </form>
                       </div>
                     </div>

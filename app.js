@@ -1,6 +1,7 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
 const path = require('path');
+const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 const app = express();
 
@@ -17,11 +18,17 @@ mongoose.connect('mongodb://localhost/codebie',{
 require('./models/User');
 const User = mongoose.model('users');
 
+// Body Parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
 // Handlebars Middleware
 app.engine('handlebars', exphbs({
     defaultLayout:'main'
 }));
 app.set('view engine', 'handlebars');
+
+// To use public folder
 app.use(express.static(path.join(__dirname,'public')));
 
 // Middleware
@@ -51,6 +58,7 @@ app.get('/practice',function(req,res){
 
 app.post('/enter',function(req,res){
     // Check login/signup validity here then direct
+    console.log(req.body);
     res.send('OK');
 });
 
