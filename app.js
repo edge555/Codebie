@@ -42,7 +42,17 @@ app.get('/about',function(req,res){
 // Login/Signup Route
 app.get('/enter',function(req,res){
     res.render('enter');
- });
+});
+
+// Practice Route
+app.get('/practice',function(req,res){
+    res.render('practice');
+});
+
+app.post('/enter',function(req,res){
+    // Check login/signup validity here then direct
+    res.send('OK');
+});
 
 app.listen(3000,function(){
     console.log("Server started on port 3000");
