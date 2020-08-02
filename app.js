@@ -6,6 +6,8 @@ const Handlebars = require('handlebars');
 const mongoose = require('mongoose');
 const app = express();
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
+const { exec } = require("child_process");
+const fs = require('fs');
 
 // Connect to mongoose
 mongoose.Promise=global.Promise;
@@ -39,6 +41,21 @@ app.use(function(req,res,next){
     next();
 });
 
+// Function to run cmd commands
+var runcmd = (command)=>{
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            return "error";
+        }
+        else if (stderr) {
+            return "stderr";
+        }
+        else{
+            return "success";
+        }
+    });
+};
+
 // Index route
 app.get('/',function(req,res){
     res.render('index');
@@ -65,21 +82,31 @@ app.get('/practice',function(req,res){
     });    
 });
 
+// Dummy submit route
+app.get('/dsubmit',function(req,res){
+    res.render('dsubmit');
+});
+
+// Fetch dummy submit code
+app.post('/dsubmit',function(req,res){
+    // Code Fetched
+    var submittedcode = req.body.submittedcode;
+    // Run command
+    var x= runcmd("mkdir testing");
+});
+
 app.post('/enter',function(req,res){
     // Check login/signup validity here then direct
     console.log(req.body);
-    
     const newUser = {
         email : req.body.signinemail,
         password : req.body.signinpass
-        
     };
     new User(newUser)
     .save()
     .then(user => {
         res.redirect('/practice');
     });
-    
 });
 
 app.listen(3000,function(){

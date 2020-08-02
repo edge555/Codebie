@@ -6,21 +6,45 @@ const ProblemSchema = new Schema({
         type : String,
         required:true
     },
+    problemcode : {
+        type : String,
+        required:true
+    },
+    difficulty : {
+        type : String,
+        default: 'easy',
+        required:true
+    },
     statement : {
         type : String,
-        default: 'statement'
+        default: 'statement',
+        required : true
     },
     constraints : {
         type : String,
+        default: 'constraints'
+    },
+    timelimit : {
+        type : String,
+        default: '1s'
+    },
+    sampleinput : {
+        type : String,
+        default : 'sampleinput',
         required : true
     },
-    input : {
+    sampleoutput : {
         type : String,
-        default : 'input'
+        default : 'sampleoutput',
+        required : true
     },
-    output : {
+    hiddeninput : {
         type : String,
-        default : 'output'
+        default : 'hiddeninput'
+    },
+    hiddenoutput : {
+        type : String,
+        default : 'hiddenoutput'
     },
     solvecount : {
         type : Integer,

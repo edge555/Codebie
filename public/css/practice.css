@@ -1,63 +1,63 @@
 body {
-    background-color: whitesmoke;
+  background-color: whitesmoke;
 }
 
-.badge-notification{
-    padding: 3px 5px 2px;
-    position: absolute;
-    top: 8px;
-    right: 5px;
-    display: inline-block;
-    min-width: 10px;
-    font-size: 12px;
-    font-weight: bold;
-    color: #ffffff;
-    line-height: 1;
-    vertical-align: baseline;
-    white-space: nowrap;
-    text-align: center;
-    border-radius: 10px;
+.badge-notification {
+  padding: 3px 5px 2px;
+  position: absolute;
+  top: 8px;
+  right: 5px;
+  display: inline-block;
+  min-width: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #ffffff;
+  line-height: 1;
+  vertical-align: baseline;
+  white-space: nowrap;
+  text-align: center;
+  border-radius: 10px;
 }
+
 .badge-danger {
-    background-color: #db5565;
+  background-color: #db5565;
 }
 
-#bottom
-{
+#bottom {
   background-color: #1a53ff;
 }
 
 .colored {
-margin-top: 5px;
-margin-bottom: 5px;
-height: 7px;
-border-top: 0;
-background: #c4e17f;
-border-radius: 5px;
-background-image: linear-gradient(to right,#5B86E5,#36D1DC);
-padding-right: 50%;
-background-origin: content-box;
-background-size: 200%;
-animation-name: colored;
-animation-duration: 2s;
-animation-iteration-count: infinite;
-animation-timing-function: steps(8);
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: 7px;
+  border-top: 0;
+  background: #c4e17f;
+  border-radius: 5px;
+  background-image: linear-gradient(to right, #5B86E5, #36D1DC);
+  padding-right: 50%;
+  background-origin: content-box;
+  background-size: 200%;
+  animation-name: colored;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: steps(8);
 }
-.padding-0{
-    padding-right:5px;
-    padding-left:5px;
+
+.padding-0 {
+  padding-right: 5px;
+  padding-left: 5px;
 }
 
 .card-skills:hover {
-    -webkit-box-shadow: -1px 9px 40px -12px rgba(43, 137, 255, 1);
-    -moz-box-shadow: -1px 9px 40px -12px rgba(43, 137, 255, 1);
-    box-shadow: -1px 9px 40px -12px rgba(43, 137, 255, 1);
+  -webkit-box-shadow: -1px 9px 40px -12px rgba(43, 137, 255, 1);
+  -moz-box-shadow: -1px 9px 40px -12px rgba(43, 137, 255, 1);
+  box-shadow: -1px 9px 40px -12px rgba(43, 137, 255, 1);
 }
 
 .padding-0 a:hover {
-    text-decoration: none;
+  text-decoration: none;
 }
-
 
 .center {
   display: block;
@@ -67,46 +67,51 @@ animation-timing-function: steps(8);
 }
 
 .fa-facebook {
-    color: rgb(59, 91, 152);
-    font-size:60px;
-    padding-right: 10px;
-  }
-  .fa-twitter {
+  color: rgb(59, 91, 152);
+  font-size: 60px;
+  padding-right: 10px;
+}
 
-      font-size:60px;
-      padding-right: 10px;
-    }
-  .fa-linkedin {
-        color: #23169c;
-        font-size:60px;
-        padding-right: 10px;
-      }
-  .fa-github {
-          color: black;
-          font-size:60px;
-          padding-right: 10px;
-        }
-  .footer-div {
-            border-top: 0px solid black;
-        }
+.fa-twitter {
 
-  .nav-link{
-          font-size: 1.1em !important;
-        }
-  #nav-bar {
-          position: sticky;
-          top: 0;
-          z-index: 10;
-        }
+  font-size: 60px;
+  padding-right: 10px;
+}
 
+.fa-linkedin {
+  color: #23169c;
+  font-size: 60px;
+  padding-right: 10px;
+}
 
-        #nav-bar1 {
-                position: sticky;
-                top: 0;
-                z-index: 10;
-              }
-              .vl {
-                border-left: 1px solid #fff;
-                margin-top: 10px;
-                height: 25px;
-              }
+.fa-github {
+  color: black;
+  font-size: 60px;
+  padding-right: 10px;
+}
+
+.footer-div {
+  border-top: 0px solid black;
+}
+
+.nav-link {
+  font-size: 1.1em !important;
+}
+
+#nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+#nav-bar1 {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.vl {
+  border-left: 1px solid #fff;
+  margin-top: 10px;
+  height: 25px;
+}
