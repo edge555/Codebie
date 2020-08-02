@@ -91,8 +91,42 @@ app.get('/dsubmit',function(req,res){
 app.post('/dsubmit',function(req,res){
     // Code Fetched
     var submittedcode = req.body.submittedcode;
-    // Run command
-    var x= runcmd("mkdir testing");
+    //console.log(submittedcode);
+    // Create code.txt & output.txt
+    runcmd("type nul > code.txt");
+    
+    // Check if code.txt not exists
+    try {
+        const path = 'code.txt';
+        if (fs.existsSync(path)) {
+            
+        } else {
+            runcmd("type nul > code.txt");
+        }
+      } catch(err) {
+        console.error(err);
+    }
+    // Create and write to code.txt
+    try {
+        fs.appendFile('code.txt', submittedcode, function (err) {
+            if (err) {
+                throw err;
+            } else {
+                // Change extension to .cpp
+                fs.renameSync('code.txt', 'code.cpp');
+            }
+        });
+      } catch(err) {
+        console.error(err);
+    }
+
+    // Fetch input from database
+
+
+    // Compile code.cpp
+    runcmd("g++ -o code code.cpp");
+    // run code.cpp with input.txt and store output in output.txt
+    runcmd("code.exe < input.txt > output.txt");
 });
 
 app.post('/enter',function(req,res){
