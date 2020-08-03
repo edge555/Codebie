@@ -146,21 +146,22 @@
           </div>
         </div>
         <div class="col-lg-6 col-xl-6 col-md-6  col-sm-6 col-xs-6  " style="background-color: #FFF">
+          <form action="/problem" method="post" id="problemcode" >
           <div class="row">
             <div style="padding-left:3%;">
               <p style="font-size:18px;color:#1e90ff"> <b>Write your code here!</b></p>
             </div>
-            <form style="padding-top: 8px;padding-left:37.5%;">
-              <select name="Language" id="language" style="width: 200px;height: 30px;float: right">
+            <div style="padding-top: 8px;padding-left:37.5%;">
+              <select name="language" id="language" style="width: 200px;height: 30px;float: right">
                 <option value="c">C</option>
                 <option value="cpp" selected>C++</option>
                 <option value="python">Python</option>
                 <option value="java">Java</option>
               </select>
-            </form>
+            </div>
           </div>
           <div class="textarea-wrapper">
-            <textarea rows="10" cols="40" id="prog-input" spellcheck="false"></textarea>
+            <textarea name="submittedcode" rows="10" cols="40" id="prog-input" spellcheck="false"></textarea>
           </div>
           <div class="row" style="padding-top:2%">
             <div class="row " style="padding-left:4.5%">
@@ -169,11 +170,12 @@
               </button>
             </div>
             <div class="row " style="padding-left:55%">
-              <button class="btn btn-outline-primary  " id="execute" style="margin: 0 auto;padding:5px 45px;">
+              <button name="submit" class="btn btn-outline-primary" id="execute" style="margin: 0 auto;padding:5px 45px;">
                 <h5>Submit</h5>
               </button>
             </div>
           </div>
+          </form>
         </div>
       </div>
     </div>

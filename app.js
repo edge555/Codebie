@@ -100,6 +100,59 @@ app.get('/problem',function(req,res){
     res.render('problem');
 });
 
+app.post('/problem',function(req,res){
+    // Code Fetched
+    var submittedcode = req.body.submittedcode;
+    // Create code.txt
+    runcmd("type nul > code.txt");
+    // Check if code.txt not exists
+    try {
+        const path = 'code.txt';
+        if (fs.existsSync(path)) {
+            
+        } else {
+            runcmd("type nul > code.txt");
+        }
+      } catch(err) {
+        console.error(err);
+    }
+    
+    // Create and write to code.txt
+    try {
+        fs.appendFile('code.txt', submittedcode, function (err) {
+            if (err) {
+                
+            } else {
+                // Change extension to .cpp
+                fs.renameSync('code.txt', 'code.cpp');
+            }
+        });
+      } catch(err) {
+        console.error(err);
+    }
+    // Fetch input.txt and judgeoutput.txt from database
+
+    // Compile code.cpp
+    runcmd("g++ -o code code.cpp");
+    // run code.exe with input.txt and store output in output.txt
+    generateoutput();
+    setTimeout(generateoutput,5000);
+    // Match outputs
+    var useroutput = null;
+    setTimeout(function() {
+        useroutput = fs.readFileSync('useroutput.txt','utf8');
+        judgeoutput = fs.readFileSync('judgeoutput.txt','utf8');
+        // Match outputs
+        if(useroutput===judgeoutput){
+            console.log("Yes");
+        } else {
+            console.log("No");
+        }
+    }, 8000);
+    // Delete files after verdict complete
+    //setTimeout(deletefiles,8000);
+});
+
 // Tutorial and problem list page
 app.get('/problem_list',function(req,res){
     res.render('problem_list');

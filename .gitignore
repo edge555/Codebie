@@ -1,7 +1,5 @@
 /node_modules
-code.cpp
+*.txt
+*.cpp
 code.exe
-code.txt
-useroutput.txt
-judgeoutput.txt
-input.txt
+
