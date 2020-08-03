@@ -56,6 +56,18 @@ var runcmd = (command)=>{
     });
 };
 
+var deletefiles = ()=>{
+    runcmd("del code.txt");
+    runcmd("del code.cpp");
+    runcmd("del code.exe");
+    runcmd("del useroutput.txt");
+    runcmd("del judgeoutput.txt");
+};
+
+var generateoutput = ()=>{
+    runcmd("code.exe < input.txt > useroutput.txt");
+};
+
 // Index route
 app.get('/',function(req,res){
     res.render('index');
@@ -94,7 +106,6 @@ app.post('/dsubmit',function(req,res){
     //console.log(submittedcode);
     // Create code.txt & output.txt
     runcmd("type nul > code.txt");
-    
     // Check if code.txt not exists
     try {
         const path = 'code.txt';
@@ -106,6 +117,7 @@ app.post('/dsubmit',function(req,res){
       } catch(err) {
         console.error(err);
     }
+    
     // Create and write to code.txt
     try {
         fs.appendFile('code.txt', submittedcode, function (err) {
@@ -119,14 +131,25 @@ app.post('/dsubmit',function(req,res){
       } catch(err) {
         console.error(err);
     }
-
-    // Fetch input from database
-
+    // Fetch input.txt and judgeoutput.txt from database
 
     // Compile code.cpp
     runcmd("g++ -o code code.cpp");
-    // run code.cpp with input.txt and store output in output.txt
-    runcmd("code.exe < input.txt > output.txt");
+    // run code.exe with input.txt and store output in output.txt
+    generateoutput();
+    setTimeout(generateoutput,2000);
+    // Match outputs
+    var useroutput = null;
+    setTimeout(function() {
+        useroutput = fs.readFileSync('useroutput.txt','utf8');
+        console.log(useroutput);
+        judgeoutput = fs.readFileSync('judgeoutput.txt','utf8');
+        console.log(judgeoutput);
+        // Match outputs
+
+    }, 3000);
+    // Delete files after verdict complete
+    //setTimeout(deletefiles,8000);
 });
 
 app.post('/enter',function(req,res){
