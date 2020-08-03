@@ -56,6 +56,7 @@ var runcmd = (command)=>{
     });
 };
 
+
 var deletefiles = ()=>{
     runcmd("del code.txt");
     runcmd("del code.cpp");
@@ -94,6 +95,16 @@ app.get('/practice',function(req,res){
     });    
 });
 
+// Problem show and submit page
+app.get('/problem',function(req,res){
+    res.render('problem');
+});
+
+// Tutorial and problem list page
+app.get('/problem_list',function(req,res){
+    res.render('problem_list');
+});
+
 // Dummy submit route
 app.get('/dsubmit',function(req,res){
     res.render('dsubmit');
@@ -122,7 +133,7 @@ app.post('/dsubmit',function(req,res){
     try {
         fs.appendFile('code.txt', submittedcode, function (err) {
             if (err) {
-                throw err;
+                
             } else {
                 // Change extension to .cpp
                 fs.renameSync('code.txt', 'code.cpp');
@@ -137,17 +148,19 @@ app.post('/dsubmit',function(req,res){
     runcmd("g++ -o code code.cpp");
     // run code.exe with input.txt and store output in output.txt
     generateoutput();
-    setTimeout(generateoutput,2000);
+    setTimeout(generateoutput,5000);
     // Match outputs
     var useroutput = null;
     setTimeout(function() {
         useroutput = fs.readFileSync('useroutput.txt','utf8');
-        console.log(useroutput);
         judgeoutput = fs.readFileSync('judgeoutput.txt','utf8');
-        console.log(judgeoutput);
         // Match outputs
-
-    }, 3000);
+        if(useroutput===judgeoutput){
+            console.log("Yes");
+        } else {
+            console.log("No");
+        }
+    }, 8000);
     // Delete files after verdict complete
     //setTimeout(deletefiles,8000);
 });
