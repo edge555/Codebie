@@ -56,7 +56,6 @@ var runcmd = (command)=>{
     });
 };
 
-
 var deletefiles = ()=>{
     runcmd("del code.txt");
     runcmd("del code.cpp");
@@ -158,78 +157,35 @@ app.get('/problem_list',function(req,res){
     res.render('problem_list');
 });
 
-// Dummy submit route
-app.get('/dsubmit',function(req,res){
-    res.render('dsubmit');
-});
-
-// Fetch dummy submit code
-app.post('/dsubmit',function(req,res){
-    // Code Fetched
-    var submittedcode = req.body.submittedcode;
-    //console.log(submittedcode);
-    // Create code.txt & output.txt
-    runcmd("type nul > code.txt");
-    // Check if code.txt not exists
-    try {
-        const path = 'code.txt';
-        if (fs.existsSync(path)) {
-            
-        } else {
-            runcmd("type nul > code.txt");
-        }
-      } catch(err) {
-        console.error(err);
-    }
-    
-    // Create and write to code.txt
-    try {
-        fs.appendFile('code.txt', submittedcode, function (err) {
-            if (err) {
-                
-            } else {
-                // Change extension to .cpp
-                fs.renameSync('code.txt', 'code.cpp');
-            }
-        });
-      } catch(err) {
-        console.error(err);
-    }
-    // Fetch input.txt and judgeoutput.txt from database
-
-    // Compile code.cpp
-    runcmd("g++ -o code code.cpp");
-    // run code.exe with input.txt and store output in output.txt
-    generateoutput();
-    setTimeout(generateoutput,5000);
-    // Match outputs
-    var useroutput = null;
-    setTimeout(function() {
-        useroutput = fs.readFileSync('useroutput.txt','utf8');
-        judgeoutput = fs.readFileSync('judgeoutput.txt','utf8');
-        // Match outputs
-        if(useroutput===judgeoutput){
-            console.log("Yes");
-        } else {
-            console.log("No");
-        }
-    }, 8000);
-    // Delete files after verdict complete
-    //setTimeout(deletefiles,8000);
-});
-
-app.post('/enter',function(req,res){
-    // Check login/signup validity here then direct
+app.post('/entersignin',function(req,res){
     console.log(req.body);
+    User.findOne({
+        username : req.body.signinusername
+    })
+    .then(user =>{
+        if(user){
+            res.redirect('/practice');
+        } else {
+            console.log("Not found");
+        }
+    });
+});
+
+app.post('/entersignup',function(req,res){
+    console.log(req.body);
+    // Check validity
+    // If ok then add to db
     const newUser = {
-        email : req.body.signinemail,
-        password : req.body.signinpass
+        username : req.body.signupusername,
+        email : req.body.signupemail,
+        password : req.body.signuppass,
     };
     new User(newUser)
     .save()
     .then(user => {
-        res.redirect('/practice');
-    });
+        res.redirect('/enter');
+    }); 
+    // else show error
 });
 
 app.listen(3000,function(){
