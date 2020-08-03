@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Problem</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="lib/codemirror.css">
+
+  <link rel="stylesheet" href="problem.css">
+</head>
+
+<body>
+
+  <!--Navigation Bar starts -->
+
+            <section id="nav-bar">
+              <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+                <div class="container-fluid">
+                  <a href="#" class="navbar-brand"><img src="images/logo.png" style="width:80%; height:70%"></a>
+                  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=#navbarResponsive>
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <div class="collapse navbar-collapse" id=navbarResponsive>
+
+                    <ul class="navbar-nav mr-auto">
+                      <li class="nav-item active">
+                        <a class="nav-link" href="#">Practice<span class="sr-only">(current)</span></a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="problem_list.html">Problems</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="problem_list.html">Contests</a>
+                      </li>
+                    </ul>
+
+                    <ul class="navbar-nav mr-5">
+                      <div class="dropdown" style="float: right; padding: 13px">
+                        <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1"
+                          data-target="#" style="float: left" aria-expanded="true">
+                          <i class="fa fa-bell-o" style="font-size: 20px; float: left; color: black">
+                          </i>
+                        </a>
+                        <span class="badge badge-danger badge-notification">6</span>
+                        <ul class="dropdown-menu dropdown-menu-left pull-right" role="menu" aria-labelledby="dropdownMenu1">
+                          <h6 class="text-center mb-2">Notifications</h6>
+                          <ul class="timeline timeline-icons timeline-sm" style="margin:10px;width:210px">
+                            <li>
+                              <p> <span>hello world</span> </p>
+                            </li>
+                            <li>
+                              <p> <span>hello bangladesh</span> </p>
+                            </li>
+                          </ul>
+                          <li role="presentation">
+                            <a href="#" class="dropdown-menu-header"></a>
+                          </li>
+                        </ul>
+                      </div>
+                      <li class="nav-item dropdown my-auto">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">
+                          <span><i class="fa fa-user"></i></span>
+                          username
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <a class="dropdown-item" href="#">Profile</a>
+                          <a class="dropdown-item" href="#">Settings</a>
+                        </div>
+                      </li>
+
+                    </ul>
+
+                  </div>
+                </div>
+
+              </nav>
+<!--Navigation Bar ends -->
+
+<!--Problem title starts -->
+      <div class="row">
+
+       <div class="top-content-wrapper col col-lg-6 col-md-6 col-sm-6">
+
+         <div class="problem-title large-20 darker content" id="problem-title" style="margin-left:4.5%;margin-top:10px;float:left;">
+                        <h3 style="font-size:150%;">This Problem</h3>
+
+         </div>
+         <div class="vl" style="float: left;margin-left:4%;" ></div>
+         <div style="float:left;margin-left:5%;margin-top: 7px">
+           <p> <h6>Problem Code :</h6></p>
+
+         </div>
+
+
+
+       </div>
+
+
+    <div class="col col-lg-6 col-md-6 col-sm-6" style="float: right; margin-top:10px; padding-left: 15.5%" >
+      <p >
+
+          <a href="F:/Study/Project Website/practice.html"> Practice</a>
+          &nbsp;> &nbsp; <a href="#">Data Structure</a>
+            &nbsp;> &nbsp; <a href="#">Arrays</a>
+              &nbsp;> &nbsp; <a href="#">1D</a>
+              &nbsp; > &nbsp; <a style="color:grey">Problem</a>
+
+
+      </p>
+
+
+    </div>
+
+  </div>
+
+
+    <div class="  custompadding ">
+              <div class="row distance ">
+                        <div class="col-lg-6 col-xl-6  col-md-6  col-sm-6 col-xs-6 scrollable " style="background-color:#F0F8FF;">
+                                <div class="problem-tabs regular">
+                                          <div class="tab-underline-blue">
+                                                <div class="tab history" id="discription">
+                                                        <div class="tab-name tab-dark selected" data-container= "problem-desc" cache= "True">
+                                                                Problem
+                                                        </div>
+                                                </div>
+                                                <div class="tab history" id="editorial">
+                                                        <div class="tab-name tab-dark " data-container= "editorial-desc" cache= "True">
+                                                                Editorial
+                                                        </div>
+                                                </div>
+                                                <div class="tab history" id="submissions">
+                                                        <div class="tab-name tab-dark " data-container= "mySubmissions-desc" cache= "True">
+                                                                My Submissions
+                                                        </div>
+                                                </div>
+                                                <div class="clear">
+                                                </div>
+
+                                          </div>
+
+                                </div>
+                                <div class="problem-desc" style="display: block;">
+                                            <div class="problem-description line-height-18 less-margin-2 darker content">
+                                                      <div class="problem-title medium-margin weight-700 hidden" id="problem-title">
+                                                                This Problem
+
+                                                      </div>
+                                                      <div class="ellaborate">
+                                                        <p>
+                                                          
+
+                                                        </p>
+
+                                                      </div>
+
+                                            </div>
+
+                                </div>
+
+
+
+
+
+
+
+                        </div>
+
+                        <div class="col-lg-6 col-xl-6 col-md-6  col-sm-6 col-xs-6  " style="background-color: #FFF" >
+
+                                <div class="row">
+                                  <div style="padding-left:3%;" >
+                                        <p style="font-size:22px;color:#1e90ff"> <b>Insert your code here!</b></p>
+                                  </div>
+                                    <form style="padding-top: 8px;padding-left:37.5%;">
+                                     <select name="Language" id="language" style="width: 200px;height: 30px;float: right">
+                                      <option value="c">C</option>
+                                      <option value="cpp" selected>C++</option>
+                                      <option value="python">Python</option>
+                                      <option value="java">Java</option>
+
+                                    </select>
+                                  </form>
+                                </div>
+
+
+
+                                <div class="textarea-wrapper" >
+                                  <textarea rows="10" cols="40" id="prog-input" spellcheck="false"></textarea>
+                                </div>
+
+                                <div class="row" style="padding-top:2%">
+
+                                  <div class="row " style="padding-left:4.5%" >
+                                            <button class="btn btn-outline-primary" id="execute" style="margin: 0 auto"><h5>Compile and Test</h5></button>
+                                  </div>
+
+                                  <div class="row " style="padding-left:55%" >
+                                            <button class="btn btn-outline-primary  " id="execute" style="margin: 0 auto;padding:5px 45px;"><h5>Submit</h5></button>
+                                  </div>
+
+                                </div>
+
+
+
+
+                        </div>
+
+             </div>
+
+    </div>
+
+
+
+    <script src="ace/src/ace.js" type="text/javascript" charset="utf-8"></script>
+     <script src="js/jquery-3.4.1.min.js"></script>
+     <script src="js/popper.min.js"></script>
+     <script src="bootstrap/js/bootstrap.min.js"></script>
+     <script src="js/default.js"></script>
+     <script src="js/index.js"></script>
+     <script src="lib/codemirror.js"></script>
+
+
+
+
+</body>
+
+</html>
