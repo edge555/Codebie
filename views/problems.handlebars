@@ -1,2 +1,6 @@
-<h1>{{title}}</h1>
-<h3>Problems</h3>
+{{#each problems}}
+    <a href="problems/{{code}}">{{name}}</a>
+    <br><br>
+{{else}}
+    <h1>Empty</h1>
+{{/each}}

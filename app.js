@@ -72,22 +72,25 @@ var generateoutput = ()=>{
 
 // Admin access
 app.get('/admin',function(req,res){
-    res.render('admin');
+    res.render('admin/admin');
 });
 
 app.post('/admin',function(req,res){
-    if(req.body.submit=="add"){
+    if(req.body.submit=="addproblem"){
         res.redirect('adminaddproblem');
-    } else if (req.body.submit=="edit"){
+    } else if (req.body.submit=="editproblem"){
         res.redirect('admineditproblem');
-    } else {
-        res.redirect('admintutorial');
+    } else if (req.body.submit=="addtutorial"){
+        res.redirect('adminaddtutorial');
+    } 
+    else {
+        res.redirect('adminedittutorial');
     }
 });
 
 // To add problems
 app.get('/adminaddproblem',function(req,res){
-    res.render('adminaddproblem');
+    res.render('admin/adminaddproblem');
 });
 
 app.post('/adminaddproblem',function(req,res){
@@ -109,13 +112,13 @@ app.post('/adminaddproblem',function(req,res){
     new Problem(newProblem)
     .save()
     .then(problem => {
-        res.redirect('/admin');
+        res.redirect('admin');
     }); 
 });
 
 // To edit problems
 app.get('/admineditproblem',function(req,res){
-    res.render('admineditproblem');
+    res.render('admin/admineditproblem');
 });
 
 app.post('/admineditproblem',function(req,res){
@@ -124,7 +127,7 @@ app.post('/admineditproblem',function(req,res){
 
 // To add tutorial
 app.get('/adminaddtutorial',function(req,res){
-    res.render('adminaddtutorial');
+    res.render('admin/adminaddtutorial');
 });
 
 app.post('/adminaddtutorial',function(req,res){
@@ -133,7 +136,7 @@ app.post('/adminaddtutorial',function(req,res){
 
 // To edit tutorial
 app.get('/adminedittutorial',function(req,res){
-    res.render('adminedittutorial');
+    res.render('admin/adminedittutorial');
 });
 
 app.post('/adminedittutorial',function(req,res){
@@ -189,10 +192,6 @@ app.post('/home',function(req,res){
     });
 });
 
-// Problem show and submit page
-app.get('/problem',function(req,res){
-    res.render('problem');
-});
 
 app.post('/problem',function(req,res){
     // Code Fetched
@@ -253,18 +252,19 @@ app.get('/problems',function(req,res){
 
 app.post('/problems',function(req,res){
     console.log(req.body.submit);
-    res.render('problems',{
-        title:req.body.submit
-    });
+    Problem.find({tags:req.body.submit})
+        .lean()
+        .then(problems =>{
+            res.render('problems',{
+                problems:problems
+            });
+        });
 });
+
 
 // Tutorial and problem list page
 app.get('/problem_list',function(req,res){
     res.render('problem_list');
-});
-
-app.get('/problems',function(req,res){
-    res.render('problems');
 });
 
 app.listen(3000,function(){
