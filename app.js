@@ -76,19 +76,21 @@ app.get('/admin',function(req,res){
 });
 
 app.post('/admin',function(req,res){
-    if(req.body.submit=="problem"){
-        res.redirect('adminproblem');
+    if(req.body.submit=="add"){
+        res.redirect('adminaddproblem');
+    } else if (req.body.submit=="edit"){
+        res.redirect('admineditproblem');
     } else {
         res.redirect('admintutorial');
     }
 });
 
 // To add problems
-app.get('/adminproblem',function(req,res){
-    res.render('adminproblem');
+app.get('/adminaddproblem',function(req,res){
+    res.render('adminaddproblem');
 });
 
-app.post('/adminproblem',function(req,res){
+app.post('/adminaddproblem',function(req,res){
     console.log(req.body);
     const newProblem = {
         name : req.body.name,
@@ -111,12 +113,30 @@ app.post('/adminproblem',function(req,res){
     }); 
 });
 
-// To add tutorial
-app.get('/admintutorial',function(req,res){
-    res.render('admintutorial');
+// To edit problems
+app.get('/admineditproblem',function(req,res){
+    res.render('admineditproblem');
 });
 
-app.post('/admintutorial',function(req,res){
+app.post('/admineditproblem',function(req,res){
+    
+});
+
+// To add tutorial
+app.get('/adminaddtutorial',function(req,res){
+    res.render('adminaddtutorial');
+});
+
+app.post('/adminaddtutorial',function(req,res){
+    
+});
+
+// To edit tutorial
+app.get('/adminedittutorial',function(req,res){
+    res.render('adminedittutorial');
+});
+
+app.post('/adminedittutorial',function(req,res){
     
 });
 
