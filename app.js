@@ -70,11 +70,25 @@ var generateoutput = ()=>{
     runcmd("code.exe < input.txt > useroutput.txt");
 };
 
+// Admin access
 app.get('/admin',function(req,res){
     res.render('admin');
 });
 
 app.post('/admin',function(req,res){
+    if(req.body.submit=="problem"){
+        res.redirect('adminproblem');
+    } else {
+        res.redirect('admintutorial');
+    }
+});
+
+// To add problems
+app.get('/adminproblem',function(req,res){
+    res.render('adminproblem');
+});
+
+app.post('/adminproblem',function(req,res){
     console.log(req.body);
     const newProblem = {
         name : req.body.name,
@@ -87,13 +101,23 @@ app.post('/admin',function(req,res){
         sampleoutput : req.body.sampleoutput ,
         hiddeninput : req.body.hiddeninput ,
         hiddenoutput : req.body.hiddenoutput ,
+        tags: req.body.tags,
         solvecount : 0
     };
     new Problem(newProblem)
     .save()
     .then(problem => {
-        res.redirect('/practice');
+        res.redirect('/admin');
     }); 
+});
+
+// To add tutorial
+app.get('/admintutorial',function(req,res){
+    res.render('admintutorial');
+});
+
+app.post('/admintutorial',function(req,res){
+    
 });
 
 // Index route
@@ -109,6 +133,20 @@ app.get('/about',function(req,res){
 // Login/Signup Route
 app.get('/enter',function(req,res){
     res.render('enter');
+});
+
+app.post('/enter',function(req,res){
+    const newUser = {
+        username : req.body.signupusername,
+        email : req.body.signupemail,
+        password : req.body.signuppass,
+    };
+    new User(newUser)
+    .save()
+    .then(user => {
+        res.redirect('/enter');
+    }); 
+    // else show error
 });
 
 // Practice Route
@@ -189,6 +227,17 @@ app.post('/problem',function(req,res){
     //setTimeout(deletefiles,8000);
 });
 
+app.get('/problems',function(req,res){
+    res.render('problems');
+});
+
+app.post('/problems',function(req,res){
+    console.log(req.body.submit);
+    res.render('problems',{
+        title:req.body.submit
+    });
+});
+
 // Tutorial and problem list page
 app.get('/problem_list',function(req,res){
     res.render('problem_list');
@@ -196,20 +245,6 @@ app.get('/problem_list',function(req,res){
 
 app.get('/problems',function(req,res){
     res.render('problems');
-});
-
-app.post('/enter',function(req,res){
-    const newUser = {
-        username : req.body.signupusername,
-        email : req.body.signupemail,
-        password : req.body.signuppass,
-    };
-    new User(newUser)
-    .save()
-    .then(user => {
-        res.redirect('/enter');
-    }); 
-    // else show error
 });
 
 app.listen(3000,function(){

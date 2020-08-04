@@ -45,6 +45,9 @@ const ProblemSchema = new Schema({
         type : String,
         default : 'hiddenoutput'
     },
+    tags :{
+        type : String
+    },
     solvecount : {
         type : Number,
         default : 0
