@@ -21,6 +21,8 @@ mongoose.connect('mongodb://localhost/codebie',{
 // Load User Model
 require('./models/User');
 const User = mongoose.model('users');
+require('./models/Problem');
+const Problem = mongoose.model('problems');
 
 // Body Parser
 app.use(bodyParser.json());
@@ -94,6 +96,32 @@ app.get('/practice',function(req,res){
     });    
 });
 
+app.get('/admin',function(req,res){
+    res.render('admin');
+});
+
+app.post('/admin',function(req,res){
+    console.log(req.body);
+    const newProblem = {
+        name : req.body.name,
+        code : req.body.code,
+        difficulty : req.body.difficulty,
+        statement: req.body.statement,
+        constraints: req.body.constraints,
+        timelimit: req.body.timelimit,
+        sampleinput : req.body.sampleinput ,
+        sampleoutput : req.body.sampleoutput ,
+        hiddeninput : req.body.hiddeninput ,
+        hiddenoutput : req.body.hiddenoutput ,
+        solvecount : 0
+    };
+    new Problem(newProblem)
+    .save()
+    .then(problem => {
+        res.redirect('/practice');
+    }); 
+});
+
 // Problem show and submit page
 app.get('/problem',function(req,res){
     res.render('problem');
@@ -164,7 +192,9 @@ app.post('/entersignin',function(req,res){
     })
     .then(user =>{
         if(user){
-            res.redirect('/practice');
+            res.render('practice',{
+                user:user
+            });
         } else {
             console.log("Not found");
         }

@@ -6,14 +6,13 @@ const ProblemSchema = new Schema({
         type : String,
         required:true
     },
-    problemcode : {
+    code : {
         type : String,
         required:true
     },
     difficulty : {
         type : String,
-        default: 'easy',
-        required:true
+        default: 'easy'
     },
     statement : {
         type : String,
@@ -47,7 +46,7 @@ const ProblemSchema = new Schema({
         default : 'hiddenoutput'
     },
     solvecount : {
-        type : Integer,
+        type : Number,
         default : 0
     }
 });

@@ -19,6 +19,22 @@ const UserSchema = new Schema({
         type : String,
         required:true,
         default : 'name'
+    },
+    csolved:{
+        type : Number,
+        default : 0
+    },
+    cppsolved:{
+        type : Number,
+        default : 0
+    },
+    javasolved:{
+        type : Number,
+        default : 0
+    },
+    pysolved:{
+        type : Number,
+        default : 0
     }
 });
 mongoose.model('users',UserSchema);
