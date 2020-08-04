@@ -70,32 +70,6 @@ var generateoutput = ()=>{
     runcmd("code.exe < input.txt > useroutput.txt");
 };
 
-// Index route
-app.get('/',function(req,res){
-    res.render('index');
-});
-
-// About route
-app.get('/about',function(req,res){
-   res.render('about');
-});
-
-// Login/Signup Route
-app.get('/enter',function(req,res){
-    res.render('enter');
-});
-
-// Practice Route
-app.get('/practice',function(req,res){
-    // Searching all users
-    User.find({})
-    .then(users=>{
-        res.render('practice',{
-            users : users
-        });
-    });    
-});
-
 app.get('/admin',function(req,res){
     res.render('admin');
 });
@@ -120,6 +94,41 @@ app.post('/admin',function(req,res){
     .then(problem => {
         res.redirect('/practice');
     }); 
+});
+
+// Index route
+app.get('/',function(req,res){
+    res.render('index');
+});
+
+// About route
+app.get('/about',function(req,res){
+   res.render('about');
+});
+
+// Login/Signup Route
+app.get('/enter',function(req,res){
+    res.render('enter');
+});
+
+// Practice Route
+app.get('/home',function(req,res){
+    res.render('home');    
+});
+
+app.post('/home',function(req,res){
+    User.findOne({
+        username : req.body.signinusername
+    })
+    .then(user =>{
+        if(user){
+            res.render('home',{
+                user:user
+            });
+        } else {
+            console.log("Not found");
+        }
+    });
 });
 
 // Problem show and submit page
@@ -185,26 +194,11 @@ app.get('/problem_list',function(req,res){
     res.render('problem_list');
 });
 
-app.post('/entersignin',function(req,res){
-    console.log(req.body);
-    User.findOne({
-        username : req.body.signinusername
-    })
-    .then(user =>{
-        if(user){
-            res.render('practice',{
-                user:user
-            });
-        } else {
-            console.log("Not found");
-        }
-    });
+app.get('/problems',function(req,res){
+    res.render('problems');
 });
 
-app.post('/entersignup',function(req,res){
-    console.log(req.body);
-    // Check validity
-    // If ok then add to db
+app.post('/enter',function(req,res){
     const newUser = {
         username : req.body.signupusername,
         email : req.body.signupemail,
