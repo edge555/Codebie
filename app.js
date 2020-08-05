@@ -8,6 +8,7 @@ const app = express();
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
 const { exec } = require("child_process");
 const fs = require('fs');
+var ids =[],ids2=[];
 
 // Connect to mongoose
 mongoose.Promise=global.Promise;
@@ -192,6 +193,11 @@ app.post('/home',function(req,res){
     });
 });
 
+// Problem show and submit page
+app.get('/problem',function(req,res){
+    console.log(req);
+    res.render('problem');
+});
 
 app.post('/problem',function(req,res){
     // Code Fetched
@@ -251,12 +257,24 @@ app.get('/problems',function(req,res){
 });
 
 app.post('/problems',function(req,res){
-    console.log(req.body.submit);
     Problem.find({tags:req.body.submit})
         .lean()
         .then(problems =>{
             res.render('problems',{
                 problems:problems
+            });
+        });
+});
+
+// Find problem and redirect to show and submit page
+app.get('/problems/:id',function(req,res){
+    ids.push(req.params);
+    Problem.findOne({code : ids[0].id})
+        .lean()
+        .then(problems =>{
+            ids =[];
+            res.render('problem',{
+                problems : problems
             });
         });
 });

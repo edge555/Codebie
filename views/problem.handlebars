@@ -86,13 +86,13 @@
 
         <div class="problem-title large-20 darker content" id="problem-title"
           style="margin-left:4.5%;margin-top:10px;float:left;">
-          <h3 style="font-size:150%;">This Problem</h3>
+          <h3 style="font-size:150%;">{{problems.name}}</h3>
 
         </div>
         <div class="vl" style="float: left;margin-left:4%;"></div>
         <div style="float:left;margin-left:5%;margin-top: 7px">
           <p>
-            <h6>Problem Code :</h6>
+            <h6>Problem Code : {{problems.code}}</h6>
           </p>
 
         </div>
@@ -104,7 +104,7 @@
           &nbsp;> &nbsp; <a href="#">Data Structure</a>
           &nbsp;> &nbsp; <a href="#">Arrays</a>
           &nbsp;> &nbsp; <a href="#">1D</a>
-          &nbsp; > &nbsp; <a style="color:grey">Problem</a>
+          &nbsp; > &nbsp; <a style="color:grey">{{problems.code}}</a>
         </p>
       </div>
 
@@ -140,6 +140,7 @@
               </div>
               <div class="ellaborate">
                 <p>
+                  {{problems.statement}}
                 </p>
               </div>
             </div>
