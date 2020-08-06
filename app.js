@@ -8,6 +8,18 @@ const app = express();
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
 const { exec } = require("child_process");
 const fs = require('fs');
+const unirest = require('unirest');
+
+// Judge0 API
+var req = unirest("POST", "https://judge0.p.rapidapi.com/submissions");
+req.headers({
+	"x-rapidapi-host": "judge0.p.rapidapi.com",
+	"x-rapidapi-key": "f29463abbdmsh6850c751a0bc89fp11dfc2jsn113becd1a344",
+	"content-type": "application/json",
+	"accept": "application/json",
+	"useQueryString": true
+});
+
 var ids =[],ids2=[];
 
 // Connect to mongoose
@@ -19,7 +31,7 @@ mongoose.connect('mongodb://localhost/codebie',{
 .then(()=> console.log('MongoDB Connected'))
 .catch(err => console.log(err));
 
-// Load User Model
+// Load Models
 require('./models/User');
 const User = mongoose.model('users');
 require('./models/Problem');
@@ -43,33 +55,6 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use(function(req,res,next){
     next();
 });
-
-// Function to run cmd commands
-var runcmd = (command)=>{
-    exec(command, (error, stdout, stderr) => {
-        if (error) {
-            return "error";
-        }
-        else if (stderr) {
-            return "stderr";
-        }
-        else{
-            return "success";
-        }
-    });
-};
-
-var deletefiles = ()=>{
-    runcmd("del code.txt");
-    runcmd("del code.cpp");
-    runcmd("del code.exe");
-    runcmd("del useroutput.txt");
-    runcmd("del judgeoutput.txt");
-};
-
-var generateoutput = ()=>{
-    runcmd("code.exe < input.txt > useroutput.txt");
-};
 
 // Admin access
 app.get('/admin',function(req,res){
@@ -178,78 +163,64 @@ app.get('/home',function(req,res){
     res.render('home');    
 });
 
-app.post('/home',function(req,res){
-    User.findOne({
-        username : req.body.signinusername
-    })
-    .then(user =>{
-        if(user){
-            res.render('home',{
-                user:user
-            });
-        } else {
-            console.log("Not found");
-        }
-    });
-});
-
 // Problem show and submit page
 app.get('/problem',function(req,res){
     console.log(req);
     res.render('problem');
 });
 
+ // Judge0 API call for submitting code
+function gettoken(token,input, callback) {
+    // Judge0 API for submitting code
+    var req = unirest("POST", "https://judge0.p.rapidapi.com/submissions");
+    req.headers({
+        "x-rapidapi-host": "judge0.p.rapidapi.com",
+        "x-rapidapi-key": "f29463abbdmsh6850c751a0bc89fp11dfc2jsn113becd1a344",
+        "content-type": "application/json",
+        "accept": "application/json",
+        "useQueryString": true
+    });
+    req.type("json");
+    req.send({
+        "language_id": 50,
+        "source_code": "#include <stdio.h>\n\nint main(void) {\n  char name[10];\n  scanf(\"%s\", name);\n  printf(\"hello %s\\n\", name);\n  return 0;\n}",
+        "stdin": input
+    });
+    req.end(function (res) {
+        if (res.error) 
+            throw new Error(res.error);
+        callback(res.body.token);
+    }); 
+}
+
+ // Judge0 API call to get execution info
+function getoutput(submissiontoken, callback) {
+    console.log(submissiontoken);
+    var req = unirest("GET", "https://judge0.p.rapidapi.com/submissions/"+submissiontoken);
+    req.headers({
+        "x-rapidapi-host": "judge0.p.rapidapi.com",
+        "x-rapidapi-key": "f29463abbdmsh6850c751a0bc89fp11dfc2jsn113becd1a344",
+        "useQueryString": true
+    });
+    req.end(function (res) {
+        if (res.error) 
+            throw new Error(res.error);
+        console.log(res.body);
+    });
+}
+
 app.post('/problem',function(req,res){
     // Code Fetched
     var submittedcode = req.body.submittedcode;
-    // Create code.txt
-    runcmd("type nul > code.txt");
-    // Check if code.txt not exists
-    try {
-        const path = 'code.txt';
-        if (fs.existsSync(path)) {
-            
-        } else {
-            runcmd("type nul > code.txt");
-        }
-      } catch(err) {
-        console.error(err);
-    }
-    
-    // Create and write to code.txt
-    try {
-        fs.appendFile('code.txt', submittedcode, function (err) {
-            if (err) {
-                
-            } else {
-                // Change extension to .cpp
-                fs.renameSync('code.txt', 'code.cpp');
-            }
-        });
-      } catch(err) {
-        console.error(err);
-    }
-    // Fetch input.txt and judgeoutput.txt from database
-
-    // Compile code.cpp
-    runcmd("g++ -o code code.cpp");
-    // run code.exe with input.txt and store output in output.txt
-    generateoutput();
-    setTimeout(generateoutput,5000);
-    // Match outputs
-    var useroutput = null;
+    var submissiontoken,usersubmissioncode;
+    var judgeinput = "Arthur";
+    var token=gettoken(usersubmissioncode,judgeinput, function(result) {
+        submissiontoken = result;
+    });
     setTimeout(function() {
-        useroutput = fs.readFileSync('useroutput.txt','utf8');
-        judgeoutput = fs.readFileSync('judgeoutput.txt','utf8');
-        // Match outputs
-        if(useroutput===judgeoutput){
-            console.log("Yes");
-        } else {
-            console.log("No");
-        }
-    }, 8000);
-    // Delete files after verdict complete
-    //setTimeout(deletefiles,8000);
+        //console.log(submissiontoken);
+        var check = getoutput(submissiontoken);
+    }, 3000);
 });
 
 app.get('/problems',function(req,res){
@@ -278,7 +249,6 @@ app.get('/problems/:id',function(req,res){
             });
         });
 });
-
 
 // Tutorial and problem list page
 app.get('/problem_list',function(req,res){
