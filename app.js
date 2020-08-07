@@ -158,9 +158,24 @@ app.post('/enter',function(req,res){
     // else show error
 });
 
-// Practice Route
+// Home Route
 app.get('/home',function(req,res){
     res.render('home');    
+});
+
+app.post('/home',function(req,res){
+    User.findOne({
+        username : req.body.signinusername
+    })
+    .then(user =>{
+        if(user){
+            res.render('home',{
+                user:user
+            });
+        } else {
+            console.log("Not found");
+        }
+    });
 });
 
 // Problem show and submit page
@@ -170,7 +185,7 @@ app.get('/problem',function(req,res){
 });
 
  // Judge0 API call for submitting code
-function gettoken(token,input, callback) {
+function gettoken(submission,input, callback) {
     // Judge0 API for submitting code
     var req = unirest("POST", "https://judge0.p.rapidapi.com/submissions");
     req.headers({
@@ -180,10 +195,28 @@ function gettoken(token,input, callback) {
         "accept": "application/json",
         "useQueryString": true
     });
+    /* 
+    Language ids:
+    C (GCC 9.2.0) : 50,
+    C++ (GCC 7.4.0) : 52,
+    Java (OpenJDK 8) : 27,
+    Python (3.8.1) : 71
+    */
+    console.log(submission);
+    var lang_id;
+    if(submission.language=="c"){
+        lang_id = 50;
+    } else if(submission.language=="cpp"){
+        lang_id = 52;
+    } else if(submission.language=="java"){
+        lang_id = 27;
+    } else {
+        lang_id = 71;
+    }
     req.type("json");
     req.send({
-        "language_id": 50,
-        "source_code": "#include <stdio.h>\n\nint main(void) {\n  char name[10];\n  scanf(\"%s\", name);\n  printf(\"hello %s\\n\", name);\n  return 0;\n}",
+        "language_id": lang_id,
+        "source_code": submission.code,
         "stdin": input
     });
     req.end(function (res) {
@@ -211,16 +244,20 @@ function getoutput(submissiontoken, callback) {
 
 app.post('/problem',function(req,res){
     // Code Fetched
-    var submittedcode = req.body.submittedcode;
-    var submissiontoken,usersubmissioncode;
+    //console.log(req.body);
+    var submission = {
+        code : req.body.submittedcode,
+        language : req.body.language
+    };
+    var submissiontoken;
     var judgeinput = "Arthur";
-    var token=gettoken(usersubmissioncode,judgeinput, function(result) {
+    var token=gettoken(submission,judgeinput, function(result) {
         submissiontoken = result;
     });
     setTimeout(function() {
         //console.log(submissiontoken);
         var check = getoutput(submissiontoken);
-    }, 3000);
+    }, 5000);
 });
 
 app.get('/problems',function(req,res){
