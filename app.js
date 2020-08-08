@@ -4,21 +4,12 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const Handlebars = require('handlebars');
 const mongoose = require('mongoose');
+const session = require('express-session');
 const app = express();
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
 const { exec } = require("child_process");
 const fs = require('fs');
 const unirest = require('unirest');
-
-// Judge0 API
-var req = unirest("POST", "https://judge0.p.rapidapi.com/submissions");
-req.headers({
-	"x-rapidapi-host": "judge0.p.rapidapi.com",
-	"x-rapidapi-key": "f29463abbdmsh6850c751a0bc89fp11dfc2jsn113becd1a344",
-	"content-type": "application/json",
-	"accept": "application/json",
-	"useQueryString": true
-});
 
 var ids =[],ids2=[];
 
@@ -40,6 +31,9 @@ const Problem = mongoose.model('problems');
 // Body Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
+// Express session
+app.use(session({secret: 'mySecret', resave: false, saveUninitialized: false}));
 
 // Handlebars Middleware
 app.engine('handlebars', exphbs({
@@ -145,42 +139,53 @@ app.get('/enter',function(req,res){
 });
 
 app.post('/enter',function(req,res){
-    const newUser = {
-        username : req.body.signupusername,
-        email : req.body.signupemail,
-        password : req.body.signuppass,
-    };
-    new User(newUser)
-    .save()
-    .then(user => {
-        res.redirect('/enter');
-    }); 
-    // else show error
+    if(Object.keys(req.body).length==3){
+        User.findOne({
+            username : req.body.signinusername
+        })
+        .then(user =>{
+            if(user){
+                req.session.message = user;
+                res.redirect('/home');
+            } else {
+                // else show error
+            }
+        });
+    } else {
+        const newUser = {
+            username : req.body.signupusername,
+            email : req.body.signupemail,
+            password : req.body.signuppass,
+        };
+        new User(newUser)
+        .save()
+        .then(user => {
+            res.redirect('/enter');
+        }); 
+        // else show error
+    }
+    
 });
 
 // Home Route
 app.get('/home',function(req,res){
-    res.render('home');    
+    var curuser = req.session.message;
+    res.render('home', {curuser: curuser});
 });
 
 app.post('/home',function(req,res){
-    User.findOne({
-        username : req.body.signinusername
-    })
-    .then(user =>{
-        if(user){
-            res.render('home',{
-                user:user
-            });
-        } else {
-            console.log("Not found");
-        }
-    });
+    //console.log(curuser);
+    Problem.find({tags:req.body.submit})
+        .lean()
+        .then(problems =>{
+            req.session.message = problems;
+            res.redirect('/problems');
+        });
 });
 
 // Problem show and submit page
 app.get('/problem',function(req,res){
-    console.log(req);
+    //console.log(req);
     res.render('problem');
 });
 
@@ -261,17 +266,13 @@ app.post('/problem',function(req,res){
 });
 
 app.get('/problems',function(req,res){
-    res.render('problems');
+    var curproblems = req.session.message;
+    //console.log(curproblems);
+    res.render('problems', {curproblems: curproblems});
 });
 
 app.post('/problems',function(req,res){
-    Problem.find({tags:req.body.submit})
-        .lean()
-        .then(problems =>{
-            res.render('problems',{
-                problems:problems
-            });
-        });
+    console.log("Posted");
 });
 
 // Find problem and redirect to show and submit page
@@ -285,11 +286,6 @@ app.get('/problems/:id',function(req,res){
                 problems : problems
             });
         });
-});
-
-// Tutorial and problem list page
-app.get('/problem_list',function(req,res){
-    res.render('problem_list');
 });
 
 app.listen(3000,function(){
