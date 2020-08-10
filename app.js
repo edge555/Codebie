@@ -11,7 +11,8 @@ const { exec } = require("child_process");
 const fs = require('fs');
 const unirest = require('unirest');
 
-var ids =[],ids2=[];
+var ids=[];
+var curuser,curproblem;
 
 // Connect to mongoose
 mongoose.Promise=global.Promise;
@@ -145,7 +146,7 @@ app.post('/enter',function(req,res){
         })
         .then(user =>{
             if(user){
-                req.session.message = user;
+                curuser = user;
                 res.redirect('/home');
             } else {
                 // else show error
@@ -169,12 +170,10 @@ app.post('/enter',function(req,res){
 
 // Home Route
 app.get('/home',function(req,res){
-    var curuser = req.session.message;
     res.render('home', {curuser: curuser});
 });
 
 app.post('/home',function(req,res){
-    //console.log(curuser);
     Problem.find({tags:req.body.submit})
         .lean()
         .then(problems =>{
@@ -185,8 +184,10 @@ app.post('/home',function(req,res){
 
 // Problem show and submit page
 app.get('/problem',function(req,res){
-    //console.log(req);
-    res.render('problem');
+    res.render('problem',{
+        curuser:curuser,
+        curproblem:curproblem
+    });
 });
 
  // Judge0 API call for submitting code
@@ -207,7 +208,7 @@ function gettoken(submission,input, callback) {
     Java (OpenJDK 8) : 27,
     Python (3.8.1) : 71
     */
-    console.log(submission);
+    //console.log(submission);
     var lang_id;
     if(submission.language=="c"){
         lang_id = 50;
@@ -249,11 +250,11 @@ function getoutput(submissiontoken, callback) {
 
 app.post('/problem',function(req,res){
     // Code Fetched
-    //console.log(req.body);
     var submission = {
         code : req.body.submittedcode,
         language : req.body.language
     };
+    console.log(curproblem);
     var submissiontoken;
     var judgeinput = "Arthur";
     var token=gettoken(submission,judgeinput, function(result) {
@@ -268,7 +269,10 @@ app.post('/problem',function(req,res){
 app.get('/problems',function(req,res){
     var curproblems = req.session.message;
     //console.log(curproblems);
-    res.render('problems', {curproblems: curproblems});
+    res.render('problems', {
+        curuser : curuser,
+        curproblems: curproblems
+    });
 });
 
 app.post('/problems',function(req,res){
@@ -283,7 +287,8 @@ app.get('/problems/:id',function(req,res){
         .then(problems =>{
             ids =[];
             res.render('problem',{
-                problems : problems
+                curproblem : problems,
+                curuser : curuser
             });
         });
 });
