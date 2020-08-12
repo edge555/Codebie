@@ -6,301 +6,244 @@
     <title>Practice</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"> </script>
-    <link rel="stylesheet" href="practice.css">
+    <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+    <link rel = "stylesheet" href = "practice.css">
 </head>
-
 <body>
-    <section id="nav-bar">
-        <nav class="navbar navbar-expand-md navbar-light bg-white sticky-top">
-            <div class="container-fluid">
-                <a href="#" class="navbar-brand"><img src="images/logo.png" style="width:80%; height:70%"></a>
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=#navbarResponsive>
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id=navbarResponsive>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <a class="navbar-brand ml-5" href="home.html"><img src="images/logo.png" style="width:80%; height:70%"></a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Practice<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="problem_list.html">Problems</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="problem_list.html">Contests</a>
+                </li>
+            </ul>
 
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Practice<span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="problem_list.html">Problems</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="problem_list.html">Contests</a>
-                        </li>
-                    </ul>
-
-                    <ul class="navbar-nav mr-5">
-                        <div class="dropdown" style="float: right; padding: 13px">
-                            <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1"
-                                data-target="#" style="float: left" aria-expanded="true">
-                                <i class="fa fa-bell-o" style="font-size: 20px; float: left; color: black">
-                                </i>
-                            </a>
-                            <span class="badge badge-danger badge-notification">6</span>
-                            <ul class="dropdown-menu dropdown-menu-left pull-right" role="menu"
-                                aria-labelledby="dropdownMenu1">
-                                <h6 class="text-center mb-2">Notifications</h6>
-                                <ul class="timeline timeline-icons timeline-sm" style="margin:10px;width:210px">
-                                    <li>
-                                        <p> <span>hello world</span> </p>
-                                    </li>
-                                    <li>
-                                        <p> <span>hello bangladesh</span> </p>
-                                    </li>
-                                </ul>
-                                <li role="presentation">
-                                    <a href="#" class="dropdown-menu-header"></a>
-                                </li>
-                            </ul>
-                        </div>
-                        <li class="nav-item dropdown my-auto">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span><i class="fa fa-user"></i></span>
-                                username
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Profile</a>
-                                <a class="dropdown-item" href="#">Settings</a>
-                            </div>
+            <ul class="navbar-nav mr-5">
+                <div class="dropdown" style="float: right; padding: 13px">
+                    <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1"
+                        data-target="#" style="float: left" aria-expanded="true">
+                        <i class="fa fa-bell-o" style="font-size: 20px; float: left; color: black">
+                        </i>
+                    </a>
+                    <span class="badge badge-danger badge-notification">6</span>
+                    <ul class="dropdown-menu dropdown-menu-left pull-right" role="menu" aria-labelledby="dropdownMenu1">
+                        <h6 class = "text-center mb-2">Notifications</h6>
+                        <ul class="timeline timeline-icons timeline-sm" style="margin:10px;width:210px">
+                            <li>
+                                <p> <span>hello world</span> </p>
+                            </li>
+                            <li>
+                                <p> <span>hello bangladesh</span> </p>
+                            </li>
+                        </ul>
+                        <li role="presentation">
+                            <a href="#" class="dropdown-menu-header"></a>
                         </li>
                     </ul>
                 </div>
-            </div>
-        </nav>
-        <div class="container mt-4">
-            <div class="container">
-                <h3 class="text-center">Your Progress</h3>
-                <hr class="colored">
-                <div class="row mb-3">
+                <li class="nav-item dropdown my-auto">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span><i class="fa fa-user"></i></span>
+                        username
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Profile</a>
+                        <a class="dropdown-item" href="#">Settings</a>
+                    </div>
+                </li>
 
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <div class="card shadow-lg p-2 bg-white rounded mt-3">
-                            <div class="card-body card-design">
-                                <div class="row">
-                                    <div class="col-lg-0 col-xl-0 my-auto text-right align-items-center">
-                                        <p class="my-auto"><img class="rounded-circle img-fluid my-auto"
-                                                src="images/c.jpg"
-                                                style="border-radius:50% 50% 50% 50%;width:100px;height:100px;"
-                                                alt="card image"></p>
-                                    </div>
-                                    <div class="col-lg-9 col-xl-9 text-center">
-                                        <h3 class="card-title">C</h3>
-                                        <div class="progress text-center">
-                                            <div class="progress-bar" role="progressbar" style="width: 75%"
-                                                aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">75/130</div>
-                                        </div>
-                                        <a href="#" class="btn btn-outline-primary btn-block btn-border mt-2"
-                                            id="btn-solve">
-                                            Practice
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <div class="card shadow-lg p-2 bg-white rounded mt-3">
-                            <div class="card-body card-design">
-                                <div class="row">
-                                    <div class="col-lg-0 col-xl-0 my-auto text-right align-items-center">
-                                        <p class="my-auto"><img class="rounded-circle img-fluid my-auto"
-                                                src="images/cpp.jpg"
-                                                style="border-radius:50% 50% 50% 50%;width:100px;height:100px;"
-                                                alt="card image"></p>
-                                    </div>
-                                    <div class="col-lg-9 col-xl-9 text-center">
-                                        <h3 class="card-title">C++</h3>
-                                        <div class="progress text-center">
-                                            <div class="progress-bar" role="progressbar" style="width: 90%"
-                                                aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">90/120</div>
-                                        </div>
-                                        <a href="#" class="btn btn-outline-primary btn-block btn-border mt-2"
-                                            id="btn-solve">
-                                            Practice
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <div class="card shadow-lg p-2 bg-white rounded mt-3">
-                            <div class="card-body card-design">
-                                <div class="row">
-                                    <div class="col-lg-0 col-xl-0 my-auto text-right align-items-center">
-                                        <p class="my-auto"><img class="rounded-circle img-fluid my-auto"
-                                                src="images/java.jpg"
-                                                style="border-radius:50% 50% 50% 50%;width:100px;height:100px;"
-                                                alt="card image"></p>
-                                    </div>
-                                    <div class="col-lg-9 col-xl-9 text-center">
-                                        <h3 class="card-title">Java</h3>
-                                        <div class="progress text-center">
-                                            <div class="progress-bar" role="progressbar" style="width: 35%"
-                                                aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">75/320</div>
-                                        </div>
-                                        <a href="#" class="btn btn-outline-primary btn-block btn-border mt-2"
-                                            id="btn-solve">
-                                            Practice
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <div class="card shadow-lg p-2 bg-white rounded mt-3">
-                            <div class="card-body card-design">
-                                <div class="row">
-                                    <div class="col-lg-0 col-xl-0 my-auto text-right align-items-center">
-                                        <p class="my-auto"><img class="rounded-circle img-fluid my-auto"
-                                                src="images/python.jpg"
-                                                style="border-radius:50% 50% 50% 50%;width:100px;height:100px;"
-                                                alt="card image"></p>
-                                    </div>
-                                    <div class="col-lg-9 col-xl-9 text-center">
-                                        <h3 class="card-title">Python</h3>
-                                        <div class="progress text-center">
-                                            <div class="progress-bar" role="progressbar" style="width: 40%"
-                                                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40/400</div>
-                                        </div>
-                                        <a href="#" class="btn btn-outline-primary btn-block btn-border mt-2"
-                                            id="btn-solve">
-                                            Practice
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <h3 class="text-center mt-5">Skill available for Practice</h3>
-                <hr class="colored">
-                <div class="row mt-4 mb-3">
-                    <div class="col-md-1 col-lg-1 col-sm-1"></div>
-                    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 padding-0">
-                        <a href="problem_list.html">
-                            <div class="card card-skills">
-                                <div class="card-body text-center">
-                                    <h4 class="card-title">C</h4>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 padding-0">
-                        <a href="problem_list.html">
-                            <div class="card card-skills">
-                                <div class="card-body text-center">
-                                    <h4 class="card-title">C++</h4>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-1 col-lg-1 col-sm-1"></div>
-                </div>
-                <div class="row mt-4 mb-3">
-                    <div class="col-md-1 col-lg-1 col-sm-1"></div>
-                    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 padding-0">
-                        <a href="problem_list.html">
-                            <div class="card card-skills">
-                                <div class="card-body text-center">
-                                    <h4 class="card-title">Java</h4>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 padding-0">
-                        <a href="problem_list.html">
-                            <div class="card card-skills">
-                                <div class="card-body text-center">
-                                    <h4 class="card-title">Python</h4>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-1 col-lg-1 col-sm-1"></div>
-                </div>
-                <div class="row mt-4 mb-3">
-                    <div class="col-md-1 col-lg-1 col-sm-1"></div>
-                    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 padding-0">
-                        <a href="problem_list.html">
-                            <div class="card card-skills">
-                                <div class="card-body text-center">
-                                    <h4 class="card-title">Data Stuctures</h4>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 padding-0">
-                        <a href="problem_list.html">
-                            <div class="card card-skills">
-                                <div class="card-body text-center">
-                                    <h4 class="card-title">Algorithms</h4>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-1 col-lg-1 col-sm-1"></div>
-                </div>
-            </div>
+            </ul>
         </div>
-        <footer>
-            <div class="mt-5 footer-div">
-                <div class="container mt-3">
-                    <div class="container">
-                        <img src="images/logo.png" class="center" style="display: block; height:100px; width:260px">
-                        <div class="row">
-                            <div class="col-md-6 col-lg-6 col-sm-6  text-center my-auto">
-                                <h3 style="margin-top:10px">Let's Code, shall we?</h3>
-                                <ul class="list-unstyled list-inline social">
-                                    <li class="list-inline-item"> <a href="#"><i class="fab  fa-facebook "></i></a></li>
-                                    <li class="list-inline-item "> <a href="#"><i class="fab  fa-twitter "></i></a></li>
-                                    <li class="list-inline-item "><a href="#"><i class="fab fa-linkedin "></i></a></li>
-                                    <li class="list-inline-item "><a href="#"><i class="fab fa-github "></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6 col-lg-6 col-sm-6 text-center my-auto">
-                                <h2>Contact :</h2>
-                                <h5>Have a question or feedback? Contact Us</h5>
-                                <button class="btn-primary btn-sm">Contact Us</button>
+    </nav>
+
+
+    <div class="container mt-4">
+        <div class = "container">
+            <h3 class = "text-center">Skills Available For Practice</h3>
+            <hr class = "colored">
+            <div class="row mb-3">
+
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="card shadow-lg p-2 bg-white rounded mt-3">
+                        <div class="card-body card-design">
+                            <div class="row">
+                                <div class="col-lg-0 col-xl-0 my-auto text-right align-items-center">
+                                    <p class = "my-auto"><img class="rounded-circle img-fluid my-auto" src="images/c.jpg"style="border-radius:50% 50% 50% 50%;width:100px;height:100px;" alt="card image"></p>
+                                </div>
+                                <div class="col-lg-9 col-xl-9 text-center">
+                                    <h3 class="card-title">C</h3>
+                                    <div class="progress text-center">
+                                        <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">75/130</div>
+                                    </div>
+                                    <a href="#" class="btn btn-outline-primary btn-block btn-border mt-2" id="btn-solve">
+                                        Practice
+                                    </a>
+                                </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </footer>
-        <section id="bottom">
-            <div class="d-flex" style="width: 100%">
-                <div class="mr-auto p-2">
-                    <h5><a style="color : #fff ; margin-left:10px"> &copy;2020 codebie</a></h5>
-                </div>
-                <div class="p-2"><a style="color : #fff" href="#">Privacy Policy</a></div>
-                <div class="vl"></div>
-                <div class="p-2" style="margin-right:10px"><a style="color : #fff" href="#">About Us</a></div>
-            </div>
-        </section>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="card shadow-lg p-2 bg-white rounded mt-3">
+                        <div class="card-body card-design">
+                            <div class="row">
+                                <div class="col-lg-0 col-xl-0 my-auto text-right align-items-center">
+                                    <p class = "my-auto"><img class="rounded-circle img-fluid my-auto" src="images/cpp.jpg"style="border-radius:50% 50% 50% 50%;width:100px;height:100px;" alt="card image"></p>
+                                </div>
+                                <div class="col-lg-9 col-xl-9 text-center">
+                                    <h3 class="card-title">C++</h3>
+                                    <div class="progress text-center">
+                                        <div class="progress-bar" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">90/120</div>
+                                    </div>
+                                    <a href="#" class="btn btn-outline-primary btn-block btn-border mt-2" id="btn-solve">
+                                        Practice
+                                    </a>
+                                </div>
 
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-        </script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
-        </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="card shadow-lg p-2 bg-white rounded mt-3">
+                        <div class="card-body card-design">
+                            <div class="row">
+                                <div class="col-lg-0 col-xl-0 my-auto text-right align-items-center">
+                                    <p class = "my-auto"><img class="rounded-circle img-fluid my-auto" src="images/java.jpg"style="border-radius:50% 50% 50% 50%;width:100px;height:100px;" alt="card image"></p>
+                                </div>
+                                <div class="col-lg-9 col-xl-9 text-center">
+                                    <h3 class="card-title">Java</h3>
+                                    <div class="progress text-center">
+                                        <div class="progress-bar" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">75/320</div>
+                                    </div>
+                                    <a href="#" class="btn btn-outline-primary btn-block btn-border mt-2" id="btn-solve">
+                                        Practice
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="card shadow-lg p-2 bg-white rounded mt-3">
+                        <div class="card-body card-design">
+                            <div class="row">
+                                <div class="col-lg-0 col-xl-0 my-auto text-right align-items-center">
+                                    <p class = "my-auto"><img class="rounded-circle img-fluid my-auto" src="images/python.jpg"style="border-radius:50% 50% 50% 50%;width:100px;height:100px;" alt="card image"></p>
+                                </div>
+                                <div class="col-lg-9 col-xl-9 text-center">
+                                    <h3 class="card-title">Python</h3>
+                                    <div class="progress text-center">
+                                        <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40/400</div>
+                                    </div>
+                                    <a href="#" class="btn btn-outline-primary btn-block btn-border mt-2" id="btn-solve">
+                                        Practice
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="card shadow-lg p-2 bg-white rounded mt-3">
+                        <div class="card-body card-design">
+                            <div class="row">
+                                <div class="col-lg-0 col-xl-0 my-auto text-right align-items-center">
+                                    <p class = "my-auto"><img class="rounded-circle img-fluid my-auto" src="images/python.jpg"style="border-radius:50% 50% 50% 50%;width:100px;height:100px;" alt="card image"></p>
+                                </div>
+                                <div class="col-lg-9 col-xl-9 text-center">
+                                    <h3 class="card-title">Data Structure</h3>
+                                    <div class="progress text-center">
+                                        <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40/400</div>
+                                    </div>
+                                    <a href="#" class="btn btn-outline-primary btn-block btn-border mt-2" id="btn-solve">
+                                        Practice
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="card shadow-lg p-2 bg-white rounded mt-3">
+                        <div class="card-body card-design">
+                            <div class="row">
+                                <div class="col-lg-0 col-xl-0 my-auto text-right align-items-center">
+                                    <p class = "my-auto"><img class="rounded-circle img-fluid my-auto" src="images/python.jpg"style="border-radius:50% 50% 50% 50%;width:100px;height:100px;" alt="card image"></p>
+                                </div>
+                                <div class="col-lg-9 col-xl-9 text-center">
+                                    <h3 class="card-title">Algorithm</h3>
+                                    <div class="progress text-center">
+                                        <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40/400</div>
+                                    </div>
+                                    <a href="#" class="btn btn-outline-primary btn-block btn-border mt-2" id="btn-solve">
+                                        Practice
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row">
+            <div style="padding-top: 3%;"></div>
+        </div>
+
+
+
+            <section id ="footer">
+
+
+            	<div class="d-flex">
+            		<div class="mr-auto p-2"><h5 ><a style="color : #fff ; margin-left:10px" > &copy;2020 codebie</a></h5></div>
+            		<div class="p-2"><a style="color : #fff" href="#">Privacy Policy</a></div>
+            		<div class="vl"></div>
+            		<div class="p-2" style="margin-right:10px"><a style="color : #fff" href="#">About Us</a></div>
+            	</div>
+
+
+
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
 </body>
 </html>
