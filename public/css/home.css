@@ -1,5 +1,7 @@
 body {
   background-color: whitesmoke;
+  overflow-x: hidden;
+
 }
 
 .badge-notification {
@@ -23,10 +25,6 @@ body {
   background-color: #db5565;
 }
 
-#bottom {
-  background-color: #1a53ff;
-}
-
 .colored {
   margin-top: 5px;
   margin-bottom: 5px;
@@ -34,6 +32,7 @@ body {
   border-top: 0;
   background: #c4e17f;
   border-radius: 5px;
+  /*background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);*/
   background-image: linear-gradient(to right, #5B86E5, #36D1DC);
   padding-right: 50%;
   background-origin: content-box;
@@ -58,6 +57,16 @@ body {
 .padding-0 a:hover {
   text-decoration: none;
 }
+
+#footer {
+  background-color: #1a53ff;
+}
+
+
+
+
+/* pore add kora */
+
 
 .center {
   display: block;
@@ -90,24 +99,8 @@ body {
   padding-right: 10px;
 }
 
-.footer-div {
-  border-top: 0px solid black;
-}
-
 .nav-link {
   font-size: 1.1em !important;
-}
-
-#nav-bar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-#nav-bar1 {
-  position: sticky;
-  top: 0;
-  z-index: 10;
 }
 
 .vl {
