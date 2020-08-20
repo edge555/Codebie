@@ -12,7 +12,7 @@ const fs = require('fs');
 const unirest = require('unirest');
 
 var ids=[];
-var curuser,curproblem,curproblems;
+var curuser,curproblem,curoutput,curproblems,verdict;
 
 // Connect to mongoose
 mongoose.Promise=global.Promise;
@@ -61,7 +61,6 @@ app.get('/admin',function(req,res){
     } else {
         res.render('accessdenied');
     }
-    
 });
 
 app.post('/admin',function(req,res){
@@ -288,27 +287,36 @@ function getoutput(submissiontoken, callback) {
     req.end(function (res) {
         if (res.error) 
             throw new Error(res.error);
-        console.log(res.body);
+        //console.log(res.body);
+        callback(res.body);
     });
 }
 
 app.post('/problem',function(req,res){
-    console.log("Posted in problem");
+    //console.log(curproblem);
     // Code Fetched
     var submission = {
         code : req.body.submittedcode,
         language : req.body.language
     };
-    var now=curproblem;
-    console.log(curuser);
     var submissiontoken;
-    var judgeinput = "Arthur";
+    var judgeinput = curproblem.sampleinput;
     var token=gettoken(submission,judgeinput, function(result) {
         submissiontoken = result;
     });
     setTimeout(function() {
         //console.log(submissiontoken);
-        var check = getoutput(submissiontoken);
+        var check=getoutput(submissiontoken,function(result) {
+            //console.log(result);
+            curoutput=result;
+            console.log(curproblem);
+            if(curoutput.stdout==curproblem.sampleoutput){
+                verdict = "Accepted";
+            } else {
+                verdict = "Wrong Answer";
+            }
+            res.redirect('verdict');
+        });
     }, 5000);
 });
 
@@ -325,7 +333,7 @@ app.get('/problems',function(req,res){
 });
 
 app.post('/problems',function(req,res){
-    console.log("Posted");
+    console.log("Posted from problems");
 });
 
 // Find problem and redirect to show and submit page
@@ -335,11 +343,23 @@ app.get('/problems/:id',function(req,res){
         .lean()
         .then(problems =>{
             ids =[];
+            curproblem = problems,
             res.render('problem',{
                 curproblem : problems,
                 curuser : curuser
             });
         });
+});
+
+app.get('/verdict',function(req,res){
+    if(curuser==null){
+        res.redirect('enter');
+    } else {
+        res.render('verdict',{
+            verdict : verdict,
+            curoutput : curoutput
+        });
+    }
 });
 
 app.listen(3000,function(){
