@@ -12,7 +12,7 @@ const fs = require('fs');
 const unirest = require('unirest');
 
 var ids=[];
-var curuser,curproblem;
+var curuser,curproblem,curproblems;
 
 // Connect to mongoose
 mongoose.Promise=global.Promise;
@@ -53,7 +53,15 @@ app.use(function(req,res,next){
 
 // Admin access
 app.get('/admin',function(req,res){
-    res.render('admin/admin');
+    if(curuser==null){
+        res.redirect('enter');
+    }
+    else if(curuser.username=="edge555"){
+        res.render('admin/admin');
+    } else {
+        res.render('accessdenied');
+    }
+    
 });
 
 app.post('/admin',function(req,res){
@@ -71,7 +79,14 @@ app.post('/admin',function(req,res){
 
 // To add problems
 app.get('/adminaddproblem',function(req,res){
-    res.render('admin/adminaddproblem');
+    if(curuser==null){
+        res.redirect('enter');
+    }
+    else if(curuser.username=="edge555"){
+        res.render('admin/adminaddproblem');
+    } else {
+        res.render('accessdenied');
+    }
 });
 
 app.post('/adminaddproblem',function(req,res){
@@ -99,7 +114,14 @@ app.post('/adminaddproblem',function(req,res){
 
 // To edit problems
 app.get('/admineditproblem',function(req,res){
-    res.render('admin/admineditproblem');
+    if(curuser==null){
+        res.redirect('enter');
+    }
+    else if(curuser.username=="edge555"){
+        res.render('admin/admineditproblem');
+    } else {
+        res.render('accessdenied');
+    }
 });
 
 app.post('/admineditproblem',function(req,res){
@@ -108,7 +130,14 @@ app.post('/admineditproblem',function(req,res){
 
 // To add tutorial
 app.get('/adminaddtutorial',function(req,res){
-    res.render('admin/adminaddtutorial');
+    if(curuser==null){
+        res.redirect('enter');
+    }
+    else if(curuser.username=="edge555"){
+        res.render('admin/adminaddtutorial');
+    } else {
+        res.render('accessdenied');
+    }
 });
 
 app.post('/adminaddtutorial',function(req,res){
@@ -117,7 +146,14 @@ app.post('/adminaddtutorial',function(req,res){
 
 // To edit tutorial
 app.get('/adminedittutorial',function(req,res){
-    res.render('admin/adminedittutorial');
+    if(curuser==null){
+        res.redirect('enter');
+    }
+    else if(curuser.username=="edge555"){
+        res.render('admin/adminedittutorial');
+    } else {
+        res.render('accessdenied');
+    }
 });
 
 app.post('/adminedittutorial',function(req,res){
@@ -131,7 +167,11 @@ app.get('/',function(req,res){
 
 // About route
 app.get('/about',function(req,res){
-   res.render('about');
+    if(curuser==null){
+        res.redirect('enter');
+    } else {
+        res.render('about');
+    }
 });
 
 // Login/Signup Route
@@ -170,14 +210,18 @@ app.post('/enter',function(req,res){
 
 // Home Route
 app.get('/home',function(req,res){
-    res.render('home', {curuser: curuser});
+    if(curuser==null){
+        res.redirect('enter');
+    } else {
+        res.render('home', {curuser: curuser});
+    }
 });
 
 app.post('/home',function(req,res){
     Problem.find({tags:req.body.submit})
         .lean()
         .then(problems =>{
-            req.session.message = problems;
+            curproblems = problems;
             res.redirect('/problems');
         });
 });
@@ -249,12 +293,14 @@ function getoutput(submissiontoken, callback) {
 }
 
 app.post('/problem',function(req,res){
+    console.log("Posted in problem");
     // Code Fetched
     var submission = {
         code : req.body.submittedcode,
         language : req.body.language
     };
-    console.log(curproblem);
+    var now=curproblem;
+    console.log(curuser);
     var submissiontoken;
     var judgeinput = "Arthur";
     var token=gettoken(submission,judgeinput, function(result) {
@@ -267,12 +313,15 @@ app.post('/problem',function(req,res){
 });
 
 app.get('/problems',function(req,res){
-    var curproblems = req.session.message;
-    //console.log(curproblems);
-    res.render('problems', {
-        curuser : curuser,
-        curproblems: curproblems
-    });
+    if(curuser==null){
+        res.redirect('enter');
+    } else {
+        //console.log(curproblems);
+        res.render('problems', {
+            curuser : curuser,
+            curproblems: curproblems
+        });
+    }
 });
 
 app.post('/problems',function(req,res){
