@@ -24,8 +24,8 @@ const ProblemSchema = new Schema({
         default: 'constraints'
     },
     timelimit : {
-        type : String,
-        default: '1s'
+        type : Number,
+        default: 1
     },
     sampleinput : {
         type : String,

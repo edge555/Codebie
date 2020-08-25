@@ -195,7 +195,11 @@ app.post('/adminedittutorial',function(req,res){
 
 // Index route
 app.get('/',function(req,res){
-    res.render('index');
+    if(curuser==null){
+        res.render('index');
+    } else {
+        res.redirect('home');
+    }
 });
 
 // About route
@@ -209,7 +213,11 @@ app.get('/about',function(req,res){
 
 // Login/Signup Route
 app.get('/enter',function(req,res){
-    res.render('enter');
+    if(curuser==null){
+        res.render('enter');
+    } else {
+        res.redirect('home');
+    }
 });
 
 app.post('/enter',function(req,res){
@@ -341,10 +349,11 @@ app.post('/problem',function(req,res){
     setTimeout(function() {
         //console.log(submissiontoken);
         var check=getoutput(submissiontoken,function(result) {
-            //console.log(result);
             curoutput=result;
-            console.log(curproblem);
-            if(curoutput.stdout==curproblem.sampleoutput){
+            if(curoutput.time>curproblem.timelimit){
+                verdict="Time Limit";
+            }
+            else if(curoutput.stdout==curproblem.sampleoutput){
                 verdict = "Accepted";
             } else {
                 verdict = "Wrong Answer";

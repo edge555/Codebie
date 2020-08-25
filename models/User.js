@@ -35,6 +35,14 @@ const UserSchema = new Schema({
     pysolved:{
         type : Number,
         default : 0
+    },
+    dssolved:{
+        type : Number,
+        default : 0
+    },
+    algosolved:{
+        type : Number,
+        default : 0
     }
 });
 mongoose.model('users',UserSchema);
