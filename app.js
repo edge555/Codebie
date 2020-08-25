@@ -13,6 +13,7 @@ const unirest = require('unirest');
 
 var ids=[];
 var curuser,curproblem,curoutput,curproblems,verdict;
+var cureditproblem,curedittutorial;
 
 // Connect to mongoose
 mongoose.Promise=global.Promise;
@@ -64,9 +65,11 @@ app.get('/admin',function(req,res){
 });
 
 app.post('/admin',function(req,res){
+    //console.log(req.body);
     if(req.body.submit=="addproblem"){
         res.redirect('adminaddproblem');
     } else if (req.body.submit=="editproblem"){
+        cureditproblem=req.body.problemname;
         res.redirect('admineditproblem');
     } else if (req.body.submit=="addtutorial"){
         res.redirect('adminaddtutorial');
@@ -113,18 +116,49 @@ app.post('/adminaddproblem',function(req,res){
 
 // To edit problems
 app.get('/admineditproblem',function(req,res){
+    console.log(cureditproblem);
     if(curuser==null){
         res.redirect('enter');
     }
     else if(curuser.username=="edge555"){
-        res.render('admin/admineditproblem');
+        Problem.findOne({code : cureditproblem})
+        .lean()
+        .then(problems =>{
+            //console.log(problems);
+            res.render('admin/admineditproblem',{
+                cureditproblem : problems,
+            });
+        });
+        
     } else {
         res.render('accessdenied');
     }
 });
 
 app.post('/admineditproblem',function(req,res){
-    
+    console.log("Admin edit problem");
+    Problem.findOne({
+        code:cureditproblem
+    })
+    .then(problems=>{
+        //console.log(req.body);
+        problems.name = req.body.name;
+        problems.code = req.body.code;
+        problems.difficulty = req.body.difficulty;
+        problems.statement = req.body.statement;
+        problems.constraints = req.body.constraints;
+        problems.timelimit = req.body.timelimit;
+        problems.sampleinput = req.body.sampleinput;
+        problems.sampleoutput = req.body.sampleoutput;
+        problems.hiddeninput = req.body.hiddeninput;
+        problems.hiddenoutput = req.body.hiddenoutput;
+        problems.tags = req.body.tags;
+        problems.solvecount = req.body.solvecount;
+        problems.save()
+        .then(notes=>{
+            res.redirect('admin');
+        });
+    });
 });
 
 // To add tutorial
@@ -343,7 +377,7 @@ app.get('/problems/:id',function(req,res){
         .lean()
         .then(problems =>{
             ids =[];
-            curproblem = problems,
+            curproblem = problems;
             res.render('problem',{
                 curproblem : problems,
                 curuser : curuser
