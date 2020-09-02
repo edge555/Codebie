@@ -13,7 +13,7 @@ const unirest = require('unirest');
 
 var ids=[];
 var curuser,curproblem,curoutput,curproblems,verdict;
-var cureditproblem,curedittutorial;
+var curtoken,cureditproblem,curedittutorial;
 
 // Connect to mongoose
 mongoose.Promise=global.Promise;
@@ -254,6 +254,7 @@ app.get('/home',function(req,res){
     if(curuser==null){
         res.redirect('enter');
     } else {
+        console.log(curuser);
         res.render('home', {curuser: curuser});
     }
 });
@@ -327,10 +328,15 @@ function getoutput(submissiontoken, callback) {
         "useQueryString": true
     });
     req.end(function (res) {
-        if (res.error) 
-            throw new Error(res.error);
-        //console.log(res.body);
-        callback(res.body);
+        if (res.error) {
+            //throw new Error(res.error);
+            verdict="Compilation Error";
+            callback(verdict);
+            //console.log("Compiler error");
+        } else {
+            //console.log(res.body);
+            callback(res.body);
+        }
     });
 }
 
@@ -345,18 +351,24 @@ app.post('/problem',function(req,res){
     var judgeinput = curproblem.sampleinput;
     var token=gettoken(submission,judgeinput, function(result) {
         submissiontoken = result;
+        curtoken = submissiontoken;
     });
     setTimeout(function() {
         //console.log(submissiontoken);
         var check=getoutput(submissiontoken,function(result) {
+            //console.log(result);
             curoutput=result;
-            if(curoutput.time>curproblem.timelimit){
-                verdict="Time Limit";
-            }
-            else if(curoutput.stdout==curproblem.sampleoutput){
-                verdict = "Accepted";
+            if(result=="Compilation Error"){
+                verdict=result;
             } else {
-                verdict = "Wrong Answer";
+                 if(curoutput.time>curproblem.timelimit){
+                    verdict="Time Limit";
+                }
+                else if(curoutput.stdout==curproblem.sampleoutput){
+                    verdict = "Accepted";
+                } else {
+                    verdict = "Wrong Answer";
+                }
             }
             res.redirect('verdict');
         });
@@ -398,10 +410,42 @@ app.get('/verdict',function(req,res){
     if(curuser==null){
         res.redirect('enter');
     } else {
-        res.render('verdict',{
-            verdict : verdict,
-            curoutput : curoutput
-        });
+        var alreadysolved=false;
+        if(verdict=="Accepted"){
+            console.log("Verdict get");
+            //console.log(curtoken);
+            User.findOne({
+                username : curuser.username
+            })
+            .then(user =>{
+                user.cppsolved.forEach(solve => {
+                    if(solve.problemcode==curproblem.code){
+                        alreadysolved = true;
+                    }
+                    //console.log(solve.problemcode);
+                });
+                if(alreadysolved){
+                    user.cppsolvecount++;
+                } 
+                const newSolve = {
+                    problemcode : curproblem.code,
+                    token : curtoken
+                }
+                user.cppsolved.unshift(newSolve); // add to beginning
+                user.save()
+                .then(user =>{
+                    res.render('verdict',{
+                        verdict : verdict,
+                        curoutput : curoutput
+                    });
+                });
+            });
+        } else {
+            res.render('verdict',{
+                verdict : verdict,
+                curoutput : curoutput
+            });
+        }
     }
 });
 

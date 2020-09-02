@@ -20,29 +20,89 @@ const UserSchema = new Schema({
         required:true,
         default : 'name'
     },
-    csolved:{
+    csolvecount:{
         type : Number,
         default : 0
     },
-    cppsolved:{
+    cppsolvecount:{
         type : Number,
         default : 0
     },
-    javasolved:{
+    javasolvecount:{
         type : Number,
         default : 0
     },
-    pysolved:{
+    pysolvecount:{
         type : Number,
         default : 0
     },
-    dssolved:{
+    dssolvecount:{
         type : Number,
         default : 0
     },
-    algosolved:{
+    algosolvecount:{
         type : Number,
         default : 0
-    }
+    },
+    csolved:[{
+        problem :{
+            type: String,
+            required: true
+        },
+        token :{
+            type: String,
+            required: true
+        }
+    }],
+    cppsolved:[{
+        problemcode :{
+            type: String,
+            required: true
+        },
+        token :{
+            type: String,
+            required: true
+        }
+    }],
+    javasolved:[{
+        problem :{
+            type: String,
+            required: true
+        },
+        token :{
+            type: String,
+            required: true
+        }
+    }],
+    pysolved:[{
+        problem :{
+            type: String,
+            required: true
+        },
+        token :{
+            type: String,
+            required: true
+        }
+    }],
+    dssolved:[{
+        problem :{
+            type: String,
+            required: true
+        },
+        token :{
+            type: String,
+            required: true
+        }
+    }],
+    algosolved:[{
+        problem :{
+            type: String,
+            required: true
+        },
+        token :{
+            type: String,
+            required: true
+        }
+    }]
 });
 mongoose.model('users',UserSchema);
