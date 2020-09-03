@@ -419,6 +419,7 @@ app.get('/verdict',function(req,res){
         .then(user =>{
             var alreadysolved=false;
             if(verdict=="Accepted"){
+                // Add solve and token to user
                 if(section=="c"){
                     user.csolved.forEach(solve => {
                         if(solve.problemcode==curproblem.code){
@@ -490,14 +491,28 @@ app.get('/verdict',function(req,res){
             } else if(section=="algo"){
                 user.algosolved.unshift(newSolve); 
             }
-            user.save()
-            .then(user =>{
-                res.render('verdict',{
-                    verdict : verdict,
-                    curoutput : curoutput
-                });
-            });
+            user.save();        
         });
+        // add user and token to problem
+        //console.log(curproblem);
+         Problem.findOne({
+            code:curproblem.code
+        })
+        .then(problems=>{
+            const newSolver = {
+                username : curuser.username,
+                token : curtoken
+            }
+            problems.solver.unshift(newSolver);
+            problems.solvecount++;
+            problems.save()
+            
+        });
+        res.render('verdict',{
+            curuser : curuser,
+            verdict : verdict,
+            curoutput : curoutput
+        });     
     }
 });
 

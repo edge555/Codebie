@@ -51,6 +51,14 @@ const ProblemSchema = new Schema({
     solvecount : {
         type : Number,
         default : 0
-    }
+    },
+    solver:[{
+        username :{
+            type: String
+        },
+        token :{
+            type: String
+        }
+    }]
 });
 mongoose.model('problems',ProblemSchema);
