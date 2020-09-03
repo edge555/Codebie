@@ -11,7 +11,7 @@ const { exec } = require("child_process");
 const fs = require('fs');
 const unirest = require('unirest');
 
-var ids=[];
+var ids=[],section;
 var curuser,curproblem,curoutput,curproblems,verdict;
 var curtoken,cureditproblem,curedittutorial;
 
@@ -260,6 +260,7 @@ app.get('/home',function(req,res){
 });
 
 app.post('/home',function(req,res){
+    section = req.body.submit;
     Problem.find({tags:req.body.submit})
         .lean()
         .then(problems =>{
@@ -410,42 +411,93 @@ app.get('/verdict',function(req,res){
     if(curuser==null){
         res.redirect('enter');
     } else {
-        var alreadysolved=false;
-        if(verdict=="Accepted"){
-            console.log("Verdict get");
-            //console.log(curtoken);
-            User.findOne({
-                username : curuser.username
-            })
-            .then(user =>{
-                user.cppsolved.forEach(solve => {
-                    if(solve.problemcode==curproblem.code){
-                        alreadysolved = true;
-                    }
-                    //console.log(solve.problemcode);
-                });
-                if(alreadysolved){
-                    user.cppsolvecount++;
-                } 
-                const newSolve = {
-                    problemcode : curproblem.code,
-                    token : curtoken
-                }
-                user.cppsolved.unshift(newSolve); // add to beginning
-                user.save()
-                .then(user =>{
-                    res.render('verdict',{
-                        verdict : verdict,
-                        curoutput : curoutput
+        console.log(section);
+        //console.log(curtoken);
+        User.findOne({
+            username : curuser.username
+        })
+        .then(user =>{
+            var alreadysolved=false;
+            if(verdict=="Accepted"){
+                if(section=="c"){
+                    user.csolved.forEach(solve => {
+                        if(solve.problemcode==curproblem.code){
+                            alreadysolved = true;
+                        }
                     });
+                } else if(section=="cpp"){
+                    user.cppsolved.forEach(solve => {
+                        if(solve.problemcode==curproblem.code){
+                            alreadysolved = true;
+                        }
+                    });
+                } else if(section=="java"){
+                    user.javasolved.forEach(solve => {
+                        if(solve.problemcode==curproblem.code){
+                            alreadysolved = true;
+                        }
+                    });
+                } else if(section=="py"){
+                    user.pysolved.forEach(solve => {
+                        if(solve.problemcode==curproblem.code){
+                            alreadysolved = true;
+                        }
+                    });
+                } else if(section=="ds"){
+                    user.dssolved.forEach(solve => {
+                        if(solve.problemcode==curproblem.code){
+                            alreadysolved = true;
+                        }
+                    });
+                } else if(section=="algo"){
+                    user.algosolved.forEach(solve => {
+                        if(solve.problemcode==curproblem.code){
+                            alreadysolved = true;
+                        }
+                    });
+                }
+                
+                if(!alreadysolved){
+                    if(section=="c"){
+                        user.csolvecount++;
+                    } else if(section=="cpp"){
+                        user.cppsolvecount++;
+                    } else if(section=="java"){
+                        user.javasolvecount++;
+                    } else if(section=="py"){
+                        user.pysolvecount++;
+                    } else if(section=="ds"){
+                        user.dssolvecount++;
+                    } else if(section=="algo"){
+                        user.algosolvecount++;
+                    }
+                } 
+            }
+            const newSolve = {
+                problemcode : curproblem.code,
+                token : curtoken
+            }
+            if(section=="c"){
+                user.csolved.unshift(newSolve); // unshift adds to beginning
+            } else if(section=="cpp"){
+                user.cppsolved.unshift(newSolve); 
+            } else if(section=="java"){
+                user.javasolved.unshift(newSolve); 
+            } else if(section=="py"){
+                user.pysolved.unshift(newSolve); 
+            } else if(section=="ds"){
+                user.dssolved.unshift(newSolve); 
+            } else if(section=="algo"){
+                user.algosolved.unshift(newSolve); 
+            }
+            user.save()
+            .then(user =>{
+                res.render('verdict',{
+                    verdict : verdict,
+                    curoutput : curoutput
                 });
             });
-        } else {
-            res.render('verdict',{
-                verdict : verdict,
-                curoutput : curoutput
-            });
-        }
+        });
     }
 });
 

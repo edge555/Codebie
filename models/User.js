@@ -45,7 +45,7 @@ const UserSchema = new Schema({
         default : 0
     },
     csolved:[{
-        problem :{
+        problemcode :{
             type: String,
             required: true
         },
@@ -65,7 +65,7 @@ const UserSchema = new Schema({
         }
     }],
     javasolved:[{
-        problem :{
+        problemcode :{
             type: String,
             required: true
         },
@@ -75,7 +75,7 @@ const UserSchema = new Schema({
         }
     }],
     pysolved:[{
-        problem :{
+        problemcode :{
             type: String,
             required: true
         },
@@ -85,7 +85,7 @@ const UserSchema = new Schema({
         }
     }],
     dssolved:[{
-        problem :{
+        problemcode :{
             type: String,
             required: true
         },
@@ -95,7 +95,7 @@ const UserSchema = new Schema({
         }
     }],
     algosolved:[{
-        problem :{
+        problemcode :{
             type: String,
             required: true
         },
