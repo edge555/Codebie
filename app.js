@@ -12,6 +12,7 @@ const fs = require('fs');
 const unirest = require('unirest');
 
 var ids=[],section;
+//var ccnt=0,cppcnt=0,javacnt=0,pycnt=0,dscnt=0,algocnt=0;
 var curuser,curproblem,curoutput,curproblems,verdict;
 var curtoken,cureditproblem,curedittutorial;
 
@@ -254,8 +255,40 @@ app.get('/home',function(req,res){
     if(curuser==null){
         res.redirect('enter');
     } else {
-        console.log(curuser);
-        res.render('home', {curuser: curuser});
+        // Store number of problems in each sections
+        counter = {
+            ccnt : 0,
+            cppcnt : 0,
+            javacnt : 0,
+            pycnt : 0,
+            dscnt : 0,
+            algocnt : 0
+        }
+        Problem.find({})
+        .then(problems =>{
+            //console.log(problems);
+            problems.forEach(problem => {
+                //console.log(problem.tags);
+                if(problem.tags=="c"){
+                    counter.ccnt++;
+                } else if(problem.tags=="cpp"){
+                    counter.cppcnt++;
+                } else if(problem.tags=="java"){
+                    counter.javacnt++;
+                } else if(problem.tags=="py"){
+                    counter.pycnt++;
+                } else if(problem.tags=="ds"){
+                    counter.dscnt++;
+                } else if(problem.tags=="algo"){
+                    counter.algocnt++;
+                }
+            });
+            console.log(counter);
+            res.render('home', {
+                curuser : curuser,
+                counter : counter
+            });
+        });
     }
 });
 
@@ -493,8 +526,7 @@ app.get('/verdict',function(req,res){
             }
             user.save();        
         });
-        // add user and token to problem
-        //console.log(curproblem);
+        // Add user and token to problem
          Problem.findOne({
             code:curproblem.code
         })
@@ -506,7 +538,6 @@ app.get('/verdict',function(req,res){
             problems.solver.unshift(newSolver);
             problems.solvecount++;
             problems.save()
-            
         });
         res.render('verdict',{
             curuser : curuser,
