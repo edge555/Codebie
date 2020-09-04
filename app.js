@@ -11,8 +11,7 @@ const { exec } = require("child_process");
 const fs = require('fs');
 const unirest = require('unirest');
 
-var ids=[],section;
-//var ccnt=0,cppcnt=0,javacnt=0,pycnt=0,dscnt=0,algocnt=0;
+var ids=[],section,curlang;
 var curuser,curproblem,curoutput,curproblems,verdict;
 var curtoken,cureditproblem,curedittutorial;
 
@@ -156,7 +155,7 @@ app.post('/admineditproblem',function(req,res){
         problems.tags = req.body.tags;
         problems.solvecount = req.body.solvecount;
         problems.save()
-        .then(notes=>{
+        .then(problems=>{
             res.redirect('admin');
         });
     });
@@ -283,10 +282,22 @@ app.get('/home',function(req,res){
                     counter.algocnt++;
                 }
             });
+            percentage = {
+                cper : (curuser.csolvecount*100)/counter.ccnt,
+                cppper : (curuser.cppsolvecount*100)/counter.cppcnt,
+                javaper : (curuser.javasolvecount*100)/counter.javacnt,
+                pyper : (curuser.pysolvecount*100)/counter.pycnt,
+                dsper : (curuser.dssolvecount*100)/counter.dscnt,
+                algoper : (curuser.algosolvecount*100)/counter.algocnt
+            }
             console.log(counter);
+            console.log(percentage);
+           //console.log("In home");
+            console.log(curuser);
             res.render('home', {
                 curuser : curuser,
-                counter : counter
+                counter : counter,
+                percentage : percentage
             });
         });
     }
@@ -330,6 +341,7 @@ function gettoken(submission,input, callback) {
     */
     //console.log(submission);
     var lang_id;
+    curlang = submission.language;
     if(submission.language=="c"){
         lang_id = 50;
     } else if(submission.language=="cpp"){
@@ -392,16 +404,20 @@ app.post('/problem',function(req,res){
         var check=getoutput(submissiontoken,function(result) {
             //console.log(result);
             curoutput=result;
-            if(result=="Compilation Error"){
-                verdict=result;
+            if((section!="algo" || section!="ds") && section!=curlang){
+               verdict = "Language Rejected"
             } else {
-                 if(curoutput.time>curproblem.timelimit){
-                    verdict="Time Limit";
-                }
-                else if(curoutput.stdout==curproblem.sampleoutput){
-                    verdict = "Accepted";
+                if(result=="Compilation Error"){
+                    verdict=result;
                 } else {
-                    verdict = "Wrong Answer";
+                     if(curoutput.time>curproblem.timelimit){
+                        verdict="Time Limit";
+                    }
+                    else if(curoutput.stdout==curproblem.sampleoutput){
+                        verdict = "Accepted";
+                    } else {
+                        verdict = "Wrong Answer";
+                    }
                 }
             }
             res.redirect('verdict');
@@ -444,7 +460,7 @@ app.get('/verdict',function(req,res){
     if(curuser==null){
         res.redirect('enter');
     } else {
-        console.log(section);
+        //console.log(section);
         //console.log(curtoken);
         User.findOne({
             username : curuser.username
@@ -490,7 +506,6 @@ app.get('/verdict',function(req,res){
                         }
                     });
                 }
-                
                 if(!alreadysolved){
                     if(section=="c"){
                         user.csolvecount++;
@@ -524,7 +539,8 @@ app.get('/verdict',function(req,res){
             } else if(section=="algo"){
                 user.algosolved.unshift(newSolve); 
             }
-            user.save();        
+            user.save();
+            curuser=user;        
         });
         // Add user and token to problem
          Problem.findOne({
