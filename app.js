@@ -375,27 +375,17 @@ function getoutput(submissiontoken, callback) {
     });
     req.end(function (res) {
         if (res.error) {
-            //throw new Error(res.error);
             verdict="Compilation Error";
             callback(verdict);
-            //console.log("Compiler error");
         } else {
-            //console.log(res.body);
             callback(res.body);
         }
     });
 }
 
-app.post('/problem',function(req,res){
-    //console.log(curproblem);
-    // Code Fetched
-    var submission = {
-        code : req.body.submittedcode,
-        language : req.body.language
-    };
-    var submissiontoken;
-    var judgeinput = curproblem.sampleinput;
-    var token=gettoken(submission,judgeinput, function(result) {
+function getverdict(submission,input,output,callback){
+    var submissiontoken,tempverdict;
+    var token=gettoken(submission,input, function(result) {
         submissiontoken = result;
         curtoken = submissiontoken;
     });
@@ -405,24 +395,59 @@ app.post('/problem',function(req,res){
             //console.log(result);
             curoutput=result;
             if((section!="algo" || section!="ds") && section!=curlang){
-               verdict = "Language Rejected"
+                tempverdict = "Language Rejected";
             } else {
                 if(result=="Compilation Error"){
-                    verdict=result;
+                    tempverdict=result;
                 } else {
                      if(curoutput.time>curproblem.timelimit){
-                        verdict="Time Limit";
+                        tempverdict="Time Limit";
                     }
-                    else if(curoutput.stdout==curproblem.sampleoutput){
-                        verdict = "Accepted";
+                    else if(curoutput.stdout==output){
+                        tempverdict = "Accepted";
                     } else {
-                        verdict = "Wrong Answer";
+                        tempverdict = "Wrong Answer";
                     }
                 }
             }
-            res.redirect('verdict');
+            callback(tempverdict);
         });
     }, 5000);
+}
+
+app.post('/problem',function(req,res){
+    if(curuser==null){
+        res.redirect('enter');
+    }
+    //console.log(curproblem);
+    // Code Fetched
+    var submission = {
+        code : req.body.submittedcode,
+        language : req.body.language
+    }
+    var sampleverdict,hiddenverdict;
+    var verdict1 = getverdict(submission,curproblem.sampleinput,curproblem.sampleoutput,function(result){
+        console.log(result);
+        sampleverdict = result;
+    });
+    var verdict2 = getverdict(submission,curproblem.hiddeninput,curproblem.hiddenoutput,function(result){
+        console.log(result);
+        hiddenverdict = result;
+    });
+    setTimeout(function() {
+        if(sampleverdict=="Language Rejected"){
+            verdict="Language Rejected";
+        } else if(sampleverdict=="Compilation Error" || hiddenverdict=="Compilation Error") {
+            verdict="Compilation Error";
+        } else if(sampleverdict=="Time Limit" || hiddenverdict=="Time Limit") {
+            verdict="Time Limit";
+        } else if(sampleverdict=="Wrong Answer" || hiddenverdict=="Wrong Answer") {
+            verdict="Wrong Answer";
+        } else {
+            verdict="Accepted";
+        }
+        res.redirect('verdict');
+    }, 12000);
 });
 
 app.get('/problems',function(req,res){
@@ -443,6 +468,9 @@ app.post('/problems',function(req,res){
 
 // Find problem and redirect to show and submit page
 app.get('/problems/:id',function(req,res){
+    if(curuser==null){
+        res.redirect('enter');
+    }
     ids.push(req.params);
     Problem.findOne({code : ids[0].id})
         .lean()
