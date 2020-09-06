@@ -1,5 +1,5 @@
 body {
-    overflow: hidden; /* Hide scrollbars */
+    overflow-x: hidden; /* Hide scrollbars */
 
     font-size: 18px;
     font-family: 'Open Sans',sans-serif;
