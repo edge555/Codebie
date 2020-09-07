@@ -11,9 +11,10 @@ const { exec } = require("child_process");
 const fs = require('fs');
 const unirest = require('unirest');
 
-var ids=[],section,curlang,verdict,curoutput
-var curuser,curproblem,curproblems,curtutorial,curproblems,curtutorials;
+var ids=[],section,curuser,curlang,verdict,curoutput
+var curproblem,curproblems,curtutorial,curtutorials;
 var curtoken,cureditproblem,curedittutorial;
+var curdeleteproblem,curdeletetutorial;
 
 // Connect to mongoose
 mongoose.Promise=global.Promise;
@@ -73,11 +74,20 @@ app.post('/admin',function(req,res){
     } else if (req.body.submit=="editproblem"){
         cureditproblem=req.body.problemname;
         res.redirect('admineditproblem');
+    } else if (req.body.submit=="deleteproblem"){
+        curdeleteproblem=req.body.problemname;
     } else if (req.body.submit=="addtutorial"){
         res.redirect('adminaddtutorial');
+    } else if (req.body.submit=="edittutorial"){
+        curedittutorial=req.body.tutorialname;
+        res.redirect('adminedittutorial');
     } 
     else {
-        res.redirect('adminedittutorial');
+        curdeletetutorial=req.body.tutorialname;
+        Tutorial.deleteOne({code: curdeletetutorial})
+        .then(() => {
+            res.redirect("/admin");
+        });
     }
 });
 
@@ -94,7 +104,7 @@ app.get('/adminaddproblem',function(req,res){
 });
 
 app.post('/adminaddproblem',function(req,res){
-    console.log(req.body);
+    //console.log(req.body);
     const newProblem = {
         name : req.body.name,
         code : req.body.code,
@@ -118,7 +128,7 @@ app.post('/adminaddproblem',function(req,res){
 
 // To edit problems
 app.get('/admineditproblem',function(req,res){
-    console.log(cureditproblem);
+    //console.log(cureditproblem);
     if(curuser==null){
         res.redirect('enter');
     }
@@ -138,7 +148,7 @@ app.get('/admineditproblem',function(req,res){
 });
 
 app.post('/admineditproblem',function(req,res){
-    console.log("Admin edit problem");
+    //console.log("Admin edit problem");
     Problem.findOne({
         code:cureditproblem
     })
@@ -176,7 +186,7 @@ app.get('/adminaddtutorial',function(req,res){
 });
 
 app.post('/adminaddtutorial',function(req,res){
-    console.log(req.body);
+    //console.log(req.body);
     const newTutorial = {
         name : req.body.name,
         code : req.body.code,
@@ -196,14 +206,35 @@ app.get('/adminedittutorial',function(req,res){
         res.redirect('enter');
     }
     else if(curuser.username=="edge555"){
-        res.render('admin/adminedittutorial');
+        //console.log(curedittutorial);
+        Tutorial.findOne({code : curedittutorial})
+            .then(tutorials=>{
+                res.render('admin/adminedittutorial',{
+                    curedittutorial:tutorials
+                });
+            })
+        
     } else {
         res.render('accessdenied');
     }
 });
 
 app.post('/adminedittutorial',function(req,res){
-    
+    console.log("Admin edit tutorial");
+    Tutorial.findOne({
+        code:curedittutorial
+    })
+    .then(tutorials=>{
+        //console.log(req.body);
+        tutorials.name = req.body.name;
+        tutorials.code = req.body.code;
+        tutorials.statement = req.body.statement;
+        tutorials.tags = req.body.tags;
+        tutorials.save()
+        .then(tutorials=>{
+            res.redirect('admin');
+        });
+    });
 });
 
 // Index route
