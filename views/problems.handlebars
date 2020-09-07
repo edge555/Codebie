@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/css/problems.css">
 </head>
 
-<body>
+<body style=" background-color:#F0F8FF;">
 
   <section id="nav-bar">
     <nav class="navbar navbar-expand-md navbar-light bg-white sticky-top">
@@ -70,17 +70,8 @@
         </div>
       </div>
     </nav>
-    <div style="margin-left:10%;margin-top:1%">
-      <p>
-        <h7>
-          <a href="practice.html"> Practice</a>
-          &nbsp;> &nbsp; <a href="#">Data Structure</a>
-            &nbsp;> &nbsp; <a href="#">Arrays</a>
-              &nbsp; > &nbsp; <a style="color:grey">1D</a>
+  </section>
 
-        </h7>
-      </p>
-    </div>
     <div class="container mt-5">
       <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
         <li class="nav-item">
@@ -96,11 +87,46 @@
         <div class="tab-pane fade show active" id="pills-tutorial" role="tabpanel" aria-labelledby="pills-tutorial-tab">
           <div class="row">
 
-            <form class="d-flex col-lg-8 col-xl-8" style="background-color:#EBF5F6">
-              <p style="margin-top:2%">
-                Tutorial </p>
+            <form class="d-flex col-lg-9 col-xl-9" >
+              <div class="col-lg-12 col-xl-12">
+                <!-- Card design -->
+                {{#each curtutorials}}
+                <div class="card mt-2">
+                  <div class="card-body ">
+                    <div class="row">
+                      <div class="col-lg-9 col-xl-9">
+                        <h5 class="card-title">{{name}}</h5>
+                      </div>
+                      <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
+                        <a href="tutorials/{{code}}" value="{{code}}" class="btn btn-outline-primary btn-block btn-border" id="btn-solve">Read</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {{else}}
+                  <h1>Empty</h1>
+                {{/each}}
+
+                <div class="center-block">
+                  <nav aria-label="..." class="mt-5">
+                    <ul class="pagination">
+                      <li class="page-item">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                      </li>
+                      <li class="page-item active">
+                        <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
+                      </li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
             </form>
-            <div class="col-lg-2 col-xl-2">
+            <div class="col-lg-3 col-xl-3">
               <div class="card mb-5 card-tutorial-sidebar">
                 <div class="card-header text-center card-header-tutorial">
                   Data Structures
@@ -119,7 +145,6 @@
                       </button>
                     </h5>
                   </div>
-
                   <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                     <div class="card-body">
                       <ul>
@@ -165,14 +190,12 @@
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
         <div class="tab-pane fade" id="pills-problem" role="tabpanel" aria-labelledby="pills-problem-tab">
           <div class="row">
             <div class="col-lg-9 col-xl-9">
-              
             <!-- Card design -->
             {{#each curproblems}}
               <div class="card mt-4">
@@ -180,7 +203,7 @@
                   <div class="row">
                     <div class="col-lg-9 col-xl-9">
                       <h5 class="card-title">{{name}}</h5>
-                      <span class="badge badge-warning">Medium</span>
+                      <span class="badge badge-warning">Easy</span>
                       <span class="badge badge-secondary"> Total Solved: {{solvecount}}</span>
                     </div>
                     <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
@@ -193,7 +216,23 @@
             {{else}}
                 <h1>Empty</h1>
             {{/each}}
-            
+              <div class="center-block">
+                <nav aria-label="..." class="mt-5">
+                  <ul class="pagination">
+                    <li class="page-item">
+                      <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item active">
+                      <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                      <a class="page-link" href="#">Next</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
             <div class="col-lg-3 col-xl-3">
               <div class="card mt-4 card-sidebar">
@@ -301,14 +340,19 @@
         </div>
       </div>
     </div>
-    <div class="d-flex" style="background-color: #1a53ff;margin-top:15px">
-      <div class="mr-auto p-2">
-        <h5><a style="color : #fff ; margin-left:10px"> &copy;2020 codebie</a></h5>
+    <div class="footer">
+
+      <div class="d-flex" style="background-color: #1a53ff;margin-top:15px">
+        <div class="mr-auto p-2">
+          <h5><a style="color : #fff ; margin-left:10px"> &copy;2020 codebie</a></h5>
+        </div>
+        <div class="p-2"><a style="color : #fff" href="#">Privacy Policy</a></div>
+        <div class="vl"></div>
+        <div class="p-2" style="margin-right:10px"><a style="color : #fff" href="#">About Us</a></div>
       </div>
-      <div class="p-2"><a style="color : #fff" href="#">Privacy Policy</a></div>
-      <div class="vl"></div>
-      <div class="p-2" style="margin-right:10px"><a style="color : #fff" href="#">About Us</a></div>
+
     </div>
+
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
       integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
     </script>

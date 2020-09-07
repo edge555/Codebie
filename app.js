@@ -11,8 +11,8 @@ const { exec } = require("child_process");
 const fs = require('fs');
 const unirest = require('unirest');
 
-var ids=[],section,curlang;
-var curuser,curproblem,curoutput,curproblems,verdict;
+var ids=[],section,curlang,verdict,curoutput
+var curuser,curproblem,curproblems,curtutorial,curproblems,curtutorials;
 var curtoken,cureditproblem,curedittutorial;
 
 // Connect to mongoose
@@ -29,6 +29,8 @@ require('./models/User');
 const User = mongoose.model('users');
 require('./models/Problem');
 const Problem = mongoose.model('problems');
+require('./models/Tutorial');
+const Tutorial = mongoose.model('tutorials');
 
 // Body Parser
 app.use(bodyParser.json());
@@ -174,7 +176,18 @@ app.get('/adminaddtutorial',function(req,res){
 });
 
 app.post('/adminaddtutorial',function(req,res){
-    
+    console.log(req.body);
+    const newTutorial = {
+        name : req.body.name,
+        code : req.body.code,
+        statement: req.body.statement,
+        tags: req.body.tags
+    };
+    new Tutorial(newTutorial)
+    .save()
+    .then(tutorials => {
+        res.redirect('admin');
+    }); 
 });
 
 // To edit tutorial
@@ -308,8 +321,15 @@ app.post('/home',function(req,res){
         .lean()
         .then(problems =>{
             curproblems = problems;
-            res.redirect('/problems');
+            
         });
+    Tutorial.find({tags:req.body.submit})
+        .lean()
+        .then(tutorials =>{
+            curtutorials = tutorials;
+            
+        });
+    res.redirect('/problems');
 });
 
 // Problem show and submit page
@@ -454,9 +474,11 @@ app.get('/problems',function(req,res){
         res.redirect('enter');
     } else {
         //console.log(curproblems);
+        //console.log(curtutorials);
         res.render('problems', {
             curuser : curuser,
-            curproblems: curproblems
+            curproblems: curproblems,
+            curtutorials: curtutorials
         });
     }
 });
@@ -469,18 +491,19 @@ app.post('/problems',function(req,res){
 app.get('/problems/:id',function(req,res){
     if(curuser==null){
         res.redirect('enter');
-    }
-    ids.push(req.params);
-    Problem.findOne({code : ids[0].id})
-        .lean()
-        .then(problems =>{
-            ids =[];
-            curproblem = problems;
-            res.render('problem',{
-                curproblem : problems,
-                curuser : curuser
+    } else {
+        ids.push(req.params);
+        Problem.findOne({code : ids[0].id})
+            .lean()
+            .then(problems =>{
+                ids =[];
+                curproblem = problems;
+                res.render('problem',{
+                    curproblem : problems,
+                    curuser : curuser
+                });
             });
-        });
+    }
 });
 
 // Ranklist page
@@ -499,6 +522,36 @@ app.get('/ranklist',function(req,res){
         })
     }
 })
+
+// Tutorial page
+app.get('/tutorial',function(req,res){
+    if(curuser==null){
+        res.redirect('enter');
+    } else {
+        res.render('tutorial',{
+            curuser : curuser,
+            curtutorial : curtutorial
+        });
+    }
+})
+
+// Find problem and redirect to show and submit page
+app.get('/tutorials/:id',function(req,res){
+    if(curuser==null){
+        res.redirect('enter');
+    } else {
+        //console.log(req.params);
+        Tutorial.findOne({code : req.params.id})
+            .lean()
+            .then(tutorials =>{
+                curtutorial = tutorials;
+                res.render('tutorial',{
+                    curuser : curuser,
+                    curtutorial : tutorials
+                });
+            });
+    }
+});
 
 app.get('/verdict',function(req,res){
     if(curuser==null){

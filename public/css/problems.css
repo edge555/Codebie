@@ -70,6 +70,15 @@
 .footer-div {
     border-top: 2px solid black;
 }
+/*
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+
+} 
+*/
 
 
 .pagination {
