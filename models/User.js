@@ -44,12 +44,20 @@ const UserSchema = new Schema({
         type : Number,
         default : 0
     },
+    totalsolvecount:{
+        type : Number,
+        default : 0
+    },
     csolved:[{
         problemcode :{
             type: String,
             required: true
         },
         token :{
+            type: String,
+            required: true
+        },
+        verdict :{
             type: String,
             required: true
         }
@@ -62,6 +70,10 @@ const UserSchema = new Schema({
         token :{
             type: String,
             required: true
+        },
+        verdict :{
+            type: String,
+            required: true
         }
     }],
     javasolved:[{
@@ -70,6 +82,10 @@ const UserSchema = new Schema({
             required: true
         },
         token :{
+            type: String,
+            required: true
+        },
+        verdict :{
             type: String,
             required: true
         }
@@ -82,6 +98,10 @@ const UserSchema = new Schema({
         token :{
             type: String,
             required: true
+        },
+        verdict :{
+            type: String,
+            required: true
         }
     }],
     dssolved:[{
@@ -92,6 +112,10 @@ const UserSchema = new Schema({
         token :{
             type: String,
             required: true
+        },
+        verdict :{
+            type: String,
+            required: true
         }
     }],
     algosolved:[{
@@ -100,6 +124,10 @@ const UserSchema = new Schema({
             required: true
         },
         token :{
+            type: String,
+            required: true
+        },
+        verdict :{
             type: String,
             required: true
         }

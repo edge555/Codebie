@@ -290,10 +290,9 @@ app.get('/home',function(req,res){
                 dsper : (curuser.dssolvecount*100)/counter.dscnt,
                 algoper : (curuser.algosolvecount*100)/counter.algocnt
             }
-            console.log(counter);
+            /* console.log(counter);
             console.log(percentage);
-           //console.log("In home");
-            console.log(curuser);
+            console.log(curuser); */
             res.render('home', {
                 curuser : curuser,
                 counter : counter,
@@ -412,7 +411,7 @@ function getverdict(submission,input,output,callback){
             }
             callback(tempverdict);
         });
-    }, 5000);
+    }, 6000);
 }
 
 app.post('/problem',function(req,res){
@@ -447,7 +446,7 @@ app.post('/problem',function(req,res){
             verdict="Accepted";
         }
         res.redirect('verdict');
-    }, 12000);
+    }, 13000);
 });
 
 app.get('/problems',function(req,res){
@@ -484,6 +483,23 @@ app.get('/problems/:id',function(req,res){
         });
 });
 
+// Ranklist page
+app.get('/ranklist',function(req,res){
+    if(curuser==null){
+        res.redirect('enter');
+    } else {
+        User.find({})
+        .sort({ totalsolvecount: 'desc' })
+        .then(user => {
+            //console.log(user);
+            res.render('ranklist',{
+                curuser : curuser,
+                user : user
+            });
+        })
+    }
+})
+
 app.get('/verdict',function(req,res){
     if(curuser==null){
         res.redirect('enter');
@@ -494,42 +510,43 @@ app.get('/verdict',function(req,res){
             username : curuser.username
         })
         .then(user =>{
+            //console.log(user);
             var alreadysolved=false;
             if(verdict=="Accepted"){
                 // Add solve and token to user
                 if(section=="c"){
                     user.csolved.forEach(solve => {
-                        if(solve.problemcode==curproblem.code){
+                        if(solve.problemcode==curproblem.code && solve.verdict=="Accepted"){
                             alreadysolved = true;
                         }
                     });
                 } else if(section=="cpp"){
                     user.cppsolved.forEach(solve => {
-                        if(solve.problemcode==curproblem.code){
+                        if(solve.problemcode==curproblem.code && solve.verdict=="Accepted"){
                             alreadysolved = true;
                         }
                     });
                 } else if(section=="java"){
                     user.javasolved.forEach(solve => {
-                        if(solve.problemcode==curproblem.code){
+                        if(solve.problemcode==curproblem.code && solve.verdict=="Accepted"){
                             alreadysolved = true;
                         }
                     });
                 } else if(section=="py"){
                     user.pysolved.forEach(solve => {
-                        if(solve.problemcode==curproblem.code){
+                        if(solve.problemcode==curproblem.code && solve.verdict=="Accepted"){
                             alreadysolved = true;
                         }
                     });
                 } else if(section=="ds"){
                     user.dssolved.forEach(solve => {
-                        if(solve.problemcode==curproblem.code){
+                        if(solve.problemcode==curproblem.code && solve.verdict=="Accepted"){
                             alreadysolved = true;
                         }
                     });
                 } else if(section=="algo"){
                     user.algosolved.forEach(solve => {
-                        if(solve.problemcode==curproblem.code){
+                        if(solve.problemcode==curproblem.code && solve.verdict=="Accepted"){
                             alreadysolved = true;
                         }
                     });
@@ -548,11 +565,13 @@ app.get('/verdict',function(req,res){
                     } else if(section=="algo"){
                         user.algosolvecount++;
                     }
+                    user.totalsolvecount++;
                 } 
             }
             const newSolve = {
                 problemcode : curproblem.code,
-                token : curtoken
+                token : curtoken,
+                verdict : verdict
             }
             if(section=="c"){
                 user.csolved.unshift(newSolve); // unshift adds to beginning
@@ -568,6 +587,7 @@ app.get('/verdict',function(req,res){
                 user.algosolved.unshift(newSolve); 
             }
             user.save();
+            //console.log(user);
             curuser=user;        
         });
         // Add user and token to problem
