@@ -1,0 +1,15 @@
+body{
+
+}
+.wrapper{
+  padding: 40px;
+  text-align: center;
+
+}
+h1{
+  margin-bottom: 40px;
+  letter-spacing: 1px;
+}
+.table-light td{
+  vertical-align: middle;
+}
