@@ -3,50 +3,50 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
     username : {
-        type : String,
-        required:true
+        type: String,
+        required: true
     },
     email : {
-        type : String,
-        required:true
+        type: String,
+        required: true
     },
     password : {
-        type : String,
-        required:true,
+        type: String,
+        required: true,
         default: 'password'
     },
     name : {
-        type : String,
-        required:true,
-        default : 'name'
+        type: String,
+        required: true,
+        default: 'name'
     },
     csolvecount:{
-        type : Number,
-        default : 0
+        type: Number,
+        default: 0
     },
     cppsolvecount:{
-        type : Number,
-        default : 0
+        type: Number,
+        default: 0
     },
     javasolvecount:{
-        type : Number,
-        default : 0
+        type: Number,
+        default: 0
     },
     pysolvecount:{
-        type : Number,
-        default : 0
+        type: Number,
+        default: 0
     },
     dssolvecount:{
-        type : Number,
-        default : 0
+        type: Number,
+        default: 0
     },
     algosolvecount:{
-        type : Number,
-        default : 0
+        type: Number,
+        default: 0
     },
     totalsolvecount:{
-        type : Number,
-        default : 0
+        type: Number,
+        default: 0
     },
     csolved:[{
         problemcode :{
@@ -60,6 +60,10 @@ const UserSchema = new Schema({
         verdict :{
             type: String,
             required: true
+        },
+        date:{
+            type: Date,
+            default: Date.now
         }
     }],
     cppsolved:[{
@@ -74,6 +78,10 @@ const UserSchema = new Schema({
         verdict :{
             type: String,
             required: true
+        },
+        date:{
+            type: Date,
+            default:Date.now
         }
     }],
     javasolved:[{
@@ -88,6 +96,10 @@ const UserSchema = new Schema({
         verdict :{
             type: String,
             required: true
+        },
+        date:{
+            type: Date,
+            default:Date.now
         }
     }],
     pysolved:[{
@@ -102,6 +114,10 @@ const UserSchema = new Schema({
         verdict :{
             type: String,
             required: true
+        },
+        date:{
+            type: Date,
+            default:Date.now
         }
     }],
     dssolved:[{
@@ -116,6 +132,10 @@ const UserSchema = new Schema({
         verdict :{
             type: String,
             required: true
+        },
+        date:{
+            type: Date,
+            default:Date.now
         }
     }],
     algosolved:[{
@@ -130,6 +150,10 @@ const UserSchema = new Schema({
         verdict :{
             type: String,
             required: true
+        },
+        date:{
+            type: Date,
+            default:Date.now
         }
     }]
 });

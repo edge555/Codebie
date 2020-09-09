@@ -1,5 +1,4 @@
-
-.badge-notification{
+.badge-notification {
     padding: 3px 5px 2px;
     position: absolute;
     top: 8px;
@@ -15,13 +14,14 @@
     text-align: center;
     border-radius: 10px;
 }
+
 .badge-danger {
     background-color: #db5565;
 }
+
 .btn-border {
     border-radius: 0px;
 }
-
 
 .card-design {
     border-left: 10px solid green;
@@ -42,13 +42,13 @@
     border-bottom: 4px blue solid;
 }
 
-
 .center-block {
     display: table;
     margin: auto;
     border: 0px;
 }
-.card-header-tutorial{
+
+.card-header-tutorial {
     background-color: transparent;
     border-bottom: 4px blue solid;
 }
@@ -61,15 +61,15 @@
     border: 1px solid black;
 }
 
-
-
-#footer
-{
-  background-color: #1a53ff;
+#footer {
+    background-color: #1a53ff;
 }
+
 .footer-div {
     border-top: 2px solid black;
 }
+
+
 /*
 .footer {
   position: fixed;
@@ -80,16 +80,15 @@
 } 
 */
 
-
 .pagination {
     border: 0px solid #ddd;
     border-bottom: 2px solid blue;
 }
-.pagination > li > a {
+
+.pagination>li>a {
     border: 0px solid #ddd;
     border-radius: 0px!important;
 }
-
 
 #userdropdown {
     background-color: transparent;
@@ -103,8 +102,9 @@
     outline: none;
     box-shadow: none;
 }
+
 .vl {
-  border-left: 1px solid #fff;
-  margin-top: 10px;
-  height: 25px;
+    border-left: 1px solid #fff;
+    margin-top: 10px;
+    height: 25px;
 }

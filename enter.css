@@ -1,120 +1,117 @@
 #cover {
-  background: url(images/background4.jpg) center center no-repeat;
-  background-size: cover;
-  height: 100%;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  position: relative;
+    background: url(images/background4.jpg) center center no-repeat;
+    background-size: cover;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    position: relative;
 }
 
 #cover-caption {
-  width: 100%;
-  position: relative;
-  z-index: 1;
+    width: 100%;
+    position: relative;
+    z-index: 1;
 }
+
 
 /* only used for background overlay not needed for centering */
 
 section div div div .hi img {
-  width: 100%;
-
-}
-.box{
-  background-color: lightgrey;
-  width: 500px;
-  border: 10px solid blue;
-  padding: 50px;
-  margin: 20px;
+    width: 100%;
 }
 
+.box {
+    background-color: lightgrey;
+    width: 500px;
+    border: 10px solid blue;
+    padding: 50px;
+    margin: 20px;
+}
 
 .hh {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
 }
-.padding-0{
-  padding-right:0;
-  padding-left:0;
+
+.padding-0 {
+    padding-right: 0;
+    padding-left: 0;
 }
 
 .btn-signin {
-border-radius: 16px;
+    border-radius: 16px;
 }
-
 
 .form-control {
-  background-color: transparent;
-  outline: none;
-  border-bottom: 1px solid white;
-  border-top: 0px;
-  border-left: 0px;
-  border-right: 0px;
-  color: white;
+    background-color: transparent;
+    outline: none;
+    border-bottom: 1px solid white;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    color: white;
 }
+
 .form-control:active,
 .form-control:focus,
 .form-control:focus:active {
-background-color: transparent;
-border-bottom: 1px solid white;
-  border-top: 0px;
-  border-left: 0px;
-  border-right: 0px;
-outline: none;
-box-shadow: none;
+    background-color: transparent;
+    border-bottom: 1px solid white;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    outline: none;
+    box-shadow: none;
 }
 
 .input-group-addon {
-border-bottom: 1px solid white;
-margin-top: 6px;
-
+    border-bottom: 1px solid white;
+    margin-top: 6px;
 }
 
 .vertical-center {
-  display: flex;
-  align-items: center;
-  min-height: 50%;
-  min-height: 50vh;
-
+    display: flex;
+    align-items: center;
+    min-height: 50%;
+    min-height: 50vh;
 }
 
-
-
-.tab-content div{
-  animation: 0.3s ease-in 0s 1;
+.tab-content div {
+    animation: 0.3s ease-in 0s 1;
 }
-
-
 
 .colored {
-margin-top: 5px;
-margin-bottom: 5px;
-height: 7px;
-border-top: 0;
-background: #c4e17f;
-border-radius: 5px;
-/*background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);*/
-background-image: linear-gradient(to right,#5B86E5,#36D1DC);
-padding-right: 50%;
-background-origin: content-box;
-background-size: 200%;
-animation-name: colored;
-animation-duration: 2s;
-animation-iteration-count: infinite;
-animation-timing-function: steps(8);
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 7px;
+    border-top: 0;
+    background: #c4e17f;
+    border-radius: 5px;
+    /*background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);*/
+    background-image: linear-gradient(to right, #5B86E5, #36D1DC);
+    padding-right: 50%;
+    background-origin: content-box;
+    background-size: 200%;
+    animation-name: colored;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: steps(8);
 }
 
 @keyframes colored {
-from {background-position: 0% 0%;}
-  to {background-position: 200% 0%;}
+    from {
+        background-position: 0% 0%;
+    }
+    to {
+        background-position: 200% 0%;
+    }
 }
 
-
-
 .what {
-  background-color: rgba(185,227,252,.6);
-  height: 550px;
-  width: 600px;
+    background-color: rgba(185, 227, 252, .6);
+    height: 550px;
+    width: 600px;
 }

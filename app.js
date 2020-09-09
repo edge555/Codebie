@@ -687,10 +687,18 @@ app.get('/verdict',function(req,res){
             problems.solvecount++;
             problems.save()
         });
+        var image;
+        if(verdict=="Accepted"){
+            image ="images/congrats.gif";
+        } else {
+            image ="images/sorry.gif";
+        }
+        
         res.render('verdict',{
             curuser : curuser,
             verdict : verdict,
-            curoutput : curoutput
+            curoutput : curoutput,
+            image : image
         });     
     }
 });
