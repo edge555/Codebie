@@ -100,20 +100,7 @@
        </div>
 
 
-    <div class="col col-lg-6 col-md-6 col-sm-6" style="float: right; margin-top:10px; padding-left: 15.5%" >
-      <p >
 
-          <a href="F:/Study/Project Website/practice.html"> Practice</a>
-          &nbsp;> &nbsp; <a href="#">Data Structure</a>
-            &nbsp;> &nbsp; <a href="#">Arrays</a>
-              &nbsp;> &nbsp; <a href="#">1D</a>
-              &nbsp; > &nbsp; <a style="color:grey">Problem</a>
-
-
-      </p>
-
-
-    </div>
 
   </div>
 
@@ -121,29 +108,94 @@
     <div class="  custompadding ">
               <div class="row distance ">
                         <div class="col-lg-6 col-xl-6  col-md-6  col-sm-6 col-xs-6 scrollable " style="background-color:#F0F8FF;">
-                                <div class="problem-tabs regular">
-                                          <div class="tab-underline-blue">
-                                                <div class="tab history" id="discription">
-                                                        <div class="tab-name tab-dark selected" data-container= "problem-desc" cache= "True">
-                                                                Problem
-                                                        </div>
+                          <!--content-->
+                                <div class="container mt-1">
+                                          <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="margin-top:2%">
+                                            <li class="nav-item">
+                                              <a class="nav-link active" id="pills-problem-tab" data-toggle="pill" href="#pills-problem" role="tab"
+                                                aria-controls="pills-problem" aria-selected="true">Problem Statement</a>
+                                            </li>
+                                            <li class="nav-item">
+                                              <a class="nav-link" id="pills-mysubmissions-tab" data-toggle="pill" href="#pills-mysubmissions" role="tab"
+                                                aria-controls="pills-mysubmissions" aria-selected="false">My Submissions</a>
+                                            </li>
+                                            <li class="nav-item">
+                                              <a class="nav-link" id="pills-allsubmissions-tab" data-toggle="pill" href="#pills-allsubmissions" role="tab"
+                                                aria-controls="pills-allsubmissions" aria-selected="false">All Submissions</a>
+                                            </li>
+                                          </ul>
+
+                                          <div class="tab-content" id="pills-tabContent">
+
+                                                <div class="tab-pane fade show active" id="pills-problem" role="tabpanel" aria-labelledby="pills-problem-tab">
+                                                    <div class="problemstatement" style="padding-left:2%;">
+                                                            Here is the statement of the problem.
+                                                    </div>
+
                                                 </div>
-                                                <div class="tab history" id="editorial">
-                                                        <div class="tab-name tab-dark " data-container= "editorial-desc" cache= "True">
-                                                                Editorial
-                                                        </div>
+
+                                                <div class="tab-pane fade" id="pills-mysubmissions" role="tabpanel" aria-labelledby="pills-mysubmissions-tab">
+                                                  <div class="mysubmissions">
+
+                                                    <table class="table table-light table-hover">
+                                                                   <thead>
+                                                                     <tr bgcolor="#66B2FF">
+                                                                         <th scope="col"><u>No.</u></th>
+                                                                         <th scope="col"><u>Verdict</u></th>
+                                                                         <th scope="col"><u>Solution</u></th>
+                                                                       </tr>
+                                                                   </thead>
+
+                                                                   <tbody>
+                                                                     <tr>
+                                                                       <th scope="row">1</th>
+                                                                       <td>accepted</td>
+                                                                      <td><p>&nbsp;&nbsp;&nbsp;<a href="#">View</a></p></td>
+                                                                     </tr>
+                                                                   </tbody>
+                                                                 </table>
+
+                                                  </div>
                                                 </div>
-                                                <div class="tab history" id="submissions">
-                                                        <div class="tab-name tab-dark " data-container= "mySubmissions-desc" cache= "True">
-                                                                My Submissions
-                                                        </div>
-                                                </div>
-                                                <div class="clear">
+
+                                                <div class="tab-pane fade" id="pills-allsubmissions" role="tabpanel" aria-labelledby="pills-allsubmissions-tab">
+                                                  <div class="allsubmissions">
+
+                                                    <table class="table table-light table-hover">
+                                                                   <thead>
+                                                                     <tr bgcolor="#66B2FF">
+                                                                         <th scope="col"><u>No.</u></th>
+                                                                         <th scope="col"><u>Handle</u></th>
+                                                                         <th scope="col"><u>Verdict</u></th>
+                                                                         <th scope="col"><u>Solution</u></th>
+                                                                       </tr>
+                                                                   </thead>
+
+                                                                   <tbody>
+                                                                     <tr>
+                                                                       <th scope="row">1</th>
+                                                                       <td>Mark</td>
+                                                                       <td>accepted</td>
+                                                                       <td><p>&nbsp;&nbsp;&nbsp;<a href="#">View</a></p></td>
+                                                                     </tr>
+                                                                   </tbody>
+                                                                 </table>
+
+                                                  </div>
                                                 </div>
 
                                           </div>
 
+
+
+
                                 </div>
+
+
+
+
+
+                          <!-- -->
                                 <div class="problem-desc" style="display: block;">
                                             <div class="problem-description line-height-18 less-margin-2 darker content">
                                                       <div class="problem-title medium-margin weight-700 hidden" id="problem-title">
@@ -223,6 +275,16 @@
      <script src="js/default.js"></script>
      <script src="js/index.js"></script>
      <script src="lib/codemirror.js"></script>
+
+     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+       integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+     </script>
+     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+       integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+     </script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+     </script>
 
 
 
