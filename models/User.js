@@ -2,159 +2,54 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-    username : {
+    username: {
         type: String,
         required: true
     },
-    email : {
+    email: {
         type: String,
         required: true
     },
-    password : {
+    password: {
         type: String,
         required: true,
         default: 'password'
     },
-    name : {
+    name: {
         type: String,
         required: true,
         default: 'name'
     },
-    csolvecount:{
+    csolvecount: {
         type: Number,
         default: 0
     },
-    cppsolvecount:{
+    cppsolvecount: {
         type: Number,
         default: 0
     },
-    javasolvecount:{
+    javasolvecount: {
         type: Number,
         default: 0
     },
-    pysolvecount:{
+    pysolvecount: {
         type: Number,
         default: 0
     },
-    dssolvecount:{
+    dssolvecount: {
         type: Number,
         default: 0
     },
-    algosolvecount:{
+    algosolvecount: {
         type: Number,
         default: 0
     },
-    totalsolvecount:{
+    totalsolvecount: {
         type: Number,
         default: 0
     },
-    csolved:[{
-        problemcode :{
-            type: String,
-            required: true
-        },
-        token :{
-            type: String,
-            required: true
-        },
-        verdict :{
-            type: String,
-            required: true
-        },
-        date:{
-            type: Date,
-            default: Date.now
-        }
-    }],
-    cppsolved:[{
-        problemcode :{
-            type: String,
-            required: true
-        },
-        token :{
-            type: String,
-            required: true
-        },
-        verdict :{
-            type: String,
-            required: true
-        },
-        date:{
-            type: Date,
-            default:Date.now
-        }
-    }],
-    javasolved:[{
-        problemcode :{
-            type: String,
-            required: true
-        },
-        token :{
-            type: String,
-            required: true
-        },
-        verdict :{
-            type: String,
-            required: true
-        },
-        date:{
-            type: Date,
-            default:Date.now
-        }
-    }],
-    pysolved:[{
-        problemcode :{
-            type: String,
-            required: true
-        },
-        token :{
-            type: String,
-            required: true
-        },
-        verdict :{
-            type: String,
-            required: true
-        },
-        date:{
-            type: Date,
-            default:Date.now
-        }
-    }],
-    dssolved:[{
-        problemcode :{
-            type: String,
-            required: true
-        },
-        token :{
-            type: String,
-            required: true
-        },
-        verdict :{
-            type: String,
-            required: true
-        },
-        date:{
-            type: Date,
-            default:Date.now
-        }
-    }],
-    algosolved:[{
-        problemcode :{
-            type: String,
-            required: true
-        },
-        token :{
-            type: String,
-            required: true
-        },
-        verdict :{
-            type: String,
-            required: true
-        },
-        date:{
-            type: Date,
-            default:Date.now
-        }
+    solved: [{
+        type: String
     }]
 });
-mongoose.model('users',UserSchema);
+mongoose.model('users', UserSchema);

@@ -2,63 +2,50 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ProblemSchema = new Schema({
-    name : {
-        type : String,
-        required:true
+    name: {
+        type: String,
+        required: true
     },
-    code : {
-        type : String,
-        required:true
+    code: {
+        type: String,
+        required: true
     },
-    difficulty : {
-        type : String,
+    difficulty: {
+        type: String,
         default: 'easy'
     },
-    statement : {
-        type : String,
+    statement: {
+        type: String,
         default: 'statement',
-        required : true
+        required: true
     },
-    constraints : {
-        type : String,
-        default: 'constraints'
+    constraints: {
+        type: String
     },
-    timelimit : {
-        type : Number,
+    timelimit: {
+        type: Number,
         default: 1
     },
-    sampleinput : {
-        type : String,
-        default : 'sampleinput',
-        required : true
+    memorylimit: {
+        type: Number,
+        default: 100000
     },
-    sampleoutput : {
-        type : String,
-        default : 'sampleoutput',
-        required : true
+    sampleinput: {
+        type: String,
+        required: true
     },
-    hiddeninput : {
-        type : String,
-        default : 'hiddeninput'
+    sampleoutput: {
+        type: String,
+        required: true
     },
-    hiddenoutput : {
-        type : String,
-        default : 'hiddenoutput'
+    hiddeninput: {
+        type: String,
     },
-    tags :{
-        type : String
+    hiddenoutput: {
+        type: String,
     },
-    solvecount : {
-        type : Number,
-        default : 0
-    },
-    solver:[{
-        username :{
-            type: String
-        },
-        token :{
-            type: String
-        }
-    }]
+    tags: {
+        type: String
+    }
 });
-mongoose.model('problems',ProblemSchema);
+mongoose.model('problems', ProblemSchema);

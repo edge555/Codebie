@@ -11,11 +11,8 @@
 
   <link rel="stylesheet" href="/css/problem.css">
 </head>
-
 <body>
-
   <!--Navigation Bar starts -->
-
   <section id="nav-bar">
     <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
       <div class="container-fluid">
@@ -24,9 +21,13 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id=navbarResponsive>
+
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
               <a class="nav-link" href="#">Practice<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="problem_list.html">Problems</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="ranklist">Ranklist</a>
@@ -59,7 +60,7 @@
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <span><i class="fa fa-user"></i></span>
-                {{curuser.username}}
+                  {{curuser.username}}
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">Profile</a>
@@ -67,18 +68,14 @@
               </div>
             </li>
           </ul>
-
         </div>
       </div>
-
     </nav>
     <!--Navigation Bar ends -->
-
     <!--Problem title starts -->
     <div class="row">
 
       <div class="top-content-wrapper col col-lg-6 col-md-6 col-sm-6">
-
         <div class="problem-title large-20 darker content" id="problem-title"
           style="margin-left:4.5%;margin-top:10px;float:left;">
           <h3 style="font-size:150%;">{{curproblem.name}}</h3>
@@ -89,68 +86,121 @@
           <p>
             <h6>Problem Code : {{curproblem.code}}</h6>
           </p>
-
         </div>
       </div>
-      <div class="col col-lg-6 col-md-6 col-sm-6" style="float: right; margin-top:10px; padding-left: 15.5%">
-        <p>
-
-          <a href="practice.html"> Practice</a>
-          &nbsp;> &nbsp; <a href="#">Data Structure</a>
-          &nbsp;> &nbsp; <a href="#">Arrays</a>
-          &nbsp;> &nbsp; <a href="#">1D</a>
-          &nbsp; > &nbsp; <a style="color:grey">{{curproblem.code}}</a>
-        </p>
-      </div>
-
     </div>
-    <div class="custompadding">
+    <div class="  custompadding ">
       <div class="row distance ">
         <div class="col-lg-6 col-xl-6  col-md-6  col-sm-6 col-xs-6 scrollable " style="background-color:#F0F8FF;">
-          <div class="problem-tabs regular">
-            <div class="tab-underline-blue">
-              <div class="tab history" id="discription">
-                <div class="tab-name tab-dark selected" data-container="problem-desc" cache="True">
-                  Problem
+          <!--content-->
+          <div class="container mt-1">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="margin-top:2%">
+              <li class="nav-item">
+                <a class="nav-link active" id="pills-problem-tab" data-toggle="pill" href="#pills-problem" role="tab"
+                  aria-controls="pills-problem" aria-selected="true">Problem Statement</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-mysubmissions-tab" data-toggle="pill" href="#pills-mysubmissions"
+                  role="tab" aria-controls="pills-mysubmissions" aria-selected="false">My Submissions</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-allsubmissions-tab" data-toggle="pill" href="#pills-allsubmissions"
+                  role="tab" aria-controls="pills-allsubmissions" aria-selected="false">All Submissions</a>
+              </li>
+            </ul>
+
+            <div class="tab-content" id="pills-tabContent">
+
+              <div class="tab-pane fade show active" id="pills-problem" role="tabpanel"
+                aria-labelledby="pills-problem-tab">
+                <div class="problemstatement" style="padding-left:2%;">
+                  <br>
+                  <h4>Statement</h4>
+                  <p>{{curproblem.statement}}</p>
+                  <h4>Constraints</h4>
+                  <p>{{curproblem.constraints}}</p>
+                  <h4>Time Limit</h4>
+                  <p>{{curproblem.timelimit}}s</p>
+                  <h4>Sample Input</h4>
+                  <p>{{curproblem.sampleinput}}</p>
+                  <h4>Sample Output</h4>
+                  <p>{{curproblem.sampleoutput}}</p>
+                  </div>
+              </div>
+
+              <div class="tab-pane fade" id="pills-mysubmissions" role="tabpanel"
+                aria-labelledby="pills-mysubmissions-tab">
+                <div class="mysubmissions">
+
+                  <table class="table table-light table-hover">
+                    <thead>
+                      <tr bgcolor="#66B2FF">
+                        <th scope="col"><u>No.</u></th>
+                        <th scope="col"><u>Verdict</u></th>
+                        <th scope="col"><u>Solution</u></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each curmysub}}
+                      <tr>
+                        <th scope="row">{{@index}}</th>
+                        <td>{{verdict}}</td>
+                        <td>
+                          <p>&nbsp;&nbsp;&nbsp;<a href="#">View</a></p>
+                        </td>
+                      </tr>
+                      {{else}}      
+                      {{/each}}
+                      
+                    </tbody>
+                  </table>
                 </div>
               </div>
-              <div class="tab history" id="editorial">
-                <div class="tab-name tab-dark " data-container="editorial-desc" cache="True">
-                  Editorial
+              <div class="tab-pane fade" id="pills-allsubmissions" role="tabpanel"
+                aria-labelledby="pills-allsubmissions-tab">
+                <div class="allsubmissions">
+                  <table class="table table-light table-hover">
+                    <thead>
+                      <tr bgcolor="#66B2FF">
+                        <th scope="col"><u>No.</u></th>
+                        <th scope="col"><u>Handle</u></th>
+                        <th scope="col"><u>Verdict</u></th>
+                        <th scope="col"><u>Solution</u></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        {{#each curallsub}}
+                        <th scope="row">{{@index}}</th>
+                        <td>{{username}}</td>
+                        <td>{{verdict}}</td>
+                        <td>
+                          <p>&nbsp;&nbsp;&nbsp;<a href="#">View</a></p>
+                        </td>
+                      </tr>
+                      {{else}}      
+                      {{/each}}
+                    </tbody>
+                  </table>
                 </div>
-              </div>
-              <div class="tab history" id="submissions">
-                <div class="tab-name tab-dark " data-container="mySubmissions-desc" cache="True">
-                  My Submissions
-                </div>
-              </div>
-              <div class="clear">
               </div>
             </div>
           </div>
+          <!-- -->
           <div class="problem-desc" style="display: block;">
             <div class="problem-description line-height-18 less-margin-2 darker content">
               <div class="problem-title medium-margin weight-700 hidden" id="problem-title">
                 This Problem
               </div>
               <div class="ellaborate">
-                <br>
-                <h4>Statement</h4>
-                <p>{{curproblem.statement}}</p>
-                <h4>Constraints</h4>
-                <p>{{curproblem.constraints}}</p>
-                <h4>Time Limit</h4>
-                <p>{{curproblem.timelimit}}s</p>
-                <h4>Sample Input</h4>
-                <p>{{curproblem.sampleinput}}</p>
-                <h4>Sample Output</h4>
-                <p>{{curproblem.sampleoutput}}</p>
+                <p>
+                </p>
               </div>
             </div>
           </div>
         </div>
         <div class="col-lg-6 col-xl-6 col-md-6  col-sm-6 col-xs-6  " style="background-color: #FFF">
-          <form action="/problem" method="post" id="problemcode" >
+         <form action="/problem" method="post" id="problemcode" >
           <div class="row">
             <div style="padding-left:3%;">
               <p style="font-size:18px;color:#1e90ff"> <b>Write your code here!</b></p>
@@ -168,11 +218,6 @@
             <textarea name="submittedcode" rows="10" cols="40" id="prog-input" spellcheck="false"></textarea>
           </div>
           <div class="row" style="padding-top:2%">
-            <div class="row " style="padding-left:4.5%">
-              <button class="btn btn-outline-primary" id="execute" style="margin: 0 auto">
-                <h5>Compile and Test</h5>
-              </button>
-            </div>
             <div class="row " style="padding-left:55%">
               <button name="submit" class="btn btn-outline-primary" id="execute" style="margin: 0 auto;padding:5px 45px;">
                 <h5>Submit</h5>
@@ -190,5 +235,15 @@
     <script src="js/default.js"></script>
     <script src="js/index.js"></script>
     <script src="lib/codemirror.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+      </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+      </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+      </script>
 </body>
 </html>
