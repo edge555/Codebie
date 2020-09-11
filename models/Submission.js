@@ -19,10 +19,12 @@ const SubmissionSchema = new Schema({
         required: true
     },
     time: {
-        type: Number
+        type: Number,
+        default: 0
     },
     memory: {
-        type: Number
+        type: Number,
+        default: 0
     },
     section: {
         type: String,

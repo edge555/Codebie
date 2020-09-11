@@ -49,7 +49,14 @@ const UserSchema = new Schema({
         default: 0
     },
     solved: [{
-        type: String
+        code: {
+            type: String,
+            required: true
+        },
+        section: {
+            type: String,
+            required: true
+        }
     }]
 });
 mongoose.model('users', UserSchema);

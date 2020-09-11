@@ -39,10 +39,10 @@ const ProblemSchema = new Schema({
         required: true
     },
     hiddeninput: {
-        type: String,
+        type: String
     },
     hiddenoutput: {
-        type: String,
+        type: String
     },
     tags: {
         type: String

@@ -12,7 +12,9 @@ const fs = require('fs');
 const unirest = require('unirest');
 
 var ids = [],
-    section, curuser, curlang, verdict;
+    cursolvedproblems = [],
+    curnotsolvedproblems = [];
+var section, curuser, curlang, verdict;
 var curproblem, curproblems, curtutorial, curtutorials;
 var curtoken, cureditproblem, curedittutorial;
 var curdeleteproblem, curdeletetutorial, curoutput;
@@ -349,13 +351,11 @@ app.post('/home', function(req, res) {
         .lean()
         .then(problems => {
             curproblems = problems;
-
         });
     Tutorial.find({ tags: req.body.submit })
         .lean()
         .then(tutorials => {
             curtutorials = tutorials;
-
         });
     res.redirect('/problems');
 });
@@ -499,11 +499,26 @@ app.get('/problems', function(req, res) {
     if (curuser == null) {
         res.redirect('enter');
     } else {
-        //console.log(curproblems);
-        //console.log(curtutorials);
+        // Seperating solved and non solved problems
+        var mysolvedcode = [];
+        cursolvedproblems = [];
+        curnotsolvedproblems = [];
+        curuser.solved.forEach(solve => {
+            if (solve.section == section) {
+                mysolvedcode.push(solve.code)
+            }
+        });
+        curproblems.forEach(problem => {
+            if (mysolvedcode.includes(problem.code)) {
+                cursolvedproblems.push(problem);
+            } else {
+                curnotsolvedproblems.push(problem);
+            }
+        });
         res.render('problems', {
             curuser: curuser,
-            curproblems: curproblems,
+            cursolvedproblems: cursolvedproblems,
+            curnotsolvedproblems: curnotsolvedproblems,
             curtutorials: curtutorials
         });
     }
@@ -634,10 +649,14 @@ app.get('/verdict', function(req, res) {
                             user.algosolvecount++;
                         }
                         user.totalsolvecount++;
+                        const newSolved = {
+                            code: curproblem.code,
+                            section: section
+                        }
+                        user.solved.unshift(newSolved);
+                        user.save();
+                        curuser = user;
                     }
-                    user.solved.unshift(curproblem.code);
-                    user.save()
-                    curuser = user;
                     Problem.findOne({
                             code: curproblem.code
                         })
