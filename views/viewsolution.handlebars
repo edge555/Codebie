@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Solution</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="lib/codemirror.css">
+
+    <link rel="stylesheet" href="/css/viewsolution.css">
+    <script>
+        function goBack() {
+            window.history.back()
+        }</script>
+</head>
+
+<body>
+
+    <!--Navigation Bar starts -->
+
+    <section id="nav-bar">
+        <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+            <div class="container-fluid">
+                <a href="#" class="navbar-brand"><img src="images/logo.png" style="width:80%; height:70%"></a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=#navbarResponsive>
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id=navbarResponsive>
+
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Practice<span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="problems">Problems</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="ranklist">Ranklist</a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav mr-5">
+                        <div class="dropdown" style="float: right; padding: 13px">
+                            <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1"
+                                data-target="#" style="float: left" aria-expanded="true">
+                                <i class="fa fa-bell-o" style="font-size: 20px; float: left; color: black">
+                                </i>
+                            </a>
+                            <span class="badge badge-danger badge-notification">6</span>
+                            <ul class="dropdown-menu dropdown-menu-left pull-right" role="menu"
+                                aria-labelledby="dropdownMenu1">
+                                <h6 class="text-center mb-2">Notifications</h6>
+                                <ul class="timeline timeline-icons timeline-sm" style="margin:10px;width:210px">
+                                    <li>
+                                        <p> <span>hello world</span> </p>
+                                    </li>
+                                    <li>
+                                        <p> <span>hello bangladesh</span> </p>
+                                    </li>
+                                </ul>
+                                <li role="presentation">
+                                    <a href="#" class="dropdown-menu-header"></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <li class="nav-item dropdown my-auto">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span><i class="fa fa-user"></i></span>
+                                {{curuser.username}}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Profile</a>
+                                <a class="dropdown-item" href="#">Settings</a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </div>
+
+        </nav>
+        <!--Navigation Bar ends -->
+
+        <!--Problem title starts -->
+        <div class="row">
+            <div class=" col col-lg-3 col-md-3 col-sm-3">
+            </div>
+            <div class=" col col-lg-6 col-md-6 col-sm-6">
+
+                <div class="problem-title large-20 darker content" id="problem-title"
+                    style="margin-top:10px;float:left;padding-left:15%;">
+                    <h6 style="font-size:100%;">Solution</h6>
+                </div>
+                <div class="vl" style="float: left;margin-left:4%;"></div>
+
+                <div style="float:left;margin-left:4%;margin-top: 6px">
+                    <p>
+                    <h5>Problem Code :</h5>
+                    </p>
+                </div>
+                <div style="float:left;margin-left:2%;margin-top: 7px">
+                    <p>
+                    <h5> <a href="#">{{submission.problemcode}}</a> </h5>
+                    </p>
+                </div>
+                <div class="vl2" style="float: left;margin-left:4%;"></div>
+
+                <div style="float:left;margin-left:5%;margin-top: 7px">
+                    <p>
+                    <h5>Handle :</h5>
+                    </p>
+                </div>
+
+                <div style="float:left;margin-left:2%;margin-top: 7px">
+                    <p>
+                    <h5> <a href="#">{{submission.username}}</a> </h5>
+                    </p>
+                </div>
+
+
+            </div>
+            <div class="container" style="padding-left: 7%;">
+                <hr class="solid">
+
+            </div>
+
+        </div>
+
+
+        <div class="row" style="padding-top: 0;">
+
+            <div class=" col col-lg-3 col-md-3 col-sm-3">
+            </div>
+
+
+            <div class=" col col-lg-8 col-md-8 col-sm-8" style="padding-left:3%;">
+
+                <div style="float:left;margin-left:5%;margin-top: 0px">
+                    <p>
+                    <h5>Language : C</h5>
+                    </p>
+                </div>
+
+
+                <div style="float:left;margin-left:7%;margin-top: 0px;">
+                    <p>
+                    <h5 style="color:#808080">{{submission.date}}</h5>
+                    </p>
+                </div>
+                <div class="vl3" style="float: left;margin-left:1%;"></div>
+
+                <div style="float:left;margin-left:1%;margin-top: 0px">
+                    <p>
+                    <h5 style="color:#808080;"> {{submission.time}} sec </h5>
+                    </p>
+                </div>
+
+                <div class="vl3" style="float: left;margin-left:1%;"></div>
+                <div style="float:left;margin-left:1%;margin-top: 0px">
+                    <p>
+                    <h5 style="color:#808080;"> {{submission.memory}} M </h5>
+                    </p>
+                </div>
+                <div class="vl3" style="float: left;margin-left:1%;"></div>
+            </div>
+        </div>
+        <div class="custompadding ">
+            <div class="row distance ">
+                <div class="col-lg-12 col-xl-12  col-md-12  col-sm-12 col-xs-12  "
+                    style="padding-left:16%;padding-right:5%;">
+                    <div class="textarea-wrapper">
+                        <textarea rows="10" cols="40" id="prog-input" spellcheck="false"></textarea>
+                    </div>
+                    <div class="container">
+                        <div class="center" style="padding-top:4%;padding-bottom:.5%;">
+                            <button style="background-color:#0080FF;color:white; height:40px;width:150px;"
+                                onclick="goBack()">Go Back</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="ace/src/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/jquery-3.4.1.min.js"></script>
+        <script src="js/popper.min.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="js/default.js"></script>
+        <script src="js/index.js"></script>
+        <script src="lib/codemirror.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+            </script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+            </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+            </script>
+</body>
+</html>

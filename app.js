@@ -533,22 +533,29 @@ app.get('/problems/:id', function(req, res) {
     if (curuser == null) {
         res.redirect('enter');
     } else {
-        ids.push(req.params);
-        Problem.findOne({ code: ids[0].id })
-            .lean()
-            .then(problems => {
-                ids = [];
-                curproblem = problems;
-
-            });
         setTimeout(function() {
+            ids.push(req.params);
+            Problem.findOne({ code: ids[0].id })
+                .lean()
+                .then(problems => {
+                    ids = [];
+                    curproblem = problems;
+
+                });
+        }, 3000);
+
+        setTimeout(function() {
+            /* console.log(curproblemcode);
+            console.log("code");
+            console.log(curproblem); */
             Submission.find({
                 username: curuser.username,
                 problemcode: curproblem.code
             }).then(submissions => {
                 curmysub = submissions
             });
-        }, 3000);
+        }, 5000);
+
         setTimeout(function() {
             Submission.find({
                 problemcode: curproblem.code
@@ -556,7 +563,8 @@ app.get('/problems/:id', function(req, res) {
                 curallsub = submissions
             });
 
-        }, 5000);
+        }, 7000);
+
         setTimeout(function() {
             res.render('problem', {
                 curproblem: curproblem,
@@ -565,7 +573,7 @@ app.get('/problems/:id', function(req, res) {
                 curallsub: curallsub
             });
 
-        }, 8000);
+        }, 9000);
     }
 });
 
@@ -689,6 +697,25 @@ app.get('/verdict', function(req, res) {
             curoutput: curoutput,
             image: image
         });
+    }
+});
+
+
+// Show solution
+app.get('/problems/viewsolution/:id', function(req, res) {
+    if (curuser == null) {
+        res.redirect('enter');
+    } else {
+        //console.log(req.params);
+        Submission.findOne({ token: req.params.id })
+            .then(submission => {
+                //console.log(submission);
+                res.render('viewsolution', {
+                    curuser: curuser,
+                    submission: submission
+                });
+            })
+
     }
 });
 
