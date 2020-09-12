@@ -1,0 +1,171 @@
+
+body {
+   overflow-x:    hidden; /* Hide scrollbars */
+
+    font-size: 18px;
+    font-family: 'Open Sans',sans-serif
+    margin: 0;
+
+    word-spacing: 1px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-font-smoothing: antialiased;
+
+}
+
+
+
+
+
+
+.box {
+    padding: 0 5px 0 5px;
+}
+
+.custompadding {
+   padding: 0 !important;
+
+   margin-left: 40px !important;
+   margin-right: 40px !important;
+}
+
+
+
+.distance{
+  padding:  5px;
+}
+
+.scrollable {
+  height: 800px;
+  overflow-y: scroll;
+}
+
+
+
+
+
+
+
+
+.regular {
+    font-size: 14px;
+}
+.tab-underline-blue {
+    position: relative;
+    border-bottom: 1px solid #e5e7e8;
+
+}
+.tab {
+    position: relative;
+    float: left;
+}
+.clear{
+  clear: both;
+}
+div {
+    display: block;
+}
+
+
+.darker {
+    color: #252c33;
+}
+.large-20 {
+    font-size: 20px;
+}
+.hidden {
+    display: none;
+}
+
+}
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+
+}
+
+.weight-700 {
+    font-weight: 700;
+}
+.problem-page .left .problem-desc .problem-description  {
+    font-size: 14px;
+    line-height: 21px;
+    margin: 0 10px 0 40px;
+    background-color: #fff;
+}
+.problem-detail .problem-description {
+    font-size: 13px;
+    overflow-x: auto;
+}
+.line-height-18 {
+    line-height: 18px;
+}
+.darker {
+    color: #252c33;
+}
+
+.body-font {
+    font-size: 13px;
+    font-family: 'Open Sans',sans-serif;
+}
+
+
+
+
+
+textarea {
+  background: url(http://i.imgur.com/2cOaJ.png);
+  min-width: 1065px;
+  min-height: 500px;
+  background-attachment: local;
+  background-repeat: no-repeat;
+  padding-left: 35px;
+  padding-top: 10px;
+  border-color: #ccc;
+
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.textarea-wrapper {
+  display: inline-block;
+  background-image: linear-gradient(#F1F1F1 50%, #F9F9F9 50%);
+  background-size: 100% 32px;
+  background-position: left 10px;
+}
+.vl {
+  border-left: 1px solid #000;
+  margin-top: 28px;
+  height: 12px;
+}
+.vl2 {
+  border-left: 1px solid #000;
+  margin-top: 30px;
+  height: 12px;
+}
+.vl3 {
+  border-left: 1px solid #000;
+  margin-top: 23px;
+  height: 12px;
+}
+
+
+hr.solid {
+  border: 1px solid blue;
+  padding-left: 3%;
+}
+
+.center {
+  margin: 0;
+  position: absolute;
+
+  left: 52%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
