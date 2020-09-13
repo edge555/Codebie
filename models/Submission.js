@@ -30,6 +30,12 @@ const SubmissionSchema = new Schema({
         type: String,
         required: true
     },
+    stdin: {
+        type: String
+    },
+    lang: {
+        type: String
+    },
     date: {
         type: Date,
         default: Date.now

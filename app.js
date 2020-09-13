@@ -18,7 +18,7 @@ var section, curuser, curlang, verdict;
 var curproblem, curproblems, curtutorial, curtutorials;
 var curtoken, cureditproblem, curedittutorial;
 var curdeleteproblem, curdeletetutorial, curoutput;
-var curmysub, curallsub;
+var curmysub, curallsub, cursubmittedcode;
 
 // Connect to mongoose
 mongoose.Promise = global.Promise;
@@ -466,6 +466,7 @@ app.post('/problem', function(req, res) {
         res.redirect('enter');
     }
     //console.log(curproblem);
+    cursubmittedcode = req.body.submittedcode;
     var submission = {
         code: req.body.submittedcode,
         language: req.body.language
@@ -542,19 +543,16 @@ app.get('/problems/:id', function(req, res) {
                     curproblem = problems;
 
                 });
-        }, 3000);
+        }, 5000);
 
         setTimeout(function() {
-            /* console.log(curproblemcode);
-            console.log("code");
-            console.log(curproblem); */
             Submission.find({
                 username: curuser.username,
                 problemcode: curproblem.code
             }).then(submissions => {
                 curmysub = submissions
             });
-        }, 5000);
+        }, 7000);
 
         setTimeout(function() {
             Submission.find({
@@ -634,11 +632,10 @@ app.get('/verdict', function(req, res) {
                 username: curuser.username
             })
             .then(user => {
-                //console.log(user);
                 var alreadysolved = false;
                 if (verdict == "Accepted") {
                     user.solved.forEach(solve => {
-                        if (solve == curproblem.code) {
+                        if (solve.code == curproblem.code) {
                             alreadysolved = true;
                         }
                     });
@@ -679,8 +676,10 @@ app.get('/verdict', function(req, res) {
                     token: curtoken,
                     verdict: verdict,
                     time: curoutput.time,
-                    memory: curoutput.memory,
-                    section: section
+                    memory: curoutput.memory / 1024,
+                    section: section,
+                    stdin: cursubmittedcode,
+                    lang: curlang
                 }
                 new Submission(newSubmission).save()
             });
@@ -715,7 +714,6 @@ app.get('/problems/viewsolution/:id', function(req, res) {
                     submission: submission
                 });
             })
-
     }
 });
 
