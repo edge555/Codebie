@@ -4,22 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tutorial Page</title>
+    <title>Recent Submissions</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/tutorial.css">
+    <link rel="stylesheet" href="lib/codemirror.css">
+
+    <link rel="stylesheet" href="/css/recent.css">
 </head>
 
 <body>
 
+    <!--Navigation Bar starts -->
+
     <section id="nav-bar">
-        <nav class="navbar navbar-expand-md navbar-light bg-white sticky-top">
+        <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
             <div class="container-fluid">
-                <a href="home" class="navbar-brand"><img src="images/logo.png" style="width:80%; height:70%"></a>
+                <a href="#" class="navbar-brand"><img src="images/logo.png" style="width:80%; height:70%"></a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=#navbarResponsive>
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id=navbarResponsive>
+
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
                             <a class="nav-link" href="home">Dashboard<span class="sr-only">(current)</span></a>
@@ -31,6 +36,7 @@
                             <a class="nav-link" href="recent">Recent</a>
                         </li>
                     </ul>
+
                     <ul class="navbar-nav mr-5">
                         <div class="dropdown" style="float: right; padding: 13px">
                             <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1"
@@ -66,47 +72,71 @@
                                 <a class="dropdown-item" href="#">Settings</a>
                             </div>
                         </li>
+
                     </ul>
+
                 </div>
             </div>
+
         </nav>
     </section>
-    <div class="row tutorial" style="height: auto !important;">
-        <div class="col-3">
-            <div id="sidebar-sliding-menu">
-                <div id="left-sidebar">
-                    <div class="center hide-on-large" style="padding:5px;">
-                    </div>
-                    <ul class="sidebar-list">
-                        <li class="main">
-                            <h4>Tutorials for C <span class="glyphicon pull-right glyphicon-chevron-down"></span></h4>
-                            <ul class="sidebar-sublist open">
-                                <li class="active"><a href="/c/overview-of-c.php">Overview of C</a></li>
-                                <li><a href="#">Operators and Expressions</a></li>
-                                <li><a href="#">Constants, Variables and Data types in C</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <div style="padding:3%;">
-                        <a href="#" class="btn btn-outline-primary btn-block btn-border" id="btn-solve">Let's
-                            Practice</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-8" style="height: auto !important; min-height: 0px !important;">
-            <h1>{{curtutorial.name}}</h1>
-            <div id="body-content" style="height: auto !important; background-color:#F0F8FF;padding-right:2%;">
 
-                <p style="margin-left:5%;magin-right:3%;padding-top:5%; ">
-                    {{curtutorial.statement}}
-                </p>
-            </div>
+    <div class="wrapper">
+        <h1 style="color: #176AF7;font-family: Cambria, Georgia, serif;"> <b>Recent Submissions</b></h1>
+        <div class="table-responsive-lg" style="padding-left:3%;padding-right:3%;padding-top:1%;">
+
+
+
+            <table class="table table-light table-hover">
+                <thead>
+                    <tr bgcolor="#66B2FF">
+                        <th scope="col">#</th>
+                        <th scope="col">Handle</th>
+                        <th scope="col">Language</th>
+                        <th scope="col">Date</th>
+
+
+
+
+                    </tr>
+                </thead>
+                <!--
+                   <tbody>
+                     <tr>
+                       <th scope="row">1</th>
+                       <td>Mark</td>
+                       <td>5</td>
+                       <td>0</td>
+                       <td>9</td>
+                       <td>5</td>
+                        <td>4</td>
+                         <td>4</td>
+                       <td>27</td>
+                     </tr>
+                     <tr>
+                       <th scope="row">2</th>
+                       <td>Jacob</td>
+                       <td>5</td>
+                       <td>0</td>
+                        <td>4</td>
+                       <td>0</td>
+                       <td>11</td>
+                       <td>2</td>
+                       <td>22</td>
+                     </tr>
+
+                   </tbody> -->
+            </table>
         </div>
+
     </div>
-    <div class="row">
-        <div style="padding-top: 2%;"></div>
-    </div>
+    <script src="ace/src/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/default.js"></script>
+    <script src="js/index.js"></script>
+    <script src="lib/codemirror.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
@@ -118,4 +148,5 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
         </script>
 </body>
-<html>
+
+</html>

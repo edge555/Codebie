@@ -11,6 +11,7 @@
 
   <link rel="stylesheet" href="/css/problem.css">
 </head>
+
 <body>
   <!--Navigation Bar starts -->
   <section id="nav-bar">
@@ -24,13 +25,13 @@
 
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Practice<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="problem_list.html">Problems</a>
+              <a class="nav-link" href="home">Dashboard<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="ranklist">Ranklist</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="recent">Recent</a>
             </li>
           </ul>
           <ul class="navbar-nav mr-5">
@@ -60,7 +61,7 @@
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <span><i class="fa fa-user"></i></span>
-                  {{curuser.username}}
+                {{curuser.username}}
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">Profile</a>
@@ -84,7 +85,7 @@
         <div class="vl" style="float: left;margin-left:4%;"></div>
         <div style="float:left;margin-left:5%;margin-top: 7px">
           <p>
-            <h6>Problem Code : {{curproblem.code}}</h6>
+          <h6>Problem Code : {{curproblem.code}}</h6>
           </p>
         </div>
       </div>
@@ -125,7 +126,7 @@
                   <p>{{curproblem.sampleinput}}</p>
                   <h4>Sample Output</h4>
                   <p>{{curproblem.sampleoutput}}</p>
-                  </div>
+                </div>
               </div>
 
               <div class="tab-pane fade" id="pills-mysubmissions" role="tabpanel"
@@ -148,12 +149,13 @@
                         <td>{{verdict}}</td>
                         <td>{{time}}</td>
                         <td>
-                            <a href="viewsolution/{{token}}" value="{{token}}" class="btn btn-outline-primary btn-block btn-border" id="btn-solve">view</a>
+                          <a href="viewsolution/{{token}}" value="{{token}}"
+                            class="btn btn-outline-primary btn-block btn-border" id="btn-solve">view</a>
                         </td>
                       </tr>
-                      {{else}} 
+                      {{else}}
                       {{/each}}
-                      
+
                     </tbody>
                   </table>
                 </div>
@@ -179,10 +181,11 @@
                         <td>{{verdict}}</td>
                         <td>{{time}}</td>
                         <td>
-                          <a href="viewsolution/{{token}}" value="{{token}}" class="btn btn-outline-primary btn-block btn-border" id="btn-solve">view</a>
+                          <a href="viewsolution/{{token}}" value="{{token}}"
+                            class="btn btn-outline-primary btn-block btn-border" id="btn-solve">view</a>
                         </td>
                       </tr>
-                      {{else}}      
+                      {{else}}
                       {{/each}}
                     </tbody>
                   </table>
@@ -204,30 +207,31 @@
           </div>
         </div>
         <div class="col-lg-6 col-xl-6 col-md-6  col-sm-6 col-xs-6  " style="background-color: #FFF">
-         <form action="/problem" method="post" id="problemcode" >
-          <div class="row">
-            <div style="padding-left:3%;">
-              <p style="font-size:18px;color:#1e90ff"> <b>Write your code here!</b></p>
+          <form action="/problem" method="post" id="problemcode">
+            <div class="row">
+              <div style="padding-left:3%;">
+                <p style="font-size:18px;color:#1e90ff"> <b>Write your code here!</b></p>
+              </div>
+              <div style="padding-top: 8px;padding-left:37.5%;">
+                <select name="language" id="language" style="width: 200px;height: 30px;float: right">
+                  <option value="c">C</option>
+                  <option value="cpp" selected>C++</option>
+                  <option value="python">Python</option>
+                  <option value="java">Java</option>
+                </select>
+              </div>
             </div>
-            <div style="padding-top: 8px;padding-left:37.5%;">
-              <select name="language" id="language" style="width: 200px;height: 30px;float: right">
-                <option value="c">C</option>
-                <option value="cpp" selected>C++</option>
-                <option value="python">Python</option>
-                <option value="java">Java</option>
-              </select>
+            <div class="textarea-wrapper">
+              <textarea name="submittedcode" rows="10" cols="40" id="prog-input" spellcheck="false"></textarea>
             </div>
-          </div>
-          <div class="textarea-wrapper">
-            <textarea name="submittedcode" rows="10" cols="40" id="prog-input" spellcheck="false"></textarea>
-          </div>
-          <div class="row" style="padding-top:2%">
-            <div class="row " style="padding-left:55%">
-              <button name="submit" class="btn btn-outline-primary" id="execute" style="margin: 0 auto;padding:5px 45px;">
-                <h5>Submit</h5>
-              </button>
+            <div class="row" style="padding-top:2%">
+              <div class="row " style="padding-left:55%">
+                <button name="submit" class="btn btn-outline-primary" id="execute"
+                  style="margin: 0 auto;padding:5px 45px;">
+                  <h5>Submit</h5>
+                </button>
+              </div>
             </div>
-          </div>
           </form>
         </div>
       </div>
@@ -250,4 +254,5 @@
       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
       </script>
 </body>
+
 </html>

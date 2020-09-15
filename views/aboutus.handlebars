@@ -4,22 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tutorial Page</title>
+    <title>About Us</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/tutorial.css">
+    <link rel="stylesheet" href="lib/codemirror.css">
+
+    <link rel="stylesheet" href="/css/aboutus.css">
 </head>
 
 <body>
 
+    <!--Navigation Bar starts -->
+
     <section id="nav-bar">
-        <nav class="navbar navbar-expand-md navbar-light bg-white sticky-top">
+        <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
             <div class="container-fluid">
-                <a href="home" class="navbar-brand"><img src="images/logo.png" style="width:80%; height:70%"></a>
+                <a href="#" class="navbar-brand"><img src="images/logo.png" style="width:80%; height:70%"></a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=#navbarResponsive>
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id=navbarResponsive>
+
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
                             <a class="nav-link" href="home">Dashboard<span class="sr-only">(current)</span></a>
@@ -31,6 +36,7 @@
                             <a class="nav-link" href="recent">Recent</a>
                         </li>
                     </ul>
+
                     <ul class="navbar-nav mr-5">
                         <div class="dropdown" style="float: right; padding: 13px">
                             <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1"
@@ -66,48 +72,33 @@
                                 <a class="dropdown-item" href="#">Settings</a>
                             </div>
                         </li>
+
                     </ul>
+
                 </div>
             </div>
+
         </nav>
     </section>
-    <div class="row tutorial" style="height: auto !important;">
-        <div class="col-3">
-            <div id="sidebar-sliding-menu">
-                <div id="left-sidebar">
-                    <div class="center hide-on-large" style="padding:5px;">
-                    </div>
-                    <ul class="sidebar-list">
-                        <li class="main">
-                            <h4>Tutorials for C <span class="glyphicon pull-right glyphicon-chevron-down"></span></h4>
-                            <ul class="sidebar-sublist open">
-                                <li class="active"><a href="/c/overview-of-c.php">Overview of C</a></li>
-                                <li><a href="#">Operators and Expressions</a></li>
-                                <li><a href="#">Constants, Variables and Data types in C</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <div style="padding:3%;">
-                        <a href="#" class="btn btn-outline-primary btn-block btn-border" id="btn-solve">Let's
-                            Practice</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-8" style="height: auto !important; min-height: 0px !important;">
-            <h1>{{curtutorial.name}}</h1>
-            <div id="body-content" style="height: auto !important; background-color:#F0F8FF;padding-right:2%;">
 
-                <p style="margin-left:5%;magin-right:3%;padding-top:5%; ">
-                    {{curtutorial.statement}}
-                </p>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div style="padding-top: 2%;"></div>
-    </div>
 
+    <section id="page" style="padding-top:1%;padding-bottom:2%">
+        <div class="image" style="background-color: #D1E9FA;">
+
+        </div>
+
+        <div class="content">
+            <h2 style="color: #176AF7;">About Codebie </h2>
+            <span></span>
+
+            <p>Codebie is a platform for you to improve your coding. There are 6 different sections to learn and
+                practice. You can submit your code, see the verdicts. You can see other's solutions and compare yourself
+                with others. Each sections will contains tutorials, so that you can learn before you practise. We hope
+                this platform will add some new experiences in your programming journey.</p>
+
+            <p>For any feedback please <u><a href="contactus" style="color:#1A92E8"> contact us</a></u> . </p>
+        </div>
+    </section>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
         </script>
@@ -118,4 +109,4 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
         </script>
 </body>
-<html>
+</html>

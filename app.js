@@ -61,6 +61,13 @@ app.use(function(req, res, next) {
     next();
 });
 
+// About us
+app.get('/aboutus', function(req, res) {
+    res.render('aboutus', {
+        curuser: curuser
+    });
+});
+
 // Admin access
 app.get('/admin', function(req, res) {
     if (curuser == null) {
@@ -246,13 +253,9 @@ app.get('/', function(req, res) {
     }
 });
 
-// About route
-app.get('/about', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else {
-        res.render('about');
-    }
+// Contact us
+app.get('/contactus', function(req, res) {
+
 });
 
 // Login/Signup Route
@@ -352,7 +355,7 @@ app.post('/home', function(req, res) {
         .then(problems => {
             curproblems = problems;
         });
-    Tutorial.find({ tags: req.body.submit })
+    Tutorial.find({})
         .lean()
         .then(tutorials => {
             curtutorials = tutorials;
@@ -575,6 +578,23 @@ app.get('/problems/:id', function(req, res) {
     }
 });
 
+// Show solution
+app.get('/problems/viewsolution/:id', function(req, res) {
+    if (curuser == null) {
+        res.redirect('enter');
+    } else {
+        //console.log(req.params);
+        Submission.findOne({ token: req.params.id })
+            .then(submission => {
+                //console.log(submission);
+                res.render('viewsolution', {
+                    curuser: curuser,
+                    submission: submission
+                });
+            })
+    }
+});
+
 // Ranklist page
 app.get('/ranklist', function(req, res) {
     if (curuser == null) {
@@ -589,6 +609,15 @@ app.get('/ranklist', function(req, res) {
                     user: user
                 });
             })
+    }
+})
+
+// Recent page
+app.get('/recent', function(req, res) {
+    if (curuser == null) {
+        res.redirect('enter');
+    } else {
+        res.render('recent');
     }
 })
 
@@ -699,23 +728,6 @@ app.get('/verdict', function(req, res) {
     }
 });
 
-
-// Show solution
-app.get('/problems/viewsolution/:id', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else {
-        //console.log(req.params);
-        Submission.findOne({ token: req.params.id })
-            .then(submission => {
-                //console.log(submission);
-                res.render('viewsolution', {
-                    curuser: curuser,
-                    submission: submission
-                });
-            })
-    }
-});
 
 app.listen(3000, function() {
     console.log("Server started on port 3000");
