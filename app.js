@@ -18,7 +18,8 @@ var section, curuser, curlang, verdict;
 var curproblem, curproblems, curtutorial, curtutorials;
 var curtoken, cureditproblem, curedittutorial;
 var curdeleteproblem, curdeletetutorial, curoutput;
-var curmysub, curallsub, cursubmittedcode;
+var curmysub = [],
+    cursubmittedcode;
 
 // Connect to mongoose
 mongoose.Promise = global.Promise;
@@ -372,7 +373,7 @@ app.post('/home', function(req, res) {
         .then(problems => {
             curproblems = problems;
         });
-    Tutorial.find({})
+    Tutorial.find({ tags: req.body.submit })
         .lean()
         .then(tutorials => {
             curtutorials = tutorials;
@@ -554,53 +555,30 @@ app.get('/problems/:id', function(req, res) {
     if (curuser == null) {
         res.redirect('enter');
     } else {
-        setTimeout(function() {
-            ids.push(req.params);
-            Problem.findOne({ code: ids[0].id })
-                .lean()
-                .then(problems => {
-                    ids = [];
-                    curproblem = problems;
-
-                });
-        }, 3000);
-
-        setTimeout(function() {
-            Submission.find({
-                username: curuser.username,
-                problemcode: curproblem.code
-            }).then(submissions => {
-                curmysub = submissions
-            });
-        }, 7000);
-
-        setTimeout(function() {
-            alreadysolved2 = false;
-            curuser.solved.forEach(solve => {
-                if (solve.code == curproblem.code) {
-                    alreadysolved2 = true;
-                }
-            });
-            if (alreadysolved2) {
+        ids.push(req.params);
+        Problem.findOne({ code: ids[0].id })
+            .lean()
+            .then(problems => {
+                id = [];
+                curmysub = [];
+                curallsub = [];
+                curproblem = problems;
                 Submission.find({
                     problemcode: curproblem.code
                 }).then(submissions => {
-                    curallsub = submissions
+                    submissions.forEach(submission => {
+                        if (submission.username == curuser.username) {
+                            curmysub.push(submission);
+                        }
+                    })
+                    res.render('problem', {
+                        curproblem: curproblem,
+                        curuser: curuser,
+                        curmysub: curmysub,
+                        curallsub: submissions
+                    });
                 });
-            } else {
-                curallsub = null;
-            }
-        }, 7000);
-
-        setTimeout(function() {
-            res.render('problem', {
-                curproblem: curproblem,
-                curuser: curuser,
-                curmysub: curmysub,
-                curallsub: curallsub
             });
-
-        }, 9000);
     }
 });
 
@@ -684,7 +662,6 @@ app.get('/verdict', function(req, res) {
         res.redirect('enter');
     } else {
         //console.log(section);
-        //console.log(curtoken);
         User.findOne({
                 username: curuser.username
             })
