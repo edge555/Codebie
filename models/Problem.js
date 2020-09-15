@@ -11,13 +11,11 @@ const ProblemSchema = new Schema({
         required: true
     },
     difficulty: {
-        type: String,
-        default: 'easy'
+        type: Number,
+        default: 1
     },
     statement: {
-        type: String,
-        default: 'statement',
-        required: true
+        type: String
     },
     constraints: {
         type: String
@@ -46,6 +44,10 @@ const ProblemSchema = new Schema({
     },
     tags: {
         type: String
+    },
+    solvecount: {
+        type: Number,
+        default: 0
     }
 });
 mongoose.model('problems', ProblemSchema);

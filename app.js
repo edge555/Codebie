@@ -47,10 +47,26 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({ secret: 'mySecret', resave: false, saveUninitialized: false }));
 
 // Handlebars Middleware
+
 app.engine('handlebars', exphbs({
     defaultLayout: 'main',
-    handlebars: allowInsecurePrototypeAccess(Handlebars)
+    handlebars: allowInsecurePrototypeAccess(Handlebars),
+    helpers: {
+        // Function to do basic mathematical operation in handlebar
+        math: function(lvalue, operator, rvalue) {
+            lvalue = parseFloat(lvalue);
+            rvalue = parseFloat(rvalue);
+            return {
+                "+": lvalue + rvalue,
+                "-": lvalue - rvalue,
+                "*": lvalue * rvalue,
+                "/": lvalue / rvalue,
+                "%": lvalue % rvalue
+            }[operator];
+        }
+    }
 }));
+
 app.set('view engine', 'handlebars');
 
 // To use public folder
@@ -281,6 +297,7 @@ app.post('/enter', function(req, res) {
                 }
             });
     } else {
+        //console.log(req.body);
         const newUser = {
             username: req.body.signupusername,
             email: req.body.signupemail,
@@ -546,7 +563,7 @@ app.get('/problems/:id', function(req, res) {
                     curproblem = problems;
 
                 });
-        }, 5000);
+        }, 3000);
 
         setTimeout(function() {
             Submission.find({
@@ -558,12 +575,21 @@ app.get('/problems/:id', function(req, res) {
         }, 7000);
 
         setTimeout(function() {
-            Submission.find({
-                problemcode: curproblem.code
-            }).then(submissions => {
-                curallsub = submissions
+            alreadysolved2 = false;
+            curuser.solved.forEach(solve => {
+                if (solve.code == curproblem.code) {
+                    alreadysolved2 = true;
+                }
             });
-
+            if (alreadysolved2) {
+                Submission.find({
+                    problemcode: curproblem.code
+                }).then(submissions => {
+                    curallsub = submissions
+                });
+            } else {
+                curallsub = null;
+            }
         }, 7000);
 
         setTimeout(function() {
@@ -617,7 +643,9 @@ app.get('/recent', function(req, res) {
     if (curuser == null) {
         res.redirect('enter');
     } else {
-        res.render('recent');
+        res.render('recent', {
+            curuser: curuser
+        });
     }
 })
 

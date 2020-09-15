@@ -133,7 +133,9 @@
                 aria-labelledby="pills-mysubmissions-tab">
                 <div class="mysubmissions">
 
-                  <table class="table table-light table-hover">
+
+                  {{#if curmysub}}
+                    <table class="table table-light table-hover">
                     <thead>
                       <tr bgcolor="#66B2FF">
                         <th scope="col"><u>No.</u></th>
@@ -143,9 +145,10 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {{#each curmysub}}
                       <tr>
-                        <th scope="row">{{@index}}</th>
+                        {{#each curmysub}}
+                        <tr>
+                        <th scope="row">{{math @index "+" 1}}</th>
                         <td>{{verdict}}</td>
                         <td>{{time}}</td>
                         <td>
@@ -154,16 +157,20 @@
                         </td>
                       </tr>
                       {{else}}
+                      
                       {{/each}}
-
                     </tbody>
                   </table>
+                  {{else}}
+                    <h2>You didn't submit yet</h4>
+                  {{/if}}
                 </div>
               </div>
               <div class="tab-pane fade" id="pills-allsubmissions" role="tabpanel"
                 aria-labelledby="pills-allsubmissions-tab">
                 <div class="allsubmissions">
-                  <table class="table table-light table-hover">
+                  {{#if curallsub}}
+                    <table class="table table-light table-hover">
                     <thead>
                       <tr bgcolor="#66B2FF">
                         <th scope="col"><u>No.</u></th>
@@ -176,7 +183,7 @@
                     <tbody>
                       <tr>
                         {{#each curallsub}}
-                        <th scope="row">{{@index}}</th>
+                        <th scope="row">{{math @index "+" 1}}</th>
                         <td>{{username}}</td>
                         <td>{{verdict}}</td>
                         <td>{{time}}</td>
@@ -186,9 +193,14 @@
                         </td>
                       </tr>
                       {{else}}
+                      
                       {{/each}}
                     </tbody>
                   </table>
+                  {{else}}
+                    <h2>You can't see solutions now</h4>
+                  {{/if}}
+                  
                 </div>
               </div>
             </div>
