@@ -11,15 +11,13 @@ const { exec } = require("child_process");
 const fs = require('fs');
 const unirest = require('unirest');
 
-var ids = [],
+var curmysub = [],
     cursolvedproblems = [],
     curnotsolvedproblems = [];
-var section, curuser, curlang, verdict;
+var section, curuser, curlang, curtoken, verdict;
 var curproblem, curproblems, curtutorial, curtutorials;
-var curtoken, cureditproblem, curedittutorial;
+var cursubmittedcode, cureditproblem, curedittutorial;
 var curdeleteproblem, curdeletetutorial, curoutput;
-var curmysub = [],
-    cursubmittedcode;
 
 // Connect to mongoose
 mongoose.Promise = global.Promise;
@@ -64,6 +62,31 @@ app.engine('handlebars', exphbs({
                 "/": lvalue / rvalue,
                 "%": lvalue % rvalue
             }[operator];
+        },
+        prettifyDate: function(timestamp) {
+            function addZero(i) {
+                if (i < 10) {
+                    i = "0" + i;
+                }
+                return i;
+            }
+            temp = "AM";
+            var curr_date = timestamp.getDate();
+            var curr_month = timestamp.getMonth();
+            curr_month++;
+            var curr_year = timestamp.getFullYear() % 100;
+            var curr_hour = timestamp.getHours();
+            if (curr_hour > 12) {
+                curr_hour -= 12;
+                temp = "PM";
+            } else if (curr_hour == 0) {
+                curr_hour = 12;
+            }
+            var curr_minutes = timestamp.getMinutes();
+            var curr_seconds = timestamp.getSeconds();
+
+            result = addZero(curr_date) + "/" + addZero(curr_month) + "/" + addZero(curr_year) + '   ' + addZero(curr_hour) + ':' + addZero(curr_minutes) + ':' + addZero(curr_seconds) + ' ' + temp;
+            return result;
         }
     }
 }));
@@ -555,13 +578,10 @@ app.get('/problems/:id', function(req, res) {
     if (curuser == null) {
         res.redirect('enter');
     } else {
-        ids.push(req.params);
-        Problem.findOne({ code: ids[0].id })
+        Problem.findOne({ code: req.params.id })
             .lean()
             .then(problems => {
-                id = [];
                 curmysub = [];
-                curallsub = [];
                 curproblem = problems;
                 Submission.find({
                     problemcode: curproblem.code
@@ -579,23 +599,6 @@ app.get('/problems/:id', function(req, res) {
                     });
                 });
             });
-    }
-});
-
-// Show solution
-app.get('/problems/viewsolution/:id', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else {
-        //console.log(req.params);
-        Submission.findOne({ token: req.params.id })
-            .then(submission => {
-                //console.log(submission);
-                res.render('viewsolution', {
-                    curuser: curuser,
-                    submission: submission
-                });
-            })
     }
 });
 
@@ -621,9 +624,15 @@ app.get('/recent', function(req, res) {
     if (curuser == null) {
         res.redirect('enter');
     } else {
-        res.render('recent', {
-            curuser: curuser
-        });
+        Submission.find({})
+            .sort({ date: 'desc' })
+            .limit(20)
+            .then(submissions => {
+                res.render('recent', {
+                    curuser: curuser,
+                    submission: submissions
+                });
+            })
     }
 })
 
@@ -730,6 +739,23 @@ app.get('/verdict', function(req, res) {
             curoutput: curoutput,
             image: image
         });
+    }
+});
+
+// View solution
+app.get('/viewsolution/:id', function(req, res) {
+    if (curuser == null) {
+        res.redirect('enter');
+    } else {
+        //console.log(req.params);
+        Submission.findOne({ token: req.params.id })
+            .then(submission => {
+                //console.log(submission);
+                res.render('viewsolution', {
+                    curuser: curuser,
+                    submission: submission
+                });
+            })
     }
 });
 

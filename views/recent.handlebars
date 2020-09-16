@@ -89,17 +89,24 @@
                         <th scope="col">Verdict</th>
                         <th scope="col">Language</th>
                         <th scope="col">Time</th>
+                        <th scope="col">Solution</th>
                     </tr>
                 </thead>
-                
                    <tbody>
-                     <tr>
-                       <td>Mark</td>
-                       <td>howdiff</td>
-                       <td>Accepted</td>
-                       <td>C++</td>
-                       <td>5:00 PM</td>
-                     </tr>
+                     {{#each submission}}
+                        <tr>
+                            <td>{{username}}</td>
+                            <td>{{problemcode}}</td>
+                            <td>{{verdict}}</td>
+                            <td>{{lang}}</td>
+                            <td>{{prettifyDate date}}</td>
+                            <td>
+                            <a href="/viewsolution/{{token}}" value="{{token}}"
+                                class="btn btn-outline-primary btn-block btn-border" id="btn-solve">view</a>
+                            </td>
+                        </tr>
+                    {{else}}
+                    {{/each}}
                    </tbody> 
             </table>
         </div>
