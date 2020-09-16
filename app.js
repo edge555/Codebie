@@ -4,6 +4,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const Handlebars = require('handlebars');
 const mongoose = require('mongoose');
+const flash = require('connect-flash');
 const session = require('express-session');
 const app = express();
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
@@ -43,7 +44,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Express session
-app.use(session({ secret: 'mySecret', resave: false, saveUninitialized: false }));
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+
+app.use(flash());
+
 
 // Handlebars Middleware
 
@@ -98,6 +106,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware
 app.use(function(req, res, next) {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
     next();
 });
 
@@ -314,6 +325,7 @@ app.post('/enter', function(req, res) {
             })
             .then(user => {
                 if (user) {
+                    req.flash('success_msg', 'Login successful');
                     curuser = user;
                     res.redirect('/home');
                 } else {
