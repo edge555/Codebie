@@ -15,11 +15,8 @@
             window.history.back()
         }</script>
 </head>
-
 <body>
-
     <!--Navigation Bar starts -->
-
     <section id="nav-bar">
         <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
             <div class="container-fluid">
@@ -28,7 +25,6 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id=navbarResponsive>
-
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
                             <a class="nav-link" href="/home">Dashboard<span class="sr-only">(current)</span></a>
@@ -40,31 +36,7 @@
                             <a class="nav-link" href="/recent">Recent</a>
                         </li>
                     </ul>
-
                     <ul class="navbar-nav mr-5">
-                        <div class="dropdown" style="float: right; padding: 13px">
-                            <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1"
-                                data-target="#" style="float: left" aria-expanded="true">
-                                <i class="fa fa-bell-o" style="font-size: 20px; float: left; color: black">
-                                </i>
-                            </a>
-                            <span class="badge badge-danger badge-notification">6</span>
-                            <ul class="dropdown-menu dropdown-menu-left pull-right" role="menu"
-                                aria-labelledby="dropdownMenu1">
-                                <h6 class="text-center mb-2">Notifications</h6>
-                                <ul class="timeline timeline-icons timeline-sm" style="margin:10px;width:210px">
-                                    <li>
-                                        <p> <span>hello world</span> </p>
-                                    </li>
-                                    <li>
-                                        <p> <span>hello bangladesh</span> </p>
-                                    </li>
-                                </ul>
-                                <li role="presentation">
-                                    <a href="#" class="dropdown-menu-header"></a>
-                                </li>
-                            </ul>
-                        </div>
                         <li class="nav-item dropdown my-auto">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -73,18 +45,14 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="#">Profile</a>
-                                <a class="dropdown-item" href="#">Settings</a>
+                                <a class="dropdown-item" href="#">Logout</a>
                             </div>
                         </li>
-
                     </ul>
-
                 </div>
             </div>
-
         </nav>
         <!--Navigation Bar ends -->
-
         <!--Problem title starts -->
         <div class="row">
             <div class=" col col-lg-3 col-md-3 col-sm-3">
@@ -114,38 +82,25 @@
                     <h5>Handle :</h5>
                     </p>
                 </div>
-
                 <div style="float:left;margin-left:2%;margin-top: 7px">
                     <p>
                     <h5> <a href="#">{{submission.username}}</a> </h5>
                     </p>
                 </div>
-
-
             </div>
             <div class="container" style="padding-left: 7%;">
                 <hr class="solid">
-
             </div>
-
         </div>
-
-
         <div class="row" style="padding-top: 0;">
-
             <div class=" col col-lg-3 col-md-3 col-sm-3">
             </div>
-
-
             <div class=" col col-lg-8 col-md-8 col-sm-8" style="padding-left:3%;">
-
                 <div style="float:left;margin-left:5%;margin-top: 0px">
                     <p>
                     <h5>Language : {{submission.lang}}</h5>
                     </p>
                 </div>
-
-
                 <div style="float:left;margin-left:7%;margin-top: 0px;">
                     <p>
                     <h5 style="color:#808080">{{prettifyDate submission.date}}</h5>
@@ -158,7 +113,6 @@
                     <h5 style="color:#808080;"> {{submission.time}} sec </h5>
                     </p>
                 </div>
-
                 <div class="vl3" style="float: left;margin-left:1%;"></div>
                 <div style="float:left;margin-left:1%;margin-top: 0px">
                     <p>
@@ -201,5 +155,4 @@
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
             </script>
 </body>
-
 </html>

@@ -61,24 +61,16 @@
     border: 1px solid black;
 }
 
-#footer {
-    background-color: #1a53ff;
-}
-
 .footer-div {
     border-top: 2px solid black;
 }
 
-
-/*
 .footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-
-} 
-*/
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
 
 .pagination {
     border: 0px solid #ddd;

@@ -11,11 +11,8 @@
 
     <link rel="stylesheet" href="/css/recent.css">
 </head>
-
 <body>
-
     <!--Navigation Bar starts -->
-
     <section id="nav-bar">
         <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
             <div class="container-fluid">
@@ -24,7 +21,6 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id=navbarResponsive>
-
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
                             <a class="nav-link" href="home">Dashboard<span class="sr-only">(current)</span></a>
@@ -36,31 +32,7 @@
                             <a class="nav-link" href="recent">Recent</a>
                         </li>
                     </ul>
-
                     <ul class="navbar-nav mr-5">
-                        <div class="dropdown" style="float: right; padding: 13px">
-                            <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1"
-                                data-target="#" style="float: left" aria-expanded="true">
-                                <i class="fa fa-bell-o" style="font-size: 20px; float: left; color: black">
-                                </i>
-                            </a>
-                            <span class="badge badge-danger badge-notification">6</span>
-                            <ul class="dropdown-menu dropdown-menu-left pull-right" role="menu"
-                                aria-labelledby="dropdownMenu1">
-                                <h6 class="text-center mb-2">Notifications</h6>
-                                <ul class="timeline timeline-icons timeline-sm" style="margin:10px;width:210px">
-                                    <li>
-                                        <p> <span>hello world</span> </p>
-                                    </li>
-                                    <li>
-                                        <p> <span>hello bangladesh</span> </p>
-                                    </li>
-                                </ul>
-                                <li role="presentation">
-                                    <a href="#" class="dropdown-menu-header"></a>
-                                </li>
-                            </ul>
-                        </div>
                         <li class="nav-item dropdown my-auto">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -69,7 +41,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="#">Profile</a>
-                                <a class="dropdown-item" href="#">Settings</a>
+                                <a class="dropdown-item" href="#">Logout</a>
                             </div>
                         </li>
                     </ul>
@@ -92,22 +64,22 @@
                         <th scope="col">Solution</th>
                     </tr>
                 </thead>
-                   <tbody>
-                     {{#each submission}}
-                        <tr>
-                            <td>{{username}}</td>
-                            <td>{{problemcode}}</td>
-                            <td>{{verdict}}</td>
-                            <td>{{lang}}</td>
-                            <td>{{prettifyDate date}}</td>
-                            <td>
+                <tbody>
+                    {{#each submission}}
+                    <tr>
+                        <td>{{username}}</td>
+                        <td>{{problemcode}}</td>
+                        <td>{{verdict}}</td>
+                        <td>{{lang}}</td>
+                        <td>{{prettifyDate date}}</td>
+                        <td>
                             <a href="/viewsolution/{{token}}" value="{{token}}"
                                 class="btn btn-outline-primary btn-block btn-border" id="btn-solve">view</a>
-                            </td>
-                        </tr>
+                        </td>
+                    </tr>
                     {{else}}
                     {{/each}}
-                   </tbody> 
+                </tbody>
             </table>
         </div>
     </div>
@@ -118,7 +90,16 @@
     <script src="js/default.js"></script>
     <script src="js/index.js"></script>
     <script src="lib/codemirror.js"></script>
-
+    <div class="footer">
+        <div class="d-flex" style="background-color: #1a53ff;margin-top:15px">
+            <div class="mr-auto p-2">
+                <h5><a style="color : #fff ; margin-left:10px"> &copy;2020 codebie</a></h5>
+            </div>
+            <div class="p-2"><a style="color : #fff" href="#">Privacy Policy</a></div>
+            <div class="vl"></div>
+            <div class="p-2" style="margin-right:10px"><a style="color : #fff" href="#">About Us</a></div>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
         </script>
@@ -129,4 +110,5 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
         </script>
 </body>
+
 </html>

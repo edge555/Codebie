@@ -15,46 +15,23 @@
     <section id="nav-bar">
         <nav class="navbar navbar-expand-md navbar-light bg-white sticky-top">
             <div class="container-fluid">
-                <a href="home" class="navbar-brand"><img src="images/logo.png" style="width:80%; height:70%"></a>
+                <a href="/home" class="navbar-brand"><img src="/images/logo.png" style="width:80%; height:70%"></a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=#navbarResponsive>
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id=navbarResponsive>
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="home">Dashboard<span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="/home">Dashboard<span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="ranklist">Ranklist</a>
+                            <a class="nav-link" href="/ranklist">Ranklist</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="recent">Recent</a>
+                            <a class="nav-link" href="/recent">Recent</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav mr-5">
-                        <div class="dropdown" style="float: right; padding: 13px">
-                            <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1"
-                                data-target="#" style="float: left" aria-expanded="true">
-                                <i class="fa fa-bell-o" style="font-size: 20px; float: left; color: black">
-                                </i>
-                            </a>
-                            <span class="badge badge-danger badge-notification">6</span>
-                            <ul class="dropdown-menu dropdown-menu-left pull-right" role="menu"
-                                aria-labelledby="dropdownMenu1">
-                                <h6 class="text-center mb-2">Notifications</h6>
-                                <ul class="timeline timeline-icons timeline-sm" style="margin:10px;width:210px">
-                                    <li>
-                                        <p> <span>hello world</span> </p>
-                                    </li>
-                                    <li>
-                                        <p> <span>hello bangladesh</span> </p>
-                                    </li>
-                                </ul>
-                                <li role="presentation">
-                                    <a href="#" class="dropdown-menu-header"></a>
-                                </li>
-                            </ul>
-                        </div>
                         <li class="nav-item dropdown my-auto">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -63,7 +40,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="#">Profile</a>
-                                <a class="dropdown-item" href="#">Settings</a>
+                                <a class="dropdown-item" href="#">Logout</a>
                             </div>
                         </li>
                     </ul>
@@ -72,28 +49,6 @@
         </nav>
     </section>
     <div class="row tutorial" style="height: auto !important;">
-        <div class="col-3">
-            <div id="sidebar-sliding-menu">
-                <div id="left-sidebar">
-                    <div class="center hide-on-large" style="padding:5px;">
-                    </div>
-                    <ul class="sidebar-list">
-                        <li class="main">
-                            <h4>Tutorials for C <span class="glyphicon pull-right glyphicon-chevron-down"></span></h4>
-                            <ul class="sidebar-sublist open">
-                                <li class="active"><a href="/c/overview-of-c.php">Overview of C</a></li>
-                                <li><a href="#">Operators and Expressions</a></li>
-                                <li><a href="#">Constants, Variables and Data types in C</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <div style="padding:3%;">
-                        <a href="#" class="btn btn-outline-primary btn-block btn-border" id="btn-solve">Let's
-                            Practice</a>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="col-8" style="height: auto !important; min-height: 0px !important;">
             <h1>{{curtutorial.name}}</h1>
             <div id="body-content" style="height: auto !important; background-color:#F0F8FF;padding-right:2%;">
@@ -107,7 +62,16 @@
     <div class="row">
         <div style="padding-top: 2%;"></div>
     </div>
-
+    <div class="footer">
+        <div class="d-flex" style="background-color: #1a53ff;margin-top:15px">
+            <div class="mr-auto p-2">
+                <h5><a style="color : #fff ; margin-left:10px"> &copy;2020 codebie</a></h5>
+            </div>
+            <div class="p-2"><a style="color : #fff" href="#">Privacy Policy</a></div>
+            <div class="vl"></div>
+            <div class="p-2" style="margin-right:10px"><a style="color : #fff" href="#">About Us</a></div>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
         </script>

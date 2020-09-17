@@ -31,30 +31,7 @@
               <a class="nav-link" href="recent">Recent</a>
             </li>
           </ul>
-
           <ul class="navbar-nav mr-5">
-            <div class="dropdown" style="float: right; padding: 13px">
-              <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1"
-                data-target="#" style="float: left" aria-expanded="true">
-                <i class="fa fa-bell-o" style="font-size: 20px; float: left; color: black">
-                </i>
-              </a>
-              <span class="badge badge-danger badge-notification">6</span>
-              <ul class="dropdown-menu dropdown-menu-left pull-right" role="menu" aria-labelledby="dropdownMenu1">
-                <h6 class="text-center mb-2">Notifications</h6>
-                <ul class="timeline timeline-icons timeline-sm" style="margin:10px;width:210px">
-                  <li>
-                    <p> <span>hello world</span> </p>
-                  </li>
-                  <li>
-                    <p> <span>hello bangladesh</span> </p>
-                  </li>
-                </ul>
-                <li role="presentation">
-                  <a href="#" class="dropdown-menu-header"></a>
-                </li>
-              </ul>
-            </div>
             <li class="nav-item dropdown my-auto">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
@@ -63,12 +40,10 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">Profile</a>
-                <a class="dropdown-item" href="#">Settings</a>
+                <a class="dropdown-item" href="#">Logout</a>
               </div>
             </li>
-
           </ul>
-
         </div>
       </div>
     </nav>
@@ -111,84 +86,20 @@
               {{/each}}
             </div>
           </form>
-          <div class="col-lg-3 col-xl-3">
-            <div class="card mb-5 card-tutorial-sidebar">
-              <div class="card-header text-center card-header-tutorial">
-                Data Structures
-              </div>
-              <div class="card-body text-center card-body-tutorial-sidebar">
-                <p>Solve Data Structures problems</p>
-              </div>
-            </div>
-            <div id="accordion">
-              <div class="card">
-                <div class="card-header" id="headingOne">
-                  <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
-                      aria-controls="collapseOne">
-                      Arrays
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                  <div class="card-body">
-                    <ul>
-                      <li><a href="#">1 Dimensional Arrays</a>
-                      <li><a href="#">2 Dimensional Arrays</a>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="card-header" id="headingTwo">
-                  <h5 class="mb-0">
-                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo"
-                      aria-expanded="false" aria-controls="collapseTwo">
-                      Linked Lists
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                  <div class="card-body">
-                    <ul>
-                      <li><a href="#">Singly Linked List</a></li>
-                      <li><a href="#">Doubly Linked List</a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="card-header" id="headingThree">
-                  <h5 class="mb-0">
-                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree"
-                      aria-expanded="false" aria-controls="collapseThree">
-                      Tree
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                  <div class="card-body">
-                    <ul>
-                      <li><a href="#">Binary Search Tree</a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div class="tab-pane fade" id="pills-problem" role="tabpanel" aria-labelledby="pills-problem-tab">
         <div class="row">
+
           <div class="col-lg-9 col-xl-9">
-            <!-- Card design -->
             {{#each curnotsolvedproblems}}
             <div class="card mt-4">
               <div class="card-body card-design">
                 <div class="row">
                   <div class="col-lg-9 col-xl-9">
-                    <h6 class="card-title">{{name}}</h6>
-                    <span class="badge badge-secondary"> Total Solved: {{solvecount}}</span>
+                    <h5 class="card-title">{{name}}</h5>
+                    <p class="badge badge-secondary"> Total Solved: {{solvecount}}</p>
+                    <p class="badge badge-warning">{{difficulty}}</p>
                   </div>
                   <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
                     <a href="problems/{{code}}" value="{{code}}" class="btn btn-outline-primary btn-block btn-border"
@@ -205,8 +116,9 @@
               <div class="card-body card-design">
                 <div class="row">
                   <div class="col-lg-9 col-xl-9">
-                    <h6 class="card-title">{{name}}</h6>
-                    <span class="badge badge-secondary"> Total Solved: {{solvecount}}</span>
+                    <h5 class="card-title">{{name}}</h5>
+                    <p class="badge badge-secondary"> Total Solved: {{solvecount}}</p>
+                    <p class="badge badge-warning">{{difficulty}}</p>
                   </div>
                   <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
                     <a href="problems/{{code}}" value="{{code}}" class="btn btn-outline-primary btn-block btn-border"
@@ -217,116 +129,12 @@
             </div>
             {{else}}
             {{/each}}
-
-          </div>
-          <div class="col-lg-3 col-xl-3">
-            <div class="card mt-4 card-sidebar">
-              <article class="card-group-item card-item-sidebar">
-                <header class="card-header card-title-header text-center">
-                  <h6 class="title my-auto">Status</h6>
-                </header>
-                <div class="filter-content">
-                  <div class="card-body">
-                    <form>
-                      <label class="form-check">
-                        <input class="form-check-input" type="checkbox" value="">
-                        <span class="form-check-label">
-                          Solved
-                        </span>
-                      </label> <!-- form-check.// -->
-                      <label class="form-check">
-                        <input class="form-check-input" type="checkbox" value="">
-                        <span class="form-check-label">
-                          Unsolved
-                        </span>
-                      </label> <!-- form-check.// -->
-                    </form>
-
-                  </div> <!-- card-body.// -->
-                </div>
-              </article> <!-- card-group-item.// -->
-
-              <article class="card-group-item">
-                <header class="card-header card-title-header text-center">
-                  <h6 class="title my-auto">Difficulty</h6>
-                </header>
-                <div class="filter-content">
-                  <div class="card-body">
-                    <form>
-                      <label class="form-check">
-                        <input class="form-check-input" type="checkbox" value="">
-                        <span class="form-check-label">
-                          Easy
-                        </span>
-                      </label> <!-- form-check.// -->
-                      <label class="form-check">
-                        <input class="form-check-input" type="checkbox" value="">
-                        <span class="form-check-label">
-                          Medium
-                        </span>
-                      </label> <!-- form-check.// -->
-                      <label class="form-check">
-                        <input class="form-check-input" type="checkbox" value="">
-                        <span class="form-check-label">
-                          Hard
-                        </span>
-                      </label>
-                    </form>
-                  </div>
-                </div>
-              </article>
-
-              <article class="card-group-item">
-                <header class="card-header card-title-header text-center">
-                  <h6 class="title my-auto">Sort By</h6>
-                </header>
-                <div class="filter-content">
-                  <div class="card-body">
-                    <label class="form-check">
-                      <input class="form-check-input" type="radio" name="exampleRadio" value="">
-                      <span class="form-check-label">
-                        Recently Added
-                      </span>
-                    </label>
-                    <label class="form-check">
-                      <input class="form-check-input" type="radio" name="exampleRadio" value="">
-                      <span class="form-check-label">
-                        Alphabetical
-                      </span>
-                    </label>
-                    <label class="form-check">
-                      <input class="form-check-input" type="radio" name="exampleRadio" value="">
-                      <span class="form-check-label">
-                        Oldest Added
-                      </span>
-                    </label>
-                  </div>
-                </div>
-              </article>
-
-              <article class="card-group-item">
-                <header class="card-header card-title-header text-center">
-                  <h6 class="title my-auto">Tags</h6>
-                </header>
-                <div class="filter-content">
-                  <div class="card-body">
-                    <p><a href="#">c</a>, <a href="#">data-structure</a>, <a href="#">c++</a>,
-                      <a href="#">java</a>
-                      , <a href="#">dyanmic-programming</a>, <a href="#">graphs</a>, <a href="#">python</a>, <a
-                        href="#">tree</a>,
-                      <a href="#">algorithms</a>, <a href="#">linked-lists</a>
-                      ,<a href="#">strings</a>, <a href="#">greedy</a></p>
-                  </div>
-                </div>
-              </article>
-            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="footer">
-
     <div class="d-flex" style="background-color: #1a53ff;margin-top:15px">
       <div class="mr-auto p-2">
         <h5><a style="color : #fff ; margin-left:10px"> &copy;2020 codebie</a></h5>
@@ -335,9 +143,7 @@
       <div class="vl"></div>
       <div class="p-2" style="margin-right:10px"><a style="color : #fff" href="#">About Us</a></div>
     </div>
-
   </div>
-
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
     integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
     </script>

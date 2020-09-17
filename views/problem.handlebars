@@ -35,28 +35,6 @@
             </li>
           </ul>
           <ul class="navbar-nav mr-5">
-            <div class="dropdown" style="float: right; padding: 13px">
-              <a href="#" onclick="return false;" role="button" data-toggle="dropdown" id="dropdownMenu1"
-                data-target="#" style="float: left" aria-expanded="true">
-                <i class="fa fa-bell-o" style="font-size: 20px; float: left; color: black">
-                </i>
-              </a>
-              <span class="badge badge-danger badge-notification">6</span>
-              <ul class="dropdown-menu dropdown-menu-left pull-right" role="menu" aria-labelledby="dropdownMenu1">
-                <h6 class="text-center mb-2">Notifications</h6>
-                <ul class="timeline timeline-icons timeline-sm" style="margin:10px;width:210px">
-                  <li>
-                    <p> <span>hello world</span> </p>
-                  </li>
-                  <li>
-                    <p> <span>hello bangladesh</span> </p>
-                  </li>
-                </ul>
-                <li role="presentation">
-                  <a href="#" class="dropdown-menu-header"></a>
-                </li>
-              </ul>
-            </div>
             <li class="nav-item dropdown my-auto">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
@@ -65,7 +43,7 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="#">Profile</a>
-                <a class="dropdown-item" href="#">Settings</a>
+                <a class="dropdown-item" href="#">Logout</a>
               </div>
             </li>
           </ul>
@@ -135,7 +113,7 @@
 
 
                   {{#if curmysub}}
-                    <table class="table table-light table-hover">
+                  <table class="table table-light table-hover">
                     <thead>
                       <tr bgcolor="#66B2FF">
                         <th scope="col"><u>No.</u></th>
@@ -147,7 +125,7 @@
                     <tbody>
                       <tr>
                         {{#each curmysub}}
-                        <tr>
+                      <tr>
                         <th scope="row">{{math @index "+" 1}}</th>
                         <td>{{verdict}}</td>
                         <td>{{time}}</td>
@@ -157,20 +135,20 @@
                         </td>
                       </tr>
                       {{else}}
-                      
+
                       {{/each}}
                     </tbody>
                   </table>
                   {{else}}
-                    <h2>You didn't submit yet</h4>
-                  {{/if}}
+                  <h2>You didn't submit yet</h4>
+                    {{/if}}
                 </div>
               </div>
               <div class="tab-pane fade" id="pills-allsubmissions" role="tabpanel"
                 aria-labelledby="pills-allsubmissions-tab">
                 <div class="allsubmissions">
                   {{#if curallsub}}
-                    <table class="table table-light table-hover">
+                  <table class="table table-light table-hover">
                     <thead>
                       <tr bgcolor="#66B2FF">
                         <th scope="col"><u>No.</u></th>
@@ -193,14 +171,14 @@
                         </td>
                       </tr>
                       {{else}}
-                      
+
                       {{/each}}
                     </tbody>
                   </table>
                   {{else}}
-                    <h2>You can't see solutions now</h4>
-                  {{/if}}
-                  
+                  <h2>You can't see solutions now</h4>
+                    {{/if}}
+
                 </div>
               </div>
             </div>
@@ -266,4 +244,5 @@
       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
       </script>
 </body>
+
 </html>
