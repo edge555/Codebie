@@ -70,11 +70,11 @@
                           <form action="/enter" method="post" id="signupform" class="text-left">
                             <div class="input-group mb-4 text-white">
                               <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
-                              <input class="form-control text-white" name="signupemail" type="text" placeholder="Email address">
+                              <input class="form-control text-white" name="signupemail" type="text" value="{{email}}" placeholder="Email address" required>
                             </div>
                             <div class="input-group mb-4 text-white">
                               <span class="input-group-addon"><i class="fa fa-user mr-2"></i></i></span>
-                              <input type="text" name="signupusername" name="signupname" id="signupusername" class="form-control text-white" placeholder="Enter your username" required>
+                              <input type="text" name="signupusername" name="signupname" id="signupusername" class="form-control text-white" value="{{username}}" placeholder="Enter your username" required>
                             </div>
 
                             <div class="input-group mb-4">

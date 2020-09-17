@@ -4,6 +4,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const Handlebars = require('handlebars');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+//const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
 const app = express();
@@ -334,17 +336,55 @@ app.post('/enter', function(req, res) {
             });
     } else {
         //console.log(req.body);
-        const newUser = {
-            username: req.body.signupusername,
-            email: req.body.signupemail,
-            password: req.body.signuppass,
-        };
-        new User(newUser)
-            .save()
+        var errors = [];
+        User.findOne({ email: req.body.signupemail })
             .then(user => {
-                res.redirect('/enter');
+                if (user) {
+                    errors.push({ text: "Email already registered" });
+                }
             });
-        // else show error
+        User.findOne({ username: req.body.signupusername })
+            .then(user => {
+                if (user) {
+                    errors.push({ text: "Username already taken" });
+                }
+            });
+        if (req.body.signuppass != req.body.signuppass2) {
+            errors.push({ text: "Password doesn't match" });
+        }
+        if (req.body.signuppass.length < 6) {
+            errors.push({ text: "Password too short" });
+        }
+        if (errors.length != 0) {
+            res.render('enter', {
+                errors: errors,
+                email: req.body.signupemail,
+                username: req.body.signupusername
+            })
+        } else {
+            const newUser = {
+                username: req.body.signupusername,
+                email: req.body.signupemail,
+                password: req.body.signuppass,
+            }
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(newUser.password, salt, function(err, hash) {
+                    if (err) throw err;
+                    newUser.password = hash;
+                    new User(newUser)
+                        .save()
+                        .then(user => {
+                            console.log(user);
+                            req.flash('success_msg', 'Registration Successful');
+                            res.redirect('/enter');
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            return;
+                        });
+                });
+            });
+        }
     }
 });
 
