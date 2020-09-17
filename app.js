@@ -13,6 +13,7 @@ const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-ac
 const { exec } = require("child_process");
 const fs = require('fs');
 const unirest = require('unirest');
+const { ensureAuthenticated } = require('./helpers/auth');
 
 var curmysub = [],
     cursolvedproblems = [],
@@ -55,7 +56,6 @@ app.use(session({
     saveUninitialized: true
 }));
 
-
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
@@ -63,7 +63,6 @@ app.use(passport.session());
 app.use(flash());
 
 // Handlebars Middleware
-
 app.engine('handlebars', exphbs({
     defaultLayout: 'main',
     handlebars: allowInsecurePrototypeAccess(Handlebars),
@@ -130,17 +129,15 @@ app.get('/aboutus', function(req, res) {
 });
 
 // Admin access
-app.get('/admin', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else if (curuser.username == "edge555") {
+app.get('/admin', ensureAuthenticated, function(req, res) {
+    if (curuser.username == "edge555") {
         res.render('admin/admin');
     } else {
         res.render('accessdenied');
     }
 });
 
-app.post('/admin', function(req, res) {
+app.post('/admin', ensureAuthenticated, function(req, res) {
     //console.log(req.body);
     if (req.body.submit == "addproblem") {
         res.redirect('adminaddproblem');
@@ -164,17 +161,15 @@ app.post('/admin', function(req, res) {
 });
 
 // To add problems
-app.get('/adminaddproblem', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else if (curuser.username == "edge555") {
+app.get('/adminaddproblem', ensureAuthenticated, function(req, res) {
+    if (curuser.username == "edge555") {
         res.render('admin/adminaddproblem');
     } else {
         res.render('accessdenied');
     }
 });
 
-app.post('/adminaddproblem', function(req, res) {
+app.post('/adminaddproblem', ensureAuthenticated, function(req, res) {
     //console.log(req.body);
     const newProblem = {
         name: req.body.name,
@@ -198,11 +193,9 @@ app.post('/adminaddproblem', function(req, res) {
 });
 
 // To edit problems
-app.get('/admineditproblem', function(req, res) {
+app.get('/admineditproblem', ensureAuthenticated, function(req, res) {
     //console.log(cureditproblem);
-    if (curuser == null) {
-        res.redirect('enter');
-    } else if (curuser.username == "edge555") {
+    if (curuser.username == "edge555") {
         Problem.findOne({ code: cureditproblem })
             .lean()
             .then(problems => {
@@ -217,7 +210,7 @@ app.get('/admineditproblem', function(req, res) {
     }
 });
 
-app.post('/admineditproblem', function(req, res) {
+app.post('/admineditproblem', ensureAuthenticated, function(req, res) {
     //console.log("Admin edit problem");
     Problem.findOne({
             code: cureditproblem
@@ -244,17 +237,15 @@ app.post('/admineditproblem', function(req, res) {
 });
 
 // To add tutorial
-app.get('/adminaddtutorial', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else if (curuser.username == "edge555") {
+app.get('/adminaddtutorial', ensureAuthenticated, function(req, res) {
+    if (curuser.username == "edge555") {
         res.render('admin/adminaddtutorial');
     } else {
         res.render('accessdenied');
     }
 });
 
-app.post('/adminaddtutorial', function(req, res) {
+app.post('/adminaddtutorial', ensureAuthenticated, function(req, res) {
     //console.log(req.body);
     const newTutorial = {
         name: req.body.name,
@@ -270,10 +261,8 @@ app.post('/adminaddtutorial', function(req, res) {
 });
 
 // To edit tutorial
-app.get('/adminedittutorial', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else if (curuser.username == "edge555") {
+app.get('/adminedittutorial', ensureAuthenticated, function(req, res) {
+    if (curuser.username == "edge555") {
         //console.log(curedittutorial);
         Tutorial.findOne({ code: curedittutorial })
             .then(tutorials => {
@@ -287,7 +276,7 @@ app.get('/adminedittutorial', function(req, res) {
     }
 });
 
-app.post('/adminedittutorial', function(req, res) {
+app.post('/adminedittutorial', ensureAuthenticated, function(req, res) {
     console.log("Admin edit tutorial");
     Tutorial.findOne({
             code: curedittutorial
@@ -397,60 +386,55 @@ app.post('/enter', function(req, res, next) {
 });
 
 // Home Route
-app.get('/home', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else {
-
-        // Store number of problems in each sections
-        counter = {
-            ccnt: 0,
-            cppcnt: 0,
-            javacnt: 0,
-            pycnt: 0,
-            dscnt: 0,
-            algocnt: 0
-        }
-        Problem.find({})
-            .then(problems => {
-                //console.log(problems);
-                problems.forEach(problem => {
-                    //console.log(problem.tags);
-                    if (problem.tags == "c") {
-                        counter.ccnt++;
-                    } else if (problem.tags == "cpp") {
-                        counter.cppcnt++;
-                    } else if (problem.tags == "java") {
-                        counter.javacnt++;
-                    } else if (problem.tags == "py") {
-                        counter.pycnt++;
-                    } else if (problem.tags == "ds") {
-                        counter.dscnt++;
-                    } else if (problem.tags == "algo") {
-                        counter.algocnt++;
-                    }
-                });
-                percentage = {
-                        cper: (curuser.csolvecount * 100) / counter.ccnt,
-                        cppper: (curuser.cppsolvecount * 100) / counter.cppcnt,
-                        javaper: (curuser.javasolvecount * 100) / counter.javacnt,
-                        pyper: (curuser.pysolvecount * 100) / counter.pycnt,
-                        dsper: (curuser.dssolvecount * 100) / counter.dscnt,
-                        algoper: (curuser.algosolvecount * 100) / counter.algocnt
-                    }
-                    /* console.log(counter);
-                    console.log(percentage);
-                    console.log(curuser); */
-                res.render('home', {
-                    curuser: curuser,
-                    counter: counter,
-                    percentage: percentage
-                });
-            });
+app.get('/home', ensureAuthenticated, function(req, res) {
+    // Store number of problems in each sections
+    counter = {
+        ccnt: 0,
+        cppcnt: 0,
+        javacnt: 0,
+        pycnt: 0,
+        dscnt: 0,
+        algocnt: 0
     }
+    Problem.find({})
+        .then(problems => {
+            //console.log(problems);
+            problems.forEach(problem => {
+                //console.log(problem.tags);
+                if (problem.tags == "c") {
+                    counter.ccnt++;
+                } else if (problem.tags == "cpp") {
+                    counter.cppcnt++;
+                } else if (problem.tags == "java") {
+                    counter.javacnt++;
+                } else if (problem.tags == "py") {
+                    counter.pycnt++;
+                } else if (problem.tags == "ds") {
+                    counter.dscnt++;
+                } else if (problem.tags == "algo") {
+                    counter.algocnt++;
+                }
+            });
+            percentage = {
+                    cper: (curuser.csolvecount * 100) / counter.ccnt,
+                    cppper: (curuser.cppsolvecount * 100) / counter.cppcnt,
+                    javaper: (curuser.javasolvecount * 100) / counter.javacnt,
+                    pyper: (curuser.pysolvecount * 100) / counter.pycnt,
+                    dsper: (curuser.dssolvecount * 100) / counter.dscnt,
+                    algoper: (curuser.algosolvecount * 100) / counter.algocnt
+                }
+                /* console.log(counter);
+                console.log(percentage);
+                console.log(curuser); */
+            res.render('home', {
+                curuser: curuser,
+                counter: counter,
+                percentage: percentage
+            });
+        });
 });
 
-app.post('/home', function(req, res) {
+app.post('/home', ensureAuthenticated, function(req, res) {
     section = req.body.submit;
     Problem.find({ tags: req.body.submit })
         .lean()
@@ -473,7 +457,7 @@ app.get('/logout', function(req, res) {
 });
 
 // Problem show and submit page
-app.get('/problem', function(req, res) {
+app.get('/problem', ensureAuthenticated, function(req, res) {
     res.render('problem', {
         curuser: curuser,
         curproblem: curproblem
@@ -573,10 +557,7 @@ function getverdict(submission, input, output, callback) {
     }, 7000);
 }
 
-app.post('/problem', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    }
+app.post('/problem', ensureAuthenticated, function(req, res) {
     //console.log(curproblem);
     cursubmittedcode = req.body.submittedcode;
     var submission = {
@@ -608,225 +589,201 @@ app.post('/problem', function(req, res) {
     }, 12000);
 });
 
-app.get('/problems', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else {
-        // Seperating solved and non solved problems
-        var mysolvedcode = [];
-        cursolvedproblems = [];
-        curnotsolvedproblems = [];
-        curuser.solved.forEach(solve => {
-            if (solve.section == section) {
-                mysolvedcode.push(solve.code)
-            }
-        });
-        curproblems.forEach(problem => {
-            if (mysolvedcode.includes(problem.code)) {
-                cursolvedproblems.push(problem);
-            } else {
-                curnotsolvedproblems.push(problem);
-            }
-        });
-        res.render('problems', {
-            curuser: curuser,
-            cursolvedproblems: cursolvedproblems,
-            curnotsolvedproblems: curnotsolvedproblems,
-            curtutorials: curtutorials
-        });
-    }
-});
+app.get('/problems', ensureAuthenticated, function(req, res) {
+    // Seperating solved and non solved problems
+    var mysolvedcode = [];
+    cursolvedproblems = [];
+    curnotsolvedproblems = [];
+    curuser.solved.forEach(solve => {
+        if (solve.section == section) {
+            mysolvedcode.push(solve.code)
+        }
+    });
+    curproblems.forEach(problem => {
+        if (mysolvedcode.includes(problem.code)) {
+            cursolvedproblems.push(problem);
+        } else {
+            curnotsolvedproblems.push(problem);
+        }
+    });
+    res.render('problems', {
+        curuser: curuser,
+        cursolvedproblems: cursolvedproblems,
+        curnotsolvedproblems: curnotsolvedproblems,
+        curtutorials: curtutorials
+    });
 
-app.post('/problems', function(req, res) {
-    console.log("Posted from problems");
 });
 
 // Find problem and redirect to show and submit page
-app.get('/problems/:id', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else {
-        Problem.findOne({ code: req.params.id })
-            .lean()
-            .then(problems => {
-                curmysub = [];
-                curproblem = problems;
-                Submission.find({
-                    problemcode: curproblem.code
-                }).then(submissions => {
-                    submissions.forEach(submission => {
-                        if (submission.username == curuser.username) {
-                            curmysub.push(submission);
-                        }
-                    })
-                    res.render('problem', {
-                        curproblem: curproblem,
-                        curuser: curuser,
-                        curmysub: curmysub,
-                        curallsub: submissions
-                    });
+app.get('/problems/:id', ensureAuthenticated, function(req, res) {
+
+    Problem.findOne({ code: req.params.id })
+        .lean()
+        .then(problems => {
+            curmysub = [];
+            curproblem = problems;
+            Submission.find({
+                problemcode: curproblem.code
+            }).then(submissions => {
+                submissions.forEach(submission => {
+                    if (submission.username == curuser.username) {
+                        curmysub.push(submission);
+                    }
+                })
+                res.render('problem', {
+                    curproblem: curproblem,
+                    curuser: curuser,
+                    curmysub: curmysub,
+                    curallsub: submissions
                 });
             });
-    }
+        });
+});
+
+// Profile page
+app.get('/profile/:id', ensureAuthenticated, function(req, res) {
+    console.log(req.params.id);
+    res.render('/proflie');
 });
 
 // Ranklist page
-app.get('/ranklist', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else {
-        User.find({})
-            .sort({ totalsolvecount: 'desc' })
-            .then(user => {
-                //console.log(user);
-                res.render('ranklist', {
-                    curuser: curuser,
-                    user: user
-                });
-            })
-    }
+app.get('/ranklist', ensureAuthenticated, function(req, res) {
+
+    User.find({})
+        .sort({ totalsolvecount: 'desc' })
+        .then(user => {
+            //console.log(user);
+            res.render('ranklist', {
+                curuser: curuser,
+                user: user
+            });
+        })
 })
 
 // Recent page
-app.get('/recent', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else {
-        Submission.find({})
-            .sort({ date: 'desc' })
-            .limit(20)
-            .then(submissions => {
-                res.render('recent', {
-                    curuser: curuser,
-                    submission: submissions
-                });
-            })
-    }
+app.get('/recent', ensureAuthenticated, function(req, res) {
+
+    Submission.find({})
+        .sort({ date: 'desc' })
+        .limit(20)
+        .then(submissions => {
+            res.render('recent', {
+                curuser: curuser,
+                submission: submissions
+            });
+        })
 })
 
 // Tutorial page
-app.get('/tutorial', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else {
-        res.render('tutorial', {
-            curuser: curuser,
-            curtutorial: curtutorial
-        });
-    }
+app.get('/tutorial', ensureAuthenticated, function(req, res) {
+
+    res.render('tutorial', {
+        curuser: curuser,
+        curtutorial: curtutorial
+    });
 })
 
 // Find problem and redirect to show and submit page
-app.get('/tutorials/:id', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else {
-        //console.log(req.params);
-        Tutorial.findOne({ code: req.params.id })
-            .lean()
-            .then(tutorials => {
-                curtutorial = tutorials;
-                res.render('tutorial', {
-                    curuser: curuser,
-                    curtutorial: tutorials
-                });
+app.get('/tutorials/:id', ensureAuthenticated, function(req, res) {
+
+    //console.log(req.params);
+    Tutorial.findOne({ code: req.params.id })
+        .lean()
+        .then(tutorials => {
+            curtutorial = tutorials;
+            res.render('tutorial', {
+                curuser: curuser,
+                curtutorial: tutorials
             });
-    }
+        });
 });
 
-app.get('/verdict', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else {
-        //console.log(section);
-        User.findOne({
-                username: curuser.username
-            })
-            .then(user => {
-                var alreadysolved = false;
-                if (verdict == "Accepted") {
-                    user.solved.forEach(solve => {
-                        if (solve.code == curproblem.code) {
-                            alreadysolved = true;
-                        }
-                    });
-                    if (alreadysolved == false) {
-                        if (section == "c") {
-                            user.csolvecount++;
-                        } else if (section == "cpp") {
-                            user.cppsolvecount++;
-                        } else if (section == "java") {
-                            user.javasolvecount++;
-                        } else if (section == "py") {
-                            user.pysolvecount++;
-                        } else if (section == "ds") {
-                            user.dssolvecount++;
-                        } else if (section == "algo") {
-                            user.algosolvecount++;
-                        }
-                        user.totalsolvecount++;
-                        const newSolved = {
-                            code: curproblem.code,
-                            section: section
-                        }
-                        user.solved.unshift(newSolved);
-                        user.save();
-                        curuser = user;
+app.get('/verdict', ensureAuthenticated, function(req, res) {
+    //console.log(section);
+    User.findOne({
+            username: curuser.username
+        })
+        .then(user => {
+            var alreadysolved = false;
+            if (verdict == "Accepted") {
+                user.solved.forEach(solve => {
+                    if (solve.code == curproblem.code) {
+                        alreadysolved = true;
                     }
-                    Problem.findOne({
-                            code: curproblem.code
-                        })
-                        .then(problems => {
-                            problems.solvecount++;
-                            problems.save()
-                        });
+                });
+                if (alreadysolved == false) {
+                    if (section == "c") {
+                        user.csolvecount++;
+                    } else if (section == "cpp") {
+                        user.cppsolvecount++;
+                    } else if (section == "java") {
+                        user.javasolvecount++;
+                    } else if (section == "py") {
+                        user.pysolvecount++;
+                    } else if (section == "ds") {
+                        user.dssolvecount++;
+                    } else if (section == "algo") {
+                        user.algosolvecount++;
+                    }
+                    user.totalsolvecount++;
+                    const newSolved = {
+                        code: curproblem.code,
+                        section: section
+                    }
+                    user.solved.unshift(newSolved);
+                    user.save();
+                    curuser = user;
                 }
-                const newSubmission = {
-                    username: curuser.username,
-                    problemcode: curproblem.code,
-                    token: curtoken,
-                    verdict: verdict,
-                    time: curoutput.time,
-                    memory: curoutput.memory / 1024,
-                    section: section,
-                    stdin: cursubmittedcode,
-                    lang: curlang
-                }
-                new Submission(newSubmission).save()
-            });
-
-        var image;
-        if (verdict == "Accepted") {
-            image = "images/congrats.gif";
-        } else {
-            image = "images/sorry.gif";
-        }
-        res.render('verdict', {
-            curuser: curuser,
-            verdict: verdict,
-            curoutput: curoutput,
-            image: image
+                Problem.findOne({
+                        code: curproblem.code
+                    })
+                    .then(problems => {
+                        problems.solvecount++;
+                        problems.save()
+                    });
+            }
+            const newSubmission = {
+                username: curuser.username,
+                problemcode: curproblem.code,
+                token: curtoken,
+                verdict: verdict,
+                time: curoutput.time,
+                memory: curoutput.memory / 1024,
+                section: section,
+                stdin: cursubmittedcode,
+                lang: curlang
+            }
+            new Submission(newSubmission).save()
         });
+
+    var image;
+    if (verdict == "Accepted") {
+        image = "images/congrats.gif";
+    } else {
+        image = "images/sorry.gif";
     }
+    res.render('verdict', {
+        curuser: curuser,
+        verdict: verdict,
+        curoutput: curoutput,
+        image: image
+    });
 });
 
 // View solution
-app.get('/viewsolution/:id', function(req, res) {
-    if (curuser == null) {
-        res.redirect('enter');
-    } else {
-        //console.log(req.params);
-        Submission.findOne({ token: req.params.id })
-            .then(submission => {
-                //console.log(submission);
-                res.render('viewsolution', {
-                    curuser: curuser,
-                    submission: submission
-                });
-            })
-    }
-});
+app.get('/viewsolution/:id', ensureAuthenticated, function(req, res) {
 
+    //console.log(req.params);
+    Submission.findOne({ token: req.params.id })
+        .then(submission => {
+            //console.log(submission);
+            res.render('viewsolution', {
+                curuser: curuser,
+                submission: submission
+            });
+        })
+});
 
 app.listen(3000, function() {
     console.log("Server started on port 3000");

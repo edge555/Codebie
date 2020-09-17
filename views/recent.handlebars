@@ -16,20 +16,20 @@
     <section id="nav-bar">
         <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
             <div class="container-fluid">
-                <a href="home" class="navbar-brand"><img src="images/logo.png" style="width:80%; height:70%"></a>
+                <a href="/home" class="navbar-brand"><img src="images/logo.png" style="width:80%; height:70%"></a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=#navbarResponsive>
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id=navbarResponsive>
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="home">Dashboard<span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="/home">Dashboard<span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="ranklist">Ranklist</a>
+                            <a class="nav-link" href="/ranklist">Ranklist</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="recent">Recent</a>
+                            <a class="nav-link" href="/recent">Recent</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav mr-5">
@@ -40,8 +40,8 @@
                                 {{curuser.username}}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Profile</a>
-                                <a class="dropdown-item" href="#">Logout</a>
+                                <a class="dropdown-item" href="/profile/{{curuser.username}}" value="{{curuser.username}}">Profile</a>
+                                <a class="dropdown-item" href="/logout">Logout</a>
                             </div>
                         </li>
                     </ul>
