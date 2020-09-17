@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const Handlebars = require('handlebars');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-//const passport = require('passport');
+const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
 const app = express();
@@ -41,6 +41,9 @@ const Tutorial = mongoose.model('tutorials');
 require('./models/Submission');
 const Submission = mongoose.model('submissions');
 
+// Passport config
+require('./config/passport')(passport);
+
 // Body Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -52,8 +55,12 @@ app.use(session({
     saveUninitialized: true
 }));
 
-app.use(flash());
 
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(flash());
 
 // Handlebars Middleware
 
@@ -95,7 +102,8 @@ app.engine('handlebars', exphbs({
             var curr_minutes = timestamp.getMinutes();
             var curr_seconds = timestamp.getSeconds();
 
-            result = addZero(curr_date) + "/" + addZero(curr_month) + "/" + addZero(curr_year) + '   ' + addZero(curr_hour) + ':' + addZero(curr_minutes) + ':' + addZero(curr_seconds) + ' ' + temp;
+            result = addZero(curr_date) + "/" + addZero(curr_month) + "/" + addZero(curr_year) + '   ' +
+                addZero(curr_hour) + ':' + addZero(curr_minutes) + ':' + addZero(curr_seconds) + ' ' + temp;
             return result;
         }
     }
@@ -320,20 +328,20 @@ app.get('/enter', function(req, res) {
     }
 });
 
-app.post('/enter', function(req, res) {
+app.post('/enter', function(req, res, next) {
     if (Object.keys(req.body).length == 3) {
-        User.findOne({
-                username: req.body.signinusername
-            })
+        //console.log(req.body);
+        User.findOne({ username: req.body.username })
             .then(user => {
                 if (user) {
-                    req.flash('success_msg', 'Login successful');
                     curuser = user;
-                    res.redirect('/home');
-                } else {
-                    // else show error
                 }
-            });
+            })
+        passport.authenticate('local', {
+            successRedirect: '/home',
+            failureRedirect: '/enter',
+            failureFlash: true
+        })(req, res, next);
     } else {
         //console.log(req.body);
         var errors = [];
@@ -374,7 +382,7 @@ app.post('/enter', function(req, res) {
                     new User(newUser)
                         .save()
                         .then(user => {
-                            console.log(user);
+                            //console.log(user);
                             req.flash('success_msg', 'Registration Successful');
                             res.redirect('/enter');
                         })
@@ -393,6 +401,7 @@ app.get('/home', function(req, res) {
     if (curuser == null) {
         res.redirect('enter');
     } else {
+
         // Store number of problems in each sections
         counter = {
             ccnt: 0,
@@ -454,6 +463,13 @@ app.post('/home', function(req, res) {
             curtutorials = tutorials;
         });
     res.redirect('/problems');
+});
+
+app.get('/logout', function(req, res) {
+    curuser = null;
+    req.logout();
+    req.flash('success_msg', 'Logged Out');
+    res.redirect('/');
 });
 
 // Problem show and submit page
