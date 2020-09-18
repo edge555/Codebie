@@ -30,19 +30,26 @@
               <a class="nav-link" href="/recent">Recent</a>
             </li>
           </ul>
-          <ul class="navbar-nav mr-5">
-            <li class="nav-item dropdown my-auto">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <span><i class="fa fa-user"></i></span>
-                {{curuser.username}}
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="/profile/{{curuser.username}}" value="{{curuser.username}}">Profile</a>
-                  <a class="dropdown-item" href="/logout">Logout</a>
-              </div>
-            </li>
-          </ul>
+          {{#if curuser}}
+            <ul class="navbar-nav mr-5">
+                <li class="nav-item dropdown my-auto">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span><i class="fa fa-user"></i></span>
+                        {{curuser.username}}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/profile/{{curuser.username}}" value="{{curuser.username}}">Profile</a>
+                        <a class="dropdown-item" href="/logout">Logout</a>
+                    </div>
+                </li>
+            </ul>
+            {{else}}
+            <ul class="navbar-nav mr-4">
+                <li class="nav-item dropdown my-auto"><a href="/enter">Login</a></li>
+                <li class="nav-item dropdown my-auto"><a href="/enter">Register</a></li>
+            </ul>
+            {{/if}}
         </div>
       </div>
     </nav>

@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="/css/recent.css">
 </head>
+
 <body>
     <!--Navigation Bar starts -->
     <section id="nav-bar">
@@ -32,6 +33,7 @@
                             <a class="nav-link" href="/recent">Recent</a>
                         </li>
                     </ul>
+                    {{#if curuser}}
                     <ul class="navbar-nav mr-5">
                         <li class="nav-item dropdown my-auto">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -40,16 +42,22 @@
                                 {{curuser.username}}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/profile/{{curuser.username}}" value="{{curuser.username}}">Profile</a>
+                                <a class="dropdown-item" href="/profile/{{curuser.username}}"
+                                    value="{{curuser.username}}">Profile</a>
                                 <a class="dropdown-item" href="/logout">Logout</a>
                             </div>
                         </li>
                     </ul>
+                    {{else}}
+                    <ul class="navbar-nav mr-4">
+                        <li class="nav-item dropdown my-auto"><a href="/enter">Login</a></li>
+                        <li class="nav-item dropdown my-auto"><a href="/enter">Register</a></li>
+                    </ul>
+                    {{/if}}
                 </div>
             </div>
         </nav>
     </section>
-
     <div class="wrapper">
         <h4 style="color: #176AF7;font-family: Cambria, Georgia, serif;"> <b>Recent Submissions</b></h4>
         <div class="table-responsive-lg" style="padding-left:3%;padding-right:3%;padding-top:1%;">

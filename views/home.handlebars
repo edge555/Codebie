@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
-
     <link rel="stylesheet" href="/css/home.css">
 </head>
 
@@ -27,6 +26,7 @@
                     <a class="nav-link" href="/recent">Recent</a>
                 </li>
             </ul>
+            {{#if curuser}}
             <ul class="navbar-nav mr-5">
                 <li class="nav-item dropdown my-auto">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -40,6 +40,12 @@
                     </div>
                 </li>
             </ul>
+            {{else}}
+            <ul class="navbar-nav mr-4">
+                <li class="nav-item dropdown my-auto"><a href="/enter">Login</a></li>
+                <li class="nav-item dropdown my-auto"><a href="/enter">Register</a></li>
+            </ul>
+            {{/if}}
         </div>
     </nav>
     <form action="/home" method="post" id="gototag">
@@ -59,12 +65,23 @@
                                                 alt="card image"></p>
                                     </div>
                                     <div class="col-lg-9 col-xl-9 text-center">
-                                        <h3 class="card-title">C</h3>
-                                        <div class="progress text-center">
+                                         {{#if curuser}}
+                                            <h3 class="card-title">C ({{curuser.csolvecount}}/{{counter.ccnt}})</h3>
+                                            <div class="progress text-center">
                                             <div class="progress-bar" role="progressbar"
-                                                style="width:{{percentage.cper}}%" aria-valuenow="100" aria-valuemin="0"
-                                                aria-valuemax="100">{{curuser.csolvecount}}/{{counter.ccnt}}</div>
+                                                style="width:{{math curuser.csolvecount "x" counter.ccnt}}%" aria-valuenow="100" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
                                         </div>
+                                         {{else}}
+                                            <h3 class="card-title">C (0/{{counter.ccnt}})</h3>
+                                            <div class="progress text-center">
+                                            <div class="progress-bar" role="progressbar"
+                                                style="width:0%" aria-valuenow="100" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                         {{/if}}
                                         <button type="submit" name="submit" value="c"
                                             class="btn btn-outline-primary btn-block btn-border mt-2"
                                             id="btn-solve">Practice</button>
@@ -84,13 +101,23 @@
                                                 alt="card image"></p>
                                     </div>
                                     <div class="col-lg-9 col-xl-9 text-center">
-                                        <h3 class="card-title">C++</h3>
-                                        <div class="progress text-center">
+                                        {{#if curuser}}
+                                            <h3 class="card-title">C++ ({{curuser.cppsolvecount}}/{{counter.cppcnt}})</h3>
+                                            <div class="progress text-center">
                                             <div class="progress-bar" role="progressbar"
-                                                style="width: {{percentage.cppper}}%" aria-valuenow="90"
-                                                aria-valuemin="0" aria-valuemax="100">
-                                                {{curuser.cppsolvecount}}/{{counter.cppcnt}}</div>
+                                                style="width:{{math curuser.cppsolvecount "x" counter.cppcnt}}%" aria-valuenow="100" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
                                         </div>
+                                         {{else}}
+                                            <h3 class="card-title">C++ (0/{{counter.cppcnt}})</h3>
+                                            <div class="progress text-center">
+                                            <div class="progress-bar" role="progressbar"
+                                                style="width:0%" aria-valuenow="100" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                         {{/if}}
                                         <button type="submit" name="submit" value="cpp"
                                             class="btn btn-outline-primary btn-block btn-border mt-2"
                                             id="btn-solve">Practice</button>
@@ -112,13 +139,23 @@
                                                 alt="card image"></p>
                                     </div>
                                     <div class="col-lg-9 col-xl-9 text-center">
-                                        <h3 class="card-title">Java</h3>
-                                        <div class="progress text-center">
+                                        {{#if curuser}}
+                                            <h3 class="card-title">Java ({{curuser.javasolvecount}}/{{counter.javacnt}})</h3>
+                                            <div class="progress text-center">
                                             <div class="progress-bar" role="progressbar"
-                                                style="width: {{percentage.javaper}}%" aria-valuenow="35"
-                                                aria-valuemin="0" aria-valuemax="100">
-                                                {{curuser.javasolvecount}}/{{counter.javacnt}}</div>
+                                                style="width:{{math curuser.javasolvecount "x" counter.javacnt}}%" aria-valuenow="100" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
                                         </div>
+                                         {{else}}
+                                            <h3 class="card-title">Java (0/{{counter.javacnt}})</h3>
+                                            <div class="progress text-center">
+                                            <div class="progress-bar" role="progressbar"
+                                                style="width:0%" aria-valuenow="100" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                         {{/if}}
                                         <button type="submit" name="submit" value="java"
                                             class="btn btn-outline-primary btn-block btn-border mt-2"
                                             id="btn-solve">Practice</button>
@@ -138,13 +175,23 @@
                                                 alt="card image"></p>
                                     </div>
                                     <div class="col-lg-9 col-xl-9 text-center">
-                                        <h3 class="card-title">Python</h3>
-                                        <div class="progress text-center">
+                                        {{#if curuser}}
+                                            <h3 class="card-title">Python ({{curuser.pysolvecount}}/{{counter.pycnt}})</h3>
+                                            <div class="progress text-center">
                                             <div class="progress-bar" role="progressbar"
-                                                style="width: {{percentage.pyper}}%" aria-valuenow="40"
-                                                aria-valuemin="0" aria-valuemax="100">
-                                                {{curuser.pysolvecount}}/{{counter.pycnt}}</div>
+                                                style="width:{{math curuser.pysolvecount "x" counter.pycnt}}%" aria-valuenow="100" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
                                         </div>
+                                         {{else}}
+                                            <h3 class="card-title">Python (0/{{counter.pycnt}})</h3>
+                                            <div class="progress text-center">
+                                            <div class="progress-bar" role="progressbar"
+                                                style="width:0%" aria-valuenow="100" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                         {{/if}}
                                         <button type="submit" name="submit" value="py"
                                             class="btn btn-outline-primary btn-block btn-border mt-2"
                                             id="btn-solve">Practice</button>
@@ -164,13 +211,23 @@
                                                 alt="card image"></p>
                                     </div>
                                     <div class="col-lg-9 col-xl-9 text-center">
-                                        <h3 class="card-title">Data Structure</h3>
-                                        <div class="progress text-center">
+                                        {{#if curuser}}
+                                            <h3 class="card-title">Data Structure ({{curuser.csolvecount}}/{{counter.ccnt}})</h3>
+                                            <div class="progress text-center">
                                             <div class="progress-bar" role="progressbar"
-                                                style="width: {{percentage.dsper}}%" aria-valuenow="40"
-                                                aria-valuemin="0" aria-valuemax="100">
-                                                {{curuser.dssolvecount}}/{{counter.dscnt}}</div>
+                                                style="width:{{math curuser.dssolvecount "x" counter.dscnt}}%" aria-valuenow="100" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
                                         </div>
+                                         {{else}}
+                                            <h3 class="card-title">Data Structure (0/{{counter.dscnt}})</h3>
+                                            <div class="progress text-center">
+                                            <div class="progress-bar" role="progressbar"
+                                                style="width:0%" aria-valuenow="100" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                         {{/if}}
                                         <button type="submit" name="submit" value="ds"
                                             class="btn btn-outline-primary btn-block btn-border mt-2"
                                             id="btn-solve">Practice</button>
@@ -190,13 +247,23 @@
                                                 alt="card image"></p>
                                     </div>
                                     <div class="col-lg-9 col-xl-9 text-center">
-                                        <h3 class="card-title">Algorithm</h3>
-                                        <div class="progress text-center">
+                                        {{#if curuser}}
+                                            <h3 class="card-title">Algorithm ({{curuser.algosolvecount}}/{{counter.algocnt}})</h3>
+                                            <div class="progress text-center">
                                             <div class="progress-bar" role="progressbar"
-                                                style="width: {{percentage.algoper}}%" aria-valuenow="40"
-                                                aria-valuemin="0" aria-valuemax="100">
-                                                {{curuser.algosolvecount}}/{{counter.algocnt}}</div>
+                                                style="width:{{math curuser.algosolvecount "x" counter.algocnt}}%" aria-valuenow="100" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
                                         </div>
+                                         {{else}}
+                                            <h3 class="card-title">Algorithm (0/{{counter.algocnt}})</h3>
+                                            <div class="progress text-center">
+                                            <div class="progress-bar" role="progressbar"
+                                                style="width:0%" aria-valuenow="100" aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                         {{/if}}
                                         <button type="submit" name="submit" value="algo"
                                             class="btn btn-outline-primary btn-block btn-border mt-2"
                                             id="btn-solve">Practice</button>

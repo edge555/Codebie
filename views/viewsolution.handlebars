@@ -15,6 +15,7 @@
             window.history.back()
         }</script>
 </head>
+
 <body>
     <!--Navigation Bar starts -->
     <section id="nav-bar">
@@ -36,6 +37,7 @@
                             <a class="nav-link" href="/recent">Recent</a>
                         </li>
                     </ul>
+                    {{#if curuser}}
                     <ul class="navbar-nav mr-5">
                         <li class="nav-item dropdown my-auto">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -44,11 +46,18 @@
                                 {{curuser.username}}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/profile/{{curuser.username}}" value="{{curuser.username}}">Profile</a>
+                                <a class="dropdown-item" href="/profile/{{curuser.username}}"
+                                    value="{{curuser.username}}">Profile</a>
                                 <a class="dropdown-item" href="/logout">Logout</a>
                             </div>
                         </li>
                     </ul>
+                    {{else}}
+                    <ul class="navbar-nav mr-4">
+                        <li class="nav-item dropdown my-auto"><a href="/enter">Login</a></li>
+                        <li class="nav-item dropdown my-auto"><a href="/enter">Register</a></li>
+                    </ul>
+                    {{/if}}
                 </div>
             </div>
         </nav>
@@ -155,4 +164,5 @@
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
             </script>
 </body>
+
 </html>

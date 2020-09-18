@@ -76,7 +76,8 @@ app.engine('handlebars', exphbs({
                 "-": lvalue - rvalue,
                 "*": lvalue * rvalue,
                 "/": lvalue / rvalue,
-                "%": lvalue % rvalue
+                "%": lvalue % rvalue,
+                "x": (lvalue * 100) / rvalue
             }[operator];
         },
         prettifyDate: function(timestamp) {
@@ -386,7 +387,8 @@ app.post('/enter', function(req, res, next) {
 });
 
 // Home Route
-app.get('/home', ensureAuthenticated, function(req, res) {
+app.get('/home', function(req, res) {
+    //console.log(curuser);
     // Store number of problems in each sections
     counter = {
         ccnt: 0,
@@ -415,26 +417,16 @@ app.get('/home', ensureAuthenticated, function(req, res) {
                     counter.algocnt++;
                 }
             });
-            percentage = {
-                    cper: (curuser.csolvecount * 100) / counter.ccnt,
-                    cppper: (curuser.cppsolvecount * 100) / counter.cppcnt,
-                    javaper: (curuser.javasolvecount * 100) / counter.javacnt,
-                    pyper: (curuser.pysolvecount * 100) / counter.pycnt,
-                    dsper: (curuser.dssolvecount * 100) / counter.dscnt,
-                    algoper: (curuser.algosolvecount * 100) / counter.algocnt
-                }
-                /* console.log(counter);
-                console.log(percentage);
-                console.log(curuser); */
+            /* console.log(counter);
+            console.log(curuser); */
             res.render('home', {
                 curuser: curuser,
-                counter: counter,
-                percentage: percentage
+                counter: counter
             });
         });
 });
 
-app.post('/home', ensureAuthenticated, function(req, res) {
+app.post('/home', function(req, res) {
     section = req.body.submit;
     Problem.find({ tags: req.body.submit })
         .lean()
@@ -457,7 +449,7 @@ app.get('/logout', function(req, res) {
 });
 
 // Problem show and submit page
-app.get('/problem', ensureAuthenticated, function(req, res) {
+app.get('/problem', function(req, res) {
     res.render('problem', {
         curuser: curuser,
         curproblem: curproblem
@@ -589,35 +581,39 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
     }, 12000);
 });
 
-app.get('/problems', ensureAuthenticated, function(req, res) {
+app.get('/problems', function(req, res) {
     // Seperating solved and non solved problems
     var mysolvedcode = [];
     cursolvedproblems = [];
     curnotsolvedproblems = [];
-    curuser.solved.forEach(solve => {
-        if (solve.section == section) {
-            mysolvedcode.push(solve.code)
-        }
-    });
-    curproblems.forEach(problem => {
-        if (mysolvedcode.includes(problem.code)) {
-            cursolvedproblems.push(problem);
-        } else {
+    if (curuser) {
+        curuser.solved.forEach(solve => {
+            if (solve.section == section) {
+                mysolvedcode.push(solve.code)
+            }
+        });
+        curproblems.forEach(problem => {
+            if (mysolvedcode.includes(problem.code)) {
+                cursolvedproblems.push(problem);
+            } else {
+                curnotsolvedproblems.push(problem);
+            }
+        });
+    } else {
+        curproblems.forEach(problem => {
             curnotsolvedproblems.push(problem);
-        }
-    });
+        });
+    }
     res.render('problems', {
         curuser: curuser,
         cursolvedproblems: cursolvedproblems,
         curnotsolvedproblems: curnotsolvedproblems,
         curtutorials: curtutorials
     });
-
 });
 
 // Find problem and redirect to show and submit page
-app.get('/problems/:id', ensureAuthenticated, function(req, res) {
-
+app.get('/problems/:id', function(req, res) {
     Problem.findOne({ code: req.params.id })
         .lean()
         .then(problems => {
@@ -626,11 +622,13 @@ app.get('/problems/:id', ensureAuthenticated, function(req, res) {
             Submission.find({
                 problemcode: curproblem.code
             }).then(submissions => {
-                submissions.forEach(submission => {
-                    if (submission.username == curuser.username) {
-                        curmysub.push(submission);
-                    }
-                })
+                if (curuser) {
+                    submissions.forEach(submission => {
+                        if (submission.username == curuser.username) {
+                            curmysub.push(submission);
+                        }
+                    })
+                }
                 res.render('problem', {
                     curproblem: curproblem,
                     curuser: curuser,
@@ -644,12 +642,11 @@ app.get('/problems/:id', ensureAuthenticated, function(req, res) {
 // Profile page
 app.get('/profile/:id', ensureAuthenticated, function(req, res) {
     console.log(req.params.id);
-    res.render('/proflie');
+    res.render('proflie');
 });
 
 // Ranklist page
-app.get('/ranklist', ensureAuthenticated, function(req, res) {
-
+app.get('/ranklist', function(req, res) {
     User.find({})
         .sort({ totalsolvecount: 'desc' })
         .then(user => {
@@ -662,8 +659,7 @@ app.get('/ranklist', ensureAuthenticated, function(req, res) {
 })
 
 // Recent page
-app.get('/recent', ensureAuthenticated, function(req, res) {
-
+app.get('/recent', function(req, res) {
     Submission.find({})
         .sort({ date: 'desc' })
         .limit(20)
@@ -677,16 +673,14 @@ app.get('/recent', ensureAuthenticated, function(req, res) {
 
 // Tutorial page
 app.get('/tutorial', ensureAuthenticated, function(req, res) {
-
     res.render('tutorial', {
         curuser: curuser,
         curtutorial: curtutorial
     });
 })
 
-// Find problem and redirect to show and submit page
-app.get('/tutorials/:id', ensureAuthenticated, function(req, res) {
-
+// Find and show tutorial
+app.get('/tutorials/:id', function(req, res) {
     //console.log(req.params);
     Tutorial.findOne({ code: req.params.id })
         .lean()
