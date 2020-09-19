@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Profile</title>
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+    <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Abril Fatface' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Arbutus Slab' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <section id="nav-bar">
+        <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+            <div class="container-fluid">
+                <a href="/home" class="navbar-brand"><img src="/images/logo.png" style="width:80%; height:70%"></a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=#navbarResponsive>
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id=navbarResponsive>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/home">Dashboard<span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/ranklist">Ranklist</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/recent">Recent</a>
+                        </li>
+                    </ul>
+                    {{#if curuser}}
+                    <ul class="navbar-nav mr-5">
+                        <li class="nav-item dropdown my-auto">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span><i class="fa fa-user"></i></span>
+                                {{curuser.username}}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/profile/{{curuser.username}}"
+                                    value="{{curuser.username}}">Profile</a>
+                                <a class="dropdown-item" href="/logout">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                    {{else}}
+                    <ul class="navbar-nav mr-4">
+                        <li class="nav-item dropdown my-auto"><a href="/enter">Login</a></li>
+                        <li class="nav-item dropdown my-auto"><a href="/enter">Register</a></li>
+                    </ul>
+                    {{/if}}
+                </div>
+            </div>
+        </nav>
+        <div class="content">
+            <h1>
+                <p style="text-align: center;color:#148DDF ;"> <b>User Profile</b></p>
+            </h1>
+            <h5>
+                <p style="text-align:center;font-family: 'Arbutus Slab';">Username: {{user.username}} </p>
+            </h5>
+            <h5>
+                <p style="text-align:center;font-family: 'Arbutus Slab';">Email: {{user.email}}</p>
+            </h5>
+            <h3 style="padding-top:6px;">
+                <p style="text-align:center;color:#0E96F2">Statistics</p>
+            </h3>
+
+            <table class="table table-hover table-bordered" style="text-align: center;">
+
+                <tbody>
+                    <tr>
+                        <td style="font-size: 20px"><b>C ({{user.csolvecount}}/{{counter.ccnt}})</b></td>
+                        <td style="font-size: 20px"><b>C++ ({{user.cppsolvecount}}/{{counter.cppcnt}})</b></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 20px"><b>Java ({{user.javasolvecount}}/{{counter.javacnt}})</b></td>
+                        <td style="font-size: 20px"><b>Python ({{user.pysolvecount}}/{{counter.pycnt}})</b></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 20px"><b>Data Structure ({{user.dssolvecount}}/{{counter.dscnt}})</b></td>
+                        <td style="font-size: 20px"><b>Algorithm ({{user.algosolvecount}}/{{counter.algocnt}})</b></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="font-size: 20px"><b>Total
+                                ({{user.totalsolvecount}}/{{counter.totalcnt}})</b></td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <h3 style="padding-top:6px;">
+                <p style="text-align:center;color:#0E96F2">Solved Problems</p>
+            </h3>
+
+            <h4>
+                <p style="text-align:center;"><b>C</b> </p>
+            </h4>
+
+            <h5>
+                <p style="text-align:center;">
+                    {{#each profileCSolve}}
+                        <a href="/problems/{{this}}" value="{{this}}">{{this}}</a>&nbsp;
+                    {{else}}
+                    <p style="text-align:center;">
+                        ---
+                    </p>
+                    {{/each}}
+                </p>
+            </h5>
+            <h4>
+                <p style="text-align:center;"><b>C++</b> </p>
+            </h4>
+            <h5>
+                <p style="text-align:center;">
+                    {{#each profileCppSolve}}
+                        <a href="/problems/{{this}}" value="{{this}}">{{this}}</a>&nbsp;
+                    {{else}}
+                    <p style="text-align:center;">
+                        ---
+                    </p>
+                    {{/each}}
+                </p>
+            </h5>
+            <h4>
+                <p style="text-align:center;"><b>Java</b> </p>
+            </h4>
+            <h5>
+                <p style="text-align:center;">
+                    {{#each profileJavaSolve}}
+                        <a href="/problems/{{this}}" value="{{this}}">{{this}}</a>&nbsp;
+                    {{else}}
+                    <p style="text-align:center;">
+                        ---
+                    </p>
+                    {{/each}}
+                </p>
+            </h5>
+
+            <h4>
+                <p style="text-align:center;"><b>Python</b> </p>
+            </h4>
+            <h5>
+                <p style="text-align:center;">
+                    {{#each profilePySolve}}
+                        <a href="/problems/{{this}}" value="{{this}}">{{this}}</a>&nbsp;
+                    {{else}}
+                    <p style="text-align:center;">
+                        ---
+                    </p>
+                    {{/each}}
+                </p>
+            </h5>
+
+            <h4>
+                <p style="text-align:center;"><b>Data Structure</b> </p>
+            </h4>
+            <h5>
+                <p style="text-align:center;">
+                    {{#each profileDsSolve}}
+                        <a href="/problems/{{this}}" value="{{this}}">{{this}}</a>&nbsp;
+                    {{else}}
+                    <p style="text-align:center;">
+                        ---
+                    </p>
+                    {{/each}}
+                </p>
+            </h5>
+            <h4>
+                <p style="text-align:center;"><b>Algorithm</b> </p>
+            </h4>
+            <h5>
+                <p style="text-align:center;">
+                    {{#each profileAlgoSolve}}
+                        <a href="/problems/{{this}}" value="{{this}}">{{this}}</a>&nbsp;
+                    {{else}}
+                    <p style="text-align:center;">
+                        ---
+                    </p>
+                    {{/each}}
+                </p>
+            </h5>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+            </script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+            </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+            </script>
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+body {
+    background-color: #EBF5FB !important;
+}
+
+.content {
+    max-width: 800px;
+    margin: auto;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    background: white;
+    padding: 30px;
+    box-shadow: 10px 10px #D6EAF8;
+}
+
+.content h1 {
+    text-transform: uppercase;
+    font-size: 36px;
+    letter-spacing: 6px;
+    opacity: 0.9;
+    font-family: 'Abril Fatface';
+    font-size: 27px;
+}

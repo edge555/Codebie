@@ -416,42 +416,14 @@ app.post('/enter', function(req, res, next) {
 
 // Home Route
 app.get('/home', function(req, res) {
-    //console.log(curuser);
     // Store number of problems in each sections
-    counter = {
-        ccnt: 0,
-        cppcnt: 0,
-        javacnt: 0,
-        pycnt: 0,
-        dscnt: 0,
-        algocnt: 0
-    }
-    Problem.find({})
-        .then(problems => {
-            //console.log(problems);
-            problems.forEach(problem => {
-                //console.log(problem.section);
-                if (problem.section == "c") {
-                    counter.ccnt++;
-                } else if (problem.section == "cpp") {
-                    counter.cppcnt++;
-                } else if (problem.section == "java") {
-                    counter.javacnt++;
-                } else if (problem.section == "py") {
-                    counter.pycnt++;
-                } else if (problem.section == "ds") {
-                    counter.dscnt++;
-                } else if (problem.section == "algo") {
-                    counter.algocnt++;
-                }
-            });
-            /* console.log(counter);
-            console.log(curuser); */
-            res.render('home', {
-                curuser: curuser,
-                counter: counter
-            });
+    var tempCounter = getCounter(function(result) {
+        counter = result;
+        res.render('home', {
+            curuser: curuser,
+            counter: counter
         });
+    });
 });
 
 app.post('/home', function(req, res) {
@@ -525,6 +497,40 @@ function gettoken(submission, input, callback) {
             throw new Error(res.error);
         callback(res.body.token);
     });
+}
+
+function getCounter(callback) {
+    counter = {
+        ccnt: 0,
+        cppcnt: 0,
+        javacnt: 0,
+        pycnt: 0,
+        dscnt: 0,
+        algocnt: 0,
+        totalcnt: 0
+    }
+    Problem.find({})
+        .then(problems => {
+            //console.log(problems);
+            problems.forEach(problem => {
+                //console.log(problem.section);
+                if (problem.section == "c") {
+                    counter.ccnt++;
+                } else if (problem.section == "cpp") {
+                    counter.cppcnt++;
+                } else if (problem.section == "java") {
+                    counter.javacnt++;
+                } else if (problem.section == "py") {
+                    counter.pycnt++;
+                } else if (problem.section == "ds") {
+                    counter.dscnt++;
+                } else if (problem.section == "algo") {
+                    counter.algocnt++;
+                }
+                counter.totalcnt++
+            });
+            callback(counter);
+        });
 }
 
 // Judge0 API call to get execution info
@@ -642,11 +648,13 @@ app.get('/problems', function(req, res) {
 
 // Find problem and redirect to show and submit page
 app.get('/problems/:id', function(req, res) {
+    console.log(req.params.id);
     Problem.findOne({ code: req.params.id })
         .lean()
         .then(problems => {
             curmysub = [];
             curproblem = problems;
+            console.log(curproblem);
             Submission.find({
                 problemcode: curproblem.code
             }).then(submissions => {
@@ -670,8 +678,44 @@ app.get('/problems/:id', function(req, res) {
 // Profile page
 app.get('/profile/:id', function(req, res) {
     console.log(req.params.id);
-    res.render('profile', {
-        curuser: curuser
+    var tempCounter = getCounter(function(result) {
+        counter = result;
+        User.findOne({ username: req.params.id })
+            .then(user => {
+                //console.log(user.solved);
+                profileCSolve = [];
+                profileCppSolve = [];
+                profileJavaSolve = [];
+                profilePySolve = [];
+                profileDsSolve = [];
+                profileAlgoSolve = [];
+                user.solved.forEach(solve => {
+                    if (solve.section == "c") {
+                        profileCSolve.push(solve.code);
+                    } else if (solve.section == "cpp") {
+                        profileCppSolve.push(solve.code);
+                    } else if (solve.section == "java") {
+                        profileJavaSolve.push(solve.code);
+                    } else if (solve.section == "py") {
+                        profilePySolve.push(solve.code);
+                    } else if (solve.section == "ds") {
+                        profileDsSolve.push(solve.code);
+                    } else if (solve.section == "algo") {
+                        profileAlgoSolve.push(solve.code);
+                    }
+                });
+                res.render('profile', {
+                    user: user,
+                    curuser: curuser,
+                    counter: counter,
+                    profileCSolve: profileCSolve,
+                    profileCppSolve: profileCppSolve,
+                    profileJavaSolve: profileJavaSolve,
+                    profilePySolve: profilePySolve,
+                    profileDsSolve: profileDsSolve,
+                    profileAlgoSolve: profileAlgoSolve,
+                });
+            })
     });
 });
 
