@@ -16,7 +16,7 @@
       <div class="container">
         <div class="row text-white">
           <div class="col-xl-6 d-none d-xl-block mx-auto padding-0  vertical-center hi">
-            <img src="images/entergif.gif" height="550">
+            <img src="/images/entergif.gif" height="550">
           </div>
 
           <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mx-auto vertical-center">
@@ -25,15 +25,14 @@
               <div class="row">
                 <div class="col-lg-12 col-xl-12">
                   <div class="text-center mb-5">
-                    <img src="images/logo.png">
+                    <img src="/images/logo.png">
                     <hr class="colored">
                   </div>
 
                   <ul class="nav nav-pills nav-justified justify-content-center mb-3" id="pills-tab" role="tablist">
 
-                    <li class="nav-item tt"> <a class="nav-link active" id="pills-signin-tab" data-toggle="pill" href="#pills-signin" role="tab" aria-controls="pills-signin" aria-selected="true"><i class="fa fa-sign-in mr-2"
-                      aria-hidden="true"></i>Sign In</a> </li>
-                      <li class="nav-item tt"> <a class="nav-link" id="pills-signup-tab" data-toggle="pill" href="#pills-signup" role="tab" aria-controls="pills-signup" aria-selected="false"><i class="fa fa-user-plus mr-2"></i>Sign Up</a> </li>
+                    <li class="nav-item tt"> <a class="nav-link active" id="pills-signin-tab" data-toggle="pill" href="#pills-signin" role="tab" aria-controls="pills-signin" aria-selected="true">Sign In</a> </li>
+                      <li class="nav-item tt"> <a class="nav-link" id="pills-signup-tab" data-toggle="pill" href="#pills-signup" role="tab" aria-controls="pills-signup" aria-selected="false">Sign Up</a> </li>
                     </ul>
                     <div class="tab-content" id="pills-tabContent">
                       <div class="tab-pane fade show active" id="pills-signin" role="tabpanel" aria-labelledby="pills-signin-tab">
@@ -41,12 +40,12 @@
                           
                           <form action="/enter" method="post" id="signinform" class="text-left mt-5 text-white">
                             <div class="input-group mb-4 text-white">
-                              <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+                              <span class="input-group-addon"></span>
                               <input class="form-control text-white" name="username" type="text" placeholder="Username" required>
                             </div>
 
                             <div class="input-group mb-4">
-                              <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+                              <span class="input-group-addon"></i></span>
                               <input class="form-control text-white" name="password" type="password" placeholder="Password" required>
                             </div>
 
@@ -69,20 +68,20 @@
 
                           <form action="/enter" method="post" id="signupform" class="text-left">
                             <div class="input-group mb-4 text-white">
-                              <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+                              <span class="input-group-addon"></span>
                               <input class="form-control text-white" name="signupemail" type="text" value="{{email}}" placeholder="Email address" required>
                             </div>
                             <div class="input-group mb-4 text-white">
-                              <span class="input-group-addon"><i class="fa fa-user mr-2"></i></i></span>
+                              <span class="input-group-addon"></span>
                               <input type="text" name="signupusername" name="signupname" id="signupusername" class="form-control text-white" value="{{username}}" placeholder="Enter your username" required>
                             </div>
 
                             <div class="input-group mb-4">
-                              <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+                              <span class="input-group-addon"></span>
                               <input class="form-control text-white" name="signuppass" type="password" placeholder="Password" required>
                             </div>
                             <div class="input-group mb-4">
-                              <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+                              <span class="input-group-addon"></span>
                               <input class="form-control text-white" name="signuppass2" type="password" placeholder="Confirm Password" required>
                             </div>
                             <div class="form-group mt-4">

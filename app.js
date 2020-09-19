@@ -614,36 +614,48 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
 });
 
 app.get('/section/:id', function(req, res) {
-    //console.log(req.params.id);
-    section = req.params.id;
-    // Seperating solved and non solved problems
-    var mysolvedcode = [];
-    cursolvedproblems = [];
-    curnotsolvedproblems = [];
-    if (curuser) {
-        curuser.solved.forEach(solve => {
-            if (solve.section == section) {
-                mysolvedcode.push(solve.code)
-            }
+    Tutorial.find({ section: req.params.id })
+        .lean()
+        .then(tutorials => {
+            curtutorials = tutorials;
+            Problem.find({ section: req.params.id })
+                .lean()
+                .then(problems => {
+                    curproblems = problems;
+                    // Seperating solved and non solved problems
+                    var mysolvedcode = [];
+                    cursolvedproblems = [];
+                    curnotsolvedproblems = [];
+                    if (curuser) {
+                        curuser.solved.forEach(solve => {
+                            if (solve.section == section) {
+                                mysolvedcode.push(solve.code)
+                            }
+                        });
+                        if (curproblems) {
+                            curproblems.forEach(problem => {
+                                if (mysolvedcode.includes(problem.code)) {
+                                    cursolvedproblems.push(problem);
+                                } else {
+                                    curnotsolvedproblems.push(problem);
+                                }
+                            });
+                        }
+                    } else {
+                        if (curproblems) {
+                            curproblems.forEach(problem => {
+                                curnotsolvedproblems.push(problem);
+                            });
+                        }
+                    }
+                    res.render('section', {
+                        curuser: curuser,
+                        cursolvedproblems: cursolvedproblems,
+                        curnotsolvedproblems: curnotsolvedproblems,
+                        curtutorials: curtutorials
+                    });
+                });
         });
-        curproblems.forEach(problem => {
-            if (mysolvedcode.includes(problem.code)) {
-                cursolvedproblems.push(problem);
-            } else {
-                curnotsolvedproblems.push(problem);
-            }
-        });
-    } else {
-        curproblems.forEach(problem => {
-            curnotsolvedproblems.push(problem);
-        });
-    }
-    res.render('section', {
-        curuser: curuser,
-        cursolvedproblems: cursolvedproblems,
-        curnotsolvedproblems: curnotsolvedproblems,
-        curtutorials: curtutorials
-    });
 });
 
 // Find problem and redirect to show and submit page
