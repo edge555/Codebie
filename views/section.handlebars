@@ -7,14 +7,14 @@
   <title>Problem_List</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/problems.css">
+  <link rel="stylesheet" href="/css/section.css">
 </head>
 
 <body style=" background-color:#F0F8FF;">
   <section id="nav-bar">
     <nav class="navbar navbar-expand-md navbar-light bg-white sticky-top">
       <div class="container-fluid">
-        <a href="/home" class="navbar-brand"><img src="images/logo.png" style="width:80%; height:70%"></a>
+        <a href="/home" class="navbar-brand"><img src="/images/logo.png" style="width:80%; height:70%"></a>
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=#navbarResponsive>
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -82,7 +82,7 @@
                       <h5 class="card-title">{{name}}</h5>
                     </div>
                     <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
-                      <a href="tutorials/{{code}}" value="{{code}}" class="btn btn-outline-primary btn-block btn-border"
+                      <a href="/tutorials/{{code}}" value="{{code}}" class="btn btn-outline-primary btn-block btn-border"
                         id="btn-solve">Read</a>
                     </div>
                   </div>
@@ -116,7 +116,7 @@
                     {{/ifCond}}
                   </div>
                   <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
-                    <a href="problems/{{code}}" value="{{code}}" class="btn btn-outline-primary btn-block btn-border"
+                    <a href="/problems/{{code}}" value="{{code}}" class="btn btn-outline-primary btn-block btn-border"
                       id="btn-solve">Solve
                       Challenge</a>
                   </div>

@@ -51,6 +51,10 @@ const ProblemSchema = new Schema({
     },
     tags: {
         type: String
+    },
+    dateAdded: {
+        type: Date,
+        default: Date.now
     }
 });
 mongoose.model('problems', ProblemSchema);

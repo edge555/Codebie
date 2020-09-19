@@ -56,6 +56,10 @@ const UserSchema = new Schema({
             type: String,
             required: true
         }
-    }]
+    }],
+    dateJoined: {
+        type: Date,
+        default: Date.now
+    }
 });
 mongoose.model('users', UserSchema);

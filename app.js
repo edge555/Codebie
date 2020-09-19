@@ -305,7 +305,6 @@ app.get('/adminedittutorial', ensureAuthenticated, function(req, res) {
 });
 
 app.post('/adminedittutorial', ensureAuthenticated, function(req, res) {
-    console.log("Admin edit tutorial");
     Tutorial.findOne({
             code: curedittutorial
         })
@@ -346,7 +345,7 @@ app.get('/enter', function(req, res) {
 });
 
 app.post('/enter', function(req, res, next) {
-    console.log(req.body);
+    //console.log(req.body);
     if (Object.keys(req.body).length == 3 || Object.keys(req.body).length == 4) {
         //console.log(req.body);
         User.findOne({ username: req.body.username })
@@ -361,7 +360,6 @@ app.post('/enter', function(req, res, next) {
             failureFlash: true
         })(req, res, next);
     } else {
-        console.log(req.body);
         var errors = [];
         User.findOne({ email: req.body.signupemail })
             .then(user => {
@@ -438,7 +436,7 @@ app.post('/home', function(req, res) {
         .then(tutorials => {
             curtutorials = tutorials;
         });
-    res.redirect('/problems');
+    res.redirect('/section/' + section);
 });
 
 app.get('/logout', function(req, res) {
@@ -615,7 +613,9 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
     }, 12000);
 });
 
-app.get('/problems', function(req, res) {
+app.get('/section/:id', function(req, res) {
+    //console.log(req.params.id);
+    section = req.params.id;
     // Seperating solved and non solved problems
     var mysolvedcode = [];
     cursolvedproblems = [];
@@ -638,7 +638,7 @@ app.get('/problems', function(req, res) {
             curnotsolvedproblems.push(problem);
         });
     }
-    res.render('problems', {
+    res.render('section', {
         curuser: curuser,
         cursolvedproblems: cursolvedproblems,
         curnotsolvedproblems: curnotsolvedproblems,
@@ -648,13 +648,13 @@ app.get('/problems', function(req, res) {
 
 // Find problem and redirect to show and submit page
 app.get('/problems/:id', function(req, res) {
-    console.log(req.params.id);
+    //console.log(req.params.id);
     Problem.findOne({ code: req.params.id })
         .lean()
         .then(problems => {
             curmysub = [];
             curproblem = problems;
-            console.log(curproblem);
+            //console.log(curproblem);
             Submission.find({
                 problemcode: curproblem.code
             }).then(submissions => {
@@ -677,7 +677,7 @@ app.get('/problems/:id', function(req, res) {
 
 // Profile page
 app.get('/profile/:id', function(req, res) {
-    console.log(req.params.id);
+    //console.log(req.params.id);
     var tempCounter = getCounter(function(result) {
         counter = result;
         User.findOne({ username: req.params.id })
