@@ -31,31 +31,31 @@
             </li>
           </ul>
           {{#if curuser}}
-            <ul class="navbar-nav mr-5">
-                <li class="nav-item dropdown my-auto">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span><i class="fa fa-user"></i></span>
-                        {{curuser.username}}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/profile/{{curuser.username}}" value="{{curuser.username}}">Profile</a>
-                        <a class="dropdown-item" href="/logout">Logout</a>
-                    </div>
-                </li>
-            </ul>
-            {{else}}
-            <ul class="navbar-nav mr-4">
-                <li class="nav-item dropdown my-auto"><a href="/enter">Login</a></li>
-                <li class="nav-item dropdown my-auto"><a href="/enter">Register</a></li>
-            </ul>
-            {{/if}}
+          <ul class="navbar-nav mr-5">
+            <li class="nav-item dropdown my-auto">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <span><i class="fa fa-user"></i></span>
+                {{curuser.username}}
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/profile/{{curuser.username}}" value="{{curuser.username}}">Profile</a>
+                <a class="dropdown-item" href="/logout">Logout</a>
+              </div>
+            </li>
+          </ul>
+          {{else}}
+          <ul class="navbar-nav mr-4">
+            <li class="nav-item dropdown my-auto"><a href="/enter">Login</a></li>
+            <li class="nav-item dropdown my-auto"><a href="/enter">Register</a></li>
+          </ul>
+          {{/if}}
         </div>
       </div>
     </nav>
   </section>
   <div class="wrapper">
-    <h1 style="color: #176AF7;font-family: Cambria, Georgia, serif;"> <b>Rankings</b></h1>
+    <h3 style="color: #176AF7;font-family: Cambria, Georgia, serif;"> <b>Rankings</b></h3>
     <div class="table-responsive-lg" style="padding-left:3%;padding-right:3%;padding-top:1%;">
       <table class="table table-light table-hover">
         <thead>
@@ -75,7 +75,9 @@
           {{#each user}}
           <tr>
             <th scope="row">{{math @index "+" 1}}</th>
-            <td>{{username}}</td>
+            <td>
+              <a href="/profile/{{username}}" value="{{username}}">{{username}}</a>
+            </td>
             <td>{{totalsolvecount}}</td>
             <td>{{csolvecount}}</td>
             <td>{{cppsolvecount}}</td>

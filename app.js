@@ -100,11 +100,35 @@ app.engine('handlebars', exphbs({
                 curr_hour = 12;
             }
             var curr_minutes = timestamp.getMinutes();
-            var curr_seconds = timestamp.getSeconds();
-
-            result = addZero(curr_date) + "/" + addZero(curr_month) + "/" + addZero(curr_year) + '   ' +
-                addZero(curr_hour) + ':' + addZero(curr_minutes) + ':' + addZero(curr_seconds) + ' ' + temp;
+            result = addZero(curr_hour) + ':' + addZero(curr_minutes) + ' ' + temp + ' ' +
+                addZero(curr_date) + "/" + addZero(curr_month) + "/" + addZero(curr_year);
             return result;
+        },
+        ifCond: function(v1, operator, v2, options) {
+            switch (operator) {
+                case '==':
+                    return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                case '===':
+                    return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                case '!=':
+                    return (v1 != v2) ? options.fn(this) : options.inverse(this);
+                case '!==':
+                    return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+                case '<':
+                    return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                case '<=':
+                    return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                case '>':
+                    return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                case '>=':
+                    return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                case '&&':
+                    return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                case '||':
+                    return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                default:
+                    return options.inverse(this);
+            }
         }
     }
 }));
@@ -642,7 +666,9 @@ app.get('/problems/:id', function(req, res) {
 // Profile page
 app.get('/profile/:id', ensureAuthenticated, function(req, res) {
     console.log(req.params.id);
-    res.render('proflie');
+    res.render('profile', {
+        curuser: curuser
+    });
 });
 
 // Ranklist page

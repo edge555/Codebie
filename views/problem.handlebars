@@ -169,7 +169,9 @@
                       <tr>
                         {{#each curallsub}}
                         <th scope="row">{{math @index "+" 1}}</th>
-                        <td>{{username}}</td>
+                        <td>
+                          <a href="/profile/{{username}}" value="{{username}}">{{username}}</a>
+                        </td>
                         <td>{{verdict}}</td>
                         <td>{{time}}</td>
                         <td>

@@ -75,8 +75,12 @@
                 <tbody>
                     {{#each submission}}
                     <tr>
-                        <td>{{username}}</td>
-                        <td>{{problemcode}}</td>
+                        <td>
+                            <a href="/profile/{{username}}" value="{{username}}">{{username}}</a>
+                        </td>
+                        <td>
+                            <a href="/problems/{{problemcode}}" value="{{problemcode}}">{{problemcode}}</a>
+                        </td>
                         <td>{{verdict}}</td>
                         <td>{{lang}}</td>
                         <td>{{prettifyDate date}}</td>

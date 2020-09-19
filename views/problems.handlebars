@@ -97,7 +97,6 @@
       </div>
       <div class="tab-pane fade" id="pills-problem" role="tabpanel" aria-labelledby="pills-problem-tab">
         <div class="row">
-
           <div class="col-lg-9 col-xl-9">
             {{#each curnotsolvedproblems}}
             <div class="card mt-4">
@@ -106,7 +105,15 @@
                   <div class="col-lg-9 col-xl-9">
                     <h5 class="card-title">{{name}}</h5>
                     <p class="badge badge-secondary"> Total Solved: {{solvecount}}</p>
-                    <p class="badge badge-warning">{{difficulty}}</p>
+                    {{#ifCond difficulty '==' 1}}
+                        <p class="badge badge-success">Easy</p>
+                    {{/ifCond}}
+                    {{#ifCond difficulty '==' 2}}
+                        <p class="badge badge-warning">Medium</p>
+                    {{/ifCond}}
+                    {{#ifCond difficulty '==' 3}}
+                        <p class="badge badge-danger">Hard</p>
+                    {{/ifCond}}
                   </div>
                   <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
                     <a href="problems/{{code}}" value="{{code}}" class="btn btn-outline-primary btn-block btn-border"
@@ -125,7 +132,15 @@
                   <div class="col-lg-9 col-xl-9">
                     <h5 class="card-title">{{name}}</h5>
                     <p class="badge badge-secondary"> Total Solved: {{solvecount}}</p>
-                    <p class="badge badge-warning">{{difficulty}}</p>
+                    {{#ifCond difficulty '==' 1}}
+                        <p class="badge badge-success">Easy</p>
+                    {{/ifCond}}
+                    {{#ifCond difficulty '==' 2}}
+                        <p class="badge badge-warning">Medium</p>
+                    {{/ifCond}}
+                    {{#ifCond difficulty '==' 3}}
+                        <p class="badge badge-danger">Hard</p>
+                    {{/ifCond}}
                   </div>
                   <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
                     <a href="problems/{{code}}" value="{{code}}" class="btn btn-outline-primary btn-block btn-border"
