@@ -24,7 +24,7 @@
 }
 
 .card-design {
-    border-left: 10px solid #3498eb;
+    border-left: 10px solid green;
     outline: none;
     box-shadow: none;
 }
@@ -59,6 +59,10 @@
 
 .card-body-tutorial-sidebar {
     border: 1px solid black;
+}
+
+#footer {
+    background-color: #1a53ff;
 }
 
 .footer-div {
@@ -99,4 +103,34 @@
     border-left: 1px solid #fff;
     margin-top: 10px;
     height: 25px;
+}
+
+#nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.navbar {
+    padding: .6rem;
+}
+
+.navbar-nav li {
+    color: #0328fc;
+    padding-right: 20px;
+}
+
+.nav-link {
+    font-size: 1.1em !important;
+}
+
+.navbar-nav li a {
+    font-weight: 600;
+    float: right;
+    text-align: left;
+}
+
+.padding-0 {
+    padding-right: 0;
+    padding-left: 0;
 }

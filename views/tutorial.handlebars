@@ -9,9 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/tutorial.css">
 </head>
-
 <body>
-
     <section id="nav-bar">
         <nav class="navbar navbar-expand-md navbar-light bg-white sticky-top">
             <div class="container-fluid">
@@ -20,6 +18,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id=navbarResponsive>
+
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
                             <a class="nav-link" href="/home">Dashboard<span class="sr-only">(current)</span></a>
@@ -57,28 +56,36 @@
         </nav>
     </section>
     <div class="row tutorial" style="height: auto !important;">
+        <div class="col-3">
+            <div id="sidebar-sliding-menu">
+                <div id="left-sidebar">
+                    <div class="center hide-on-large" style="padding:5px;">
+                    </div>
+                    <ul class="sidebar-list">
+                        <li class="main">
+                            <h4>Tutorials for {{curtutorial.section}} <span class="glyphicon pull-right glyphicon-chevron-down"></span></h4>
+                            <ul class="sidebar-sublist open">
+                                {{#each cursectiontutorials}}
+                                    <li><a href="/tutorials/{{code}}" value="{{code}}">{{name}}</a></li>
+                                {{else}}
+                                {{/each}}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <div class="col-8" style="height: auto !important; min-height: 0px !important;">
             <h1>{{curtutorial.name}}</h1>
             <div id="body-content" style="height: auto !important; background-color:#F0F8FF;padding-right:2%;">
-
                 <p style="margin-left:5%;magin-right:3%;padding-top:5%; ">
-                    {{curtutorial.statement}}
+                   {{curtutorial.statement}}
                 </p>
             </div>
         </div>
     </div>
     <div class="row">
         <div style="padding-top: 2%;"></div>
-    </div>
-    <div class="footer">
-        <div class="d-flex" style="background-color: #1a53ff;margin-top:15px">
-            <div class="mr-auto p-2">
-                <h5><a style="color : #fff ; margin-left:10px"> &copy;2020 codebie</a></h5>
-            </div>
-            <div class="p-2"><a style="color : #fff" href="#">Privacy Policy</a></div>
-            <div class="vl"></div>
-            <div class="p-2" style="margin-right:10px"><a style="color : #fff" href="#">About Us</a></div>
-        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">

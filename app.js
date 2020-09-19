@@ -426,6 +426,7 @@ app.get('/home', function(req, res) {
 
 app.post('/home', function(req, res) {
     section = req.body.submit;
+    console.log(section);
     Problem.find({ section: req.body.submit })
         .lean()
         .then(problems => {
@@ -767,15 +768,20 @@ app.get('/tutorial', ensureAuthenticated, function(req, res) {
 
 // Find and show tutorial
 app.get('/tutorials/:id', function(req, res) {
-    //console.log(req.params);
+    console.log(req.params);
     Tutorial.findOne({ code: req.params.id })
         .lean()
-        .then(tutorials => {
-            curtutorial = tutorials;
-            res.render('tutorial', {
-                curuser: curuser,
-                curtutorial: tutorials
-            });
+        .then(tutorial => {
+            //console.log(tutorial);
+            curtutorial = tutorial;
+            Tutorial.find({ section: curtutorial.section })
+                .then(tutorials => {
+                    res.render('tutorial', {
+                        curuser: curuser,
+                        curtutorial: tutorial,
+                        cursectiontutorials: tutorials
+                    });
+                })
         });
 });
 
@@ -853,7 +859,6 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
 
 // View solution
 app.get('/viewsolution/:id', ensureAuthenticated, function(req, res) {
-
     //console.log(req.params);
     Submission.findOne({ token: req.params.id })
         .then(submission => {
