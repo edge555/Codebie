@@ -17,7 +17,8 @@ const { ensureAuthenticated } = require('./helpers/auth');
 
 var curmysub = [],
     cursolvedproblems = [],
-    curnotsolvedproblems = [];
+    curnotsolvedproblems = [],
+    adminids = ["edge555"];
 var section, curuser, curlang, curtoken, verdict;
 var curproblem, curproblems, curtutorial, curtutorials;
 var cursubmittedcode, cureditproblem, curedittutorial;
@@ -155,7 +156,7 @@ app.get('/aboutus', function(req, res) {
 
 // Admin access
 app.get('/admin', ensureAuthenticated, function(req, res) {
-    if (curuser.username == "edge555") {
+    if (adminids.includes(curuser.username)) {
         res.render('admin/admin');
     } else {
         res.render('accessdenied');
@@ -187,7 +188,7 @@ app.post('/admin', ensureAuthenticated, function(req, res) {
 
 // To add problems
 app.get('/adminaddproblem', ensureAuthenticated, function(req, res) {
-    if (curuser.username == "edge555") {
+    if (adminids.includes(curuser.username)) {
         res.render('admin/adminaddproblem');
     } else {
         res.render('accessdenied');
@@ -207,6 +208,7 @@ app.post('/adminaddproblem', ensureAuthenticated, function(req, res) {
         sampleoutput: req.body.sampleoutput,
         hiddeninput: req.body.hiddeninput,
         hiddenoutput: req.body.hiddenoutput,
+        section: req.body.section,
         tags: req.body.tags,
         solvecount: 0
     };
@@ -220,7 +222,7 @@ app.post('/adminaddproblem', ensureAuthenticated, function(req, res) {
 // To edit problems
 app.get('/admineditproblem', ensureAuthenticated, function(req, res) {
     //console.log(cureditproblem);
-    if (curuser.username == "edge555") {
+    if (adminids.includes(curuser.username)) {
         Problem.findOne({ code: cureditproblem })
             .lean()
             .then(problems => {
@@ -252,6 +254,7 @@ app.post('/admineditproblem', ensureAuthenticated, function(req, res) {
             problems.sampleoutput = req.body.sampleoutput;
             problems.hiddeninput = req.body.hiddeninput;
             problems.hiddenoutput = req.body.hiddenoutput;
+            problems.section = req.body.section;
             problems.tags = req.body.tags;
             problems.solvecount = req.body.solvecount;
             problems.save()
@@ -263,7 +266,7 @@ app.post('/admineditproblem', ensureAuthenticated, function(req, res) {
 
 // To add tutorial
 app.get('/adminaddtutorial', ensureAuthenticated, function(req, res) {
-    if (curuser.username == "edge555") {
+    if (adminids.includes(curuser.username)) {
         res.render('admin/adminaddtutorial');
     } else {
         res.render('accessdenied');
@@ -276,7 +279,7 @@ app.post('/adminaddtutorial', ensureAuthenticated, function(req, res) {
         name: req.body.name,
         code: req.body.code,
         statement: req.body.statement,
-        tags: req.body.tags
+        section: req.body.section
     };
     new Tutorial(newTutorial)
         .save()
@@ -287,7 +290,7 @@ app.post('/adminaddtutorial', ensureAuthenticated, function(req, res) {
 
 // To edit tutorial
 app.get('/adminedittutorial', ensureAuthenticated, function(req, res) {
-    if (curuser.username == "edge555") {
+    if (adminids.includes(curuser.username)) {
         //console.log(curedittutorial);
         Tutorial.findOne({ code: curedittutorial })
             .then(tutorials => {
@@ -311,7 +314,7 @@ app.post('/adminedittutorial', ensureAuthenticated, function(req, res) {
             tutorials.name = req.body.name;
             tutorials.code = req.body.code;
             tutorials.statement = req.body.statement;
-            tutorials.tags = req.body.tags;
+            tutorials.section = req.body.section;
             tutorials.save()
                 .then(tutorials => {
                     res.redirect('admin');
@@ -343,7 +346,8 @@ app.get('/enter', function(req, res) {
 });
 
 app.post('/enter', function(req, res, next) {
-    if (Object.keys(req.body).length == 3) {
+    console.log(req.body);
+    if (Object.keys(req.body).length == 3 || Object.keys(req.body).length == 4) {
         //console.log(req.body);
         User.findOne({ username: req.body.username })
             .then(user => {
@@ -357,7 +361,7 @@ app.post('/enter', function(req, res, next) {
             failureFlash: true
         })(req, res, next);
     } else {
-        //console.log(req.body);
+        console.log(req.body);
         var errors = [];
         User.findOne({ email: req.body.signupemail })
             .then(user => {
@@ -426,18 +430,18 @@ app.get('/home', function(req, res) {
         .then(problems => {
             //console.log(problems);
             problems.forEach(problem => {
-                //console.log(problem.tags);
-                if (problem.tags == "c") {
+                //console.log(problem.section);
+                if (problem.section == "c") {
                     counter.ccnt++;
-                } else if (problem.tags == "cpp") {
+                } else if (problem.section == "cpp") {
                     counter.cppcnt++;
-                } else if (problem.tags == "java") {
+                } else if (problem.section == "java") {
                     counter.javacnt++;
-                } else if (problem.tags == "py") {
+                } else if (problem.section == "py") {
                     counter.pycnt++;
-                } else if (problem.tags == "ds") {
+                } else if (problem.section == "ds") {
                     counter.dscnt++;
-                } else if (problem.tags == "algo") {
+                } else if (problem.section == "algo") {
                     counter.algocnt++;
                 }
             });
@@ -452,12 +456,12 @@ app.get('/home', function(req, res) {
 
 app.post('/home', function(req, res) {
     section = req.body.submit;
-    Problem.find({ tags: req.body.submit })
+    Problem.find({ section: req.body.submit })
         .lean()
         .then(problems => {
             curproblems = problems;
         });
-    Tutorial.find({ tags: req.body.submit })
+    Tutorial.find({ section: req.body.submit })
         .lean()
         .then(tutorials => {
             curtutorials = tutorials;
@@ -664,7 +668,7 @@ app.get('/problems/:id', function(req, res) {
 });
 
 // Profile page
-app.get('/profile/:id', ensureAuthenticated, function(req, res) {
+app.get('/profile/:id', function(req, res) {
     console.log(req.params.id);
     res.render('profile', {
         curuser: curuser

@@ -42,12 +42,15 @@ const ProblemSchema = new Schema({
     hiddenoutput: {
         type: String
     },
-    tags: {
+    section: {
         type: String
     },
     solvecount: {
         type: Number,
         default: 0
+    },
+    tags: {
+        type: String
     }
 });
 mongoose.model('problems', ProblemSchema);
