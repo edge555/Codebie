@@ -1,9 +1,3 @@
-* {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
 .page {
     height: 100%;
     width: 100%;
@@ -23,7 +17,7 @@
 }
 
 .page {
-    background-image: url('images/sky.jpg');
+    background-image: url('/images/sky.jpg');
     height: 100%;
     width: 100%;
     background-position: center;

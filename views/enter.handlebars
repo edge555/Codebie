@@ -18,19 +18,15 @@
           <div class="col-xl-6 d-none d-xl-block mx-auto padding-0  vertical-center hi">
             <img src="/images/entergif.gif" height="550">
           </div>
-
           <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mx-auto vertical-center">
             <div class="container w-100 p-4">
-
               <div class="row">
                 <div class="col-lg-12 col-xl-12">
                   <div class="text-center mb-5">
                     <img src="/images/logo.png">
                     <hr class="colored">
                   </div>
-
                   <ul class="nav nav-pills nav-justified justify-content-center mb-3" id="pills-tab" role="tablist">
-
                     <li class="nav-item tt"> <a class="nav-link active" id="pills-signin-tab" data-toggle="pill" href="#pills-signin" role="tab" aria-controls="pills-signin" aria-selected="true">Sign In</a> </li>
                       <li class="nav-item tt"> <a class="nav-link" id="pills-signup-tab" data-toggle="pill" href="#pills-signup" role="tab" aria-controls="pills-signup" aria-selected="false">Sign Up</a> </li>
                     </ul>
@@ -38,7 +34,7 @@
                       <div class="tab-pane fade show active" id="pills-signin" role="tabpanel" aria-labelledby="pills-signin-tab">
                         <div class="col-sm-12">
                           
-                          <form action="/enter" method="post" id="signinform" class="text-left mt-5 text-white">
+                          <form action="/login" method="post" id="signinform" class="text-left mt-5 text-white">
                             <div class="input-group mb-4 text-white">
                               <span class="input-group-addon"></span>
                               <input class="form-control text-white" name="username" type="text" placeholder="Username" required>
@@ -52,7 +48,7 @@
                             <div class="form-group">
                               <div class="row">
                                 <div class="col">
-                                  <label><input type="checkbox" name="signincondition" id="condition"> Remember me</label>
+                                  <label><input type="checkbox" name="rememberme" id="rememberme"> Remember me</label>
                                 </div>
                                 <div class="col text-right"> <a href="javascript:;" data-toggle="modal" data-target="#forgotPass">Forgot Password?</a> </div>
                               </div>
@@ -66,7 +62,7 @@
                       <div class="tab-pane fade" id="pills-signup" role="tabpanel" aria-labelledby="pills-signup-tab">
                         <div class="col-sm-12 pt-2">
 
-                          <form action="/enter" method="post" id="signupform" class="text-left">
+                          <form action="/register" method="post" id="signupform" class="text-left">
                             <div class="input-group mb-4 text-white">
                               <span class="input-group-addon"></span>
                               <input class="form-control text-white" name="signupemail" type="text" value="{{email}}" placeholder="Email address" required>

@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
+const nodemailer = require('nodemailer');
 const app = express();
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
 const { exec } = require("child_process");
@@ -23,6 +24,15 @@ var section, curuser, curlang, curtoken, verdict;
 var curproblem, curproblems, curtutorial, curtutorials;
 var cursubmittedcode, cureditproblem, curedittutorial;
 var curdeleteproblem, curdeletetutorial, curoutput;
+
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'mailfornodemailer@gmail.com',
+        pass: 'dummypassw0rd'
+    }
+});
+
 
 // Connect to mongoose
 mongoose.Promise = global.Promise;
@@ -332,7 +342,27 @@ app.get('/', function(req, res) {
 
 // Contact us
 app.get('/contactus', function(req, res) {
+    res.render('contactus', {
+        curuser: curuser
+    })
+});
 
+app.post('/contactus', function(req, res) {
+    console.log(req.body);
+    var mailOptions = {
+        from: req.body.useremail,
+        to: 'vapormaster4@gmail.com',
+        subject: "codebie " + req.body.usersubject,
+        text: req.body.username + "\n" + req.body.useremail + "\n" + req.body.usermessage
+    };
+    transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            req.flash('success_msg', 'Successful');
+            res.redirect('/home')
+        }
+    });
 });
 
 // Login/Signup Route
@@ -344,71 +374,70 @@ app.get('/enter', function(req, res) {
     }
 });
 
-app.post('/enter', function(req, res, next) {
-    //console.log(req.body);
-    if (Object.keys(req.body).length == 3 || Object.keys(req.body).length == 4) {
-        //console.log(req.body);
-        User.findOne({ username: req.body.username })
-            .then(user => {
-                if (user) {
-                    curuser = user;
-                }
-            })
-        passport.authenticate('local', {
-            successRedirect: '/home',
-            failureRedirect: '/enter',
-            failureFlash: true
-        })(req, res, next);
-    } else {
-        var errors = [];
-        User.findOne({ email: req.body.signupemail })
-            .then(user => {
-                if (user) {
-                    errors.push({ text: "Email already registered" });
-                }
-            });
-        User.findOne({ username: req.body.signupusername })
-            .then(user => {
-                if (user) {
-                    errors.push({ text: "Username already taken" });
-                }
-            });
-        if (req.body.signuppass != req.body.signuppass2) {
-            errors.push({ text: "Password doesn't match" });
-        }
-        if (req.body.signuppass.length < 6) {
-            errors.push({ text: "Password too short" });
-        }
-        if (errors.length != 0) {
-            res.render('enter', {
-                errors: errors,
-                email: req.body.signupemail,
-                username: req.body.signupusername
-            })
-        } else {
-            const newUser = {
-                username: req.body.signupusername,
-                email: req.body.signupemail,
-                password: req.body.signuppass,
+// Login Post
+app.post('/login', function(req, res, next) {
+    User.findOne({ username: req.body.username })
+        .then(user => {
+            if (user) {
+                curuser = user;
             }
-            bcrypt.genSalt(10, function(err, salt) {
-                bcrypt.hash(newUser.password, salt, function(err, hash) {
-                    if (err) throw err;
-                    newUser.password = hash;
-                    new User(newUser)
-                        .save()
-                        .then(user => {
-                            //console.log(user);
-                            req.flash('success_msg', 'Registration Successful');
-                            res.redirect('/enter');
-                        })
-                        .catch(err => {
-                            console.log(err);
-                            return;
-                        });
-                });
-            });
+        })
+    passport.authenticate('local', {
+        successRedirect: '/home',
+        failureRedirect: '/enter',
+        failureFlash: true
+    })(req, res, next);
+});
+
+// Register post
+app.post('/register', function(req, res) {
+    var errors = [];
+    User.findOne({ email: req.body.signupemail })
+        .then(user => {
+            if (user) {
+                errors.push({ text: "Email already registered" });
+            }
+        });
+    User.findOne({ username: req.body.signupusername })
+        .then(user => {
+            if (user) {
+                errors.push({ text: "Username already taken" });
+            }
+        });
+    if (req.body.signuppass != req.body.signuppass2) {
+        errors.push({ text: "Password doesn't match" });
+    }
+    if (req.body.signuppass.length < 6) {
+        errors.push({ text: "Password too short" });
+    }
+    if (errors.length != 0) {
+        res.render('enter', {
+            errors: errors,
+            email: req.body.signupemail,
+            username: req.body.signupusername
+        })
+    } else {
+        const newUser = {
+            username: req.body.signupusername,
+            email: req.body.signupemail,
+            password: req.body.signuppass,
         }
+        bcrypt.genSalt(10, function(err, salt) {
+            bcrypt.hash(newUser.password, salt, function(err, hash) {
+                if (err) throw err;
+                newUser.password = hash;
+                new User(newUser)
+                    .save()
+                    .then(user => {
+                        req.flash('success_msg', 'Registration Successful');
+                        res.redirect('/enter');
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        return;
+                    });
+            });
+        });
     }
 });
 
@@ -614,51 +643,6 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
     }, 12000);
 });
 
-app.get('/section/:id', function(req, res) {
-    Tutorial.find({ section: req.params.id })
-        .lean()
-        .then(tutorials => {
-            curtutorials = tutorials;
-            Problem.find({ section: req.params.id })
-                .lean()
-                .then(problems => {
-                    curproblems = problems;
-                    // Seperating solved and non solved problems
-                    var mysolvedcode = [];
-                    cursolvedproblems = [];
-                    curnotsolvedproblems = [];
-                    if (curuser) {
-                        curuser.solved.forEach(solve => {
-                            if (solve.section == section) {
-                                mysolvedcode.push(solve.code)
-                            }
-                        });
-                        if (curproblems) {
-                            curproblems.forEach(problem => {
-                                if (mysolvedcode.includes(problem.code)) {
-                                    cursolvedproblems.push(problem);
-                                } else {
-                                    curnotsolvedproblems.push(problem);
-                                }
-                            });
-                        }
-                    } else {
-                        if (curproblems) {
-                            curproblems.forEach(problem => {
-                                curnotsolvedproblems.push(problem);
-                            });
-                        }
-                    }
-                    res.render('section', {
-                        curuser: curuser,
-                        cursolvedproblems: cursolvedproblems,
-                        curnotsolvedproblems: curnotsolvedproblems,
-                        curtutorials: curtutorials
-                    });
-                });
-        });
-});
-
 // Find problem and redirect to show and submit page
 app.get('/problems/:id', function(req, res) {
     //console.log(req.params.id);
@@ -757,6 +741,52 @@ app.get('/recent', function(req, res) {
             });
         })
 })
+
+app.get('/section/:id', function(req, res) {
+    Tutorial.find({ section: req.params.id })
+        .lean()
+        .then(tutorials => {
+            curtutorials = tutorials;
+            Problem.find({ section: req.params.id })
+                .lean()
+                .then(problems => {
+                    curproblems = problems;
+                    // Seperating solved and non solved problems
+                    var mysolvedcode = [];
+                    cursolvedproblems = [];
+                    curnotsolvedproblems = [];
+                    if (curuser) {
+                        curuser.solved.forEach(solve => {
+                            if (solve.section == section) {
+                                mysolvedcode.push(solve.code)
+                            }
+                        });
+                        if (curproblems) {
+                            curproblems.forEach(problem => {
+                                if (mysolvedcode.includes(problem.code)) {
+                                    cursolvedproblems.push(problem);
+                                } else {
+                                    curnotsolvedproblems.push(problem);
+                                }
+                            });
+                        }
+                    } else {
+                        if (curproblems) {
+                            curproblems.forEach(problem => {
+                                curnotsolvedproblems.push(problem);
+                            });
+                        }
+                    }
+                    res.render('section', {
+                        curuser: curuser,
+                        cursolvedproblems: cursolvedproblems,
+                        curnotsolvedproblems: curnotsolvedproblems,
+                        curtutorials: curtutorials
+                    });
+                });
+        });
+});
+
 
 // Tutorial page
 app.get('/tutorial', ensureAuthenticated, function(req, res) {

@@ -52,6 +52,14 @@ const ProblemSchema = new Schema({
     tags: {
         type: String
     },
+    editorial: {
+        statement: {
+            type: String
+        },
+        authorCode: {
+            type: String
+        }
+    },
     dateAdded: {
         type: Date,
         default: Date.now
