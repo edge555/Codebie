@@ -91,7 +91,7 @@ app.engine('handlebars', exphbs({
                 "x": (lvalue * 100) / rvalue
             }[operator];
         },
-        prettifyDate: function(timestamp) {
+        prettifyDate: function(timestamp, check) {
             function addZero(i) {
                 if (i < 10) {
                     i = "0" + i;
@@ -111,8 +111,12 @@ app.engine('handlebars', exphbs({
                 curr_hour = 12;
             }
             var curr_minutes = timestamp.getMinutes();
-            result = addZero(curr_hour) + ':' + addZero(curr_minutes) + ' ' + temp + ' ' +
-                addZero(curr_date) + "/" + addZero(curr_month) + "/" + addZero(curr_year);
+            if (check == 1) {
+                result = addZero(curr_hour) + ':' + addZero(curr_minutes) + ' ' + temp + ' ' +
+                    addZero(curr_date) + "/" + addZero(curr_month) + "/" + addZero(curr_year);
+            } else {
+                result = addZero(curr_date) + "/" + addZero(curr_month) + "/" + addZero(curr_year);
+            }
             return result;
         },
         ifCond: function(v1, operator, v2, options) {
@@ -352,7 +356,7 @@ app.post('/contactus', function(req, res) {
     var mailOptions = {
         from: req.body.useremail,
         to: 'vapormaster4@gmail.com',
-        subject: "codebie " + req.body.usersubject,
+        subject: "Codebie " + req.body.usersubject,
         text: req.body.username + "\n" + req.body.useremail + "\n" + req.body.usermessage
     };
     transporter.sendMail(mailOptions, function(error, info) {
@@ -890,12 +894,20 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
 // View solution
 app.get('/viewsolution/:id', ensureAuthenticated, function(req, res) {
     //console.log(req.params);
+    //console.log(curuser);
     Submission.findOne({ token: req.params.id })
         .then(submission => {
             //console.log(submission);
+            alreadysolved = false;
+            curuser.solved.forEach(solve => {
+                if (solve.code == submission.problemcode) {
+                    alreadysolved = true;
+                }
+            });
             res.render('viewsolution', {
                 curuser: curuser,
-                submission: submission
+                submission: submission,
+                alreadysolved: alreadysolved
             });
         })
 });
