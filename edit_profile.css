@@ -1,0 +1,38 @@
+body{
+  background-image: url(images/blue.jpg);
+}
+
+
+
+.content {
+  max-width: 800px;
+  margin: auto;
+  margin-top: 2%;
+  margin-bottom:  25px;
+  background: white;
+  padding: 30px;
+  box-shadow: 10px 10px #D6EAF8 ;
+  min-height: 500px;
+}
+
+.p-inline{
+
+  display: inline;
+  font-size: 150%;
+  padding-left: 3%;
+
+
+}
+.center {
+  margin: 0;
+
+  margin-top:  2%;
+  margin-left: 41%;
+}
+
+.center1{
+  margin: 0;
+  margin-top:  2%;
+  margin-left: 40.5%;
+
+}
