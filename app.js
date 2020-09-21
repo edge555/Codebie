@@ -372,7 +372,7 @@ app.get('/contactus', function(req, res) {
 });
 
 app.post('/contactus', function(req, res) {
-    console.log(req.body);
+    //console.log(req.body);
     var mailOptions = {
         from: req.body.useremail,
         to: 'vapormaster4@gmail.com',
@@ -683,12 +683,12 @@ function getverdict(submission, input, output, callback) {
     setTimeout(function() {
         //console.log(submissiontoken);
         var check = getoutput(submissiontoken, function(result) {
-            //console.log(result);
             curoutput = result;
-            if (section != "algo" && section != "ds" && section != curlang) {
+            if (section != "algo" && section != "ds" && section != submission.language) {
                 tempverdict = "Language Rejected";
             } else {
                 if (result == "Compilation Error") {
+                    curoutput = null;
                     tempverdict = result;
                 } else {
                     if (curoutput.time > curproblem.timelimit) {
@@ -706,41 +706,51 @@ function getverdict(submission, input, output, callback) {
 }
 
 app.post('/problem', ensureAuthenticated, function(req, res) {
-    //console.log(curproblem);
-    cursubmittedcode = req.body.submittedcode;
-    var submission = {
-        code: req.body.submittedcode,
-        language: req.body.language
-    }
-    var sampleverdict, hiddenverdict;
-    var verdict1 = getverdict(submission, curproblem.sampleinput, curproblem.sampleoutput, function(result) {
-        console.log(result);
-        sampleverdict = result;
-    });
-    var verdict2 = getverdict(submission, curproblem.hiddeninput, curproblem.hiddenoutput, function(result) {
-        console.log(result);
-        hiddenverdict = result;
-    });
-    setTimeout(function() {
-        if (sampleverdict == "Language Rejected") {
-            verdict = "Language Rejected";
-        } else if (sampleverdict == "Compilation Error" || hiddenverdict == "Compilation Error") {
+    if (req.user) {
+        if (req.body.submittedcode.length == 0) {
             verdict = "Compilation Error";
-        } else if (sampleverdict == "Time Limit" || hiddenverdict == "Time Limit") {
-            verdict = "Time Limit";
-        } else if (sampleverdict == "Wrong Answer" || hiddenverdict == "Wrong Answer") {
-            verdict = "Wrong Answer";
+            curtoken = null;
+            curoutput = null;
+            res.redirect('verdict');
         } else {
-            verdict = "Accepted";
+            cursubmittedcode = req.body.submittedcode;
+            var submission = {
+                code: req.body.submittedcode,
+                language: req.body.language
+            }
+            var sampleverdict, hiddenverdict;
+            var verdict1 = getverdict(submission, curproblem.sampleinput, curproblem.sampleoutput, function(result) {
+                console.log(result);
+                sampleverdict = result;
+            });
+            var verdict2 = getverdict(submission, curproblem.hiddeninput, curproblem.hiddenoutput, function(result) {
+                console.log(result);
+                hiddenverdict = result;
+            });
+            setTimeout(function() {
+                if (sampleverdict == "Language Rejected") {
+                    verdict = "Language Rejected";
+                } else if (sampleverdict == "Compilation Error" || hiddenverdict == "Compilation Error") {
+                    verdict = "Compilation Error";
+                } else if (sampleverdict == "Time Limit" || hiddenverdict == "Time Limit") {
+                    verdict = "Time Limit";
+                } else if (sampleverdict == "Wrong Answer" || hiddenverdict == "Wrong Answer") {
+                    verdict = "Wrong Answer";
+                } else {
+                    verdict = "Accepted";
+                }
+                res.redirect('verdict');
+            }, 12000);
         }
-        res.redirect('verdict');
-    }, 12000);
+
+    } else {
+        req.flash('error_msg', 'You must be logged in to submit');
+        res.redirect('/enter');
+    }
 });
 
 // Find problem and redirect to show and submit page
 app.get('/problems/:id', function(req, res) {
-    console.log(section);
-    //console.log(req.params.id);
     Problem.findOne({ code: req.params.id })
         .lean()
         .then(problems => {
@@ -909,7 +919,7 @@ app.get('/tutorial', ensureAuthenticated, function(req, res) {
 
 // Find and show tutorial
 app.get('/tutorials/:id', function(req, res) {
-    console.log(req.params);
+    //console.log(req.params);
     Tutorial.findOne({ code: req.params.id })
         .lean()
         .then(tutorial => {
@@ -928,65 +938,82 @@ app.get('/tutorials/:id', function(req, res) {
 
 app.get('/verdict', ensureAuthenticated, function(req, res) {
     //console.log(section);
-    User.findOne({
-            username: curuser.username
-        })
-        .then(user => {
-            var alreadysolved = false;
-            if (verdict == "Accepted") {
-                user.solved.forEach(solve => {
-                    if (solve.code == curproblem.code) {
-                        alreadysolved = true;
-                    }
-                });
-                if (alreadysolved == false) {
-                    if (section == "c") {
-                        user.csolvecount++;
-                    } else if (section == "cpp") {
-                        user.cppsolvecount++;
-                    } else if (section == "java") {
-                        user.javasolvecount++;
-                    } else if (section == "py") {
-                        user.pysolvecount++;
-                    } else if (section == "ds") {
-                        user.dssolvecount++;
-                    } else if (section == "algo") {
-                        user.algosolvecount++;
-                    }
-                    user.totalsolvecount++;
-                    const newSolved = {
-                        code: curproblem.code,
-                        section: section
-                    }
-                    user.solved.unshift(newSolved);
-                    user.save();
-                    curuser = user;
-                }
-                Problem.findOne({
-                        code: curproblem.code
-                    })
-                    .then(problems => {
-                        problems.solvecount++;
-                        problems.save()
-                    });
-            }
+    if (curoutput == null) {
+        if (curtoken) {
             const newSubmission = {
                 username: curuser.username,
                 problemcode: curproblem.code,
                 token: curtoken,
                 verdict: verdict,
-                time: curoutput.time,
-                memory: curoutput.memory / 1024,
                 section: section,
                 stdin: cursubmittedcode,
                 lang: curlang
             }
             new Submission(newSubmission).save()
-        });
+        }
+    } else {
+        User.findOne({
+                username: curuser.username
+            })
+            .then(user => {
+                var alreadysolved = false;
+                if (verdict == "Accepted") {
+                    user.solved.forEach(solve => {
+                        if (solve.code == curproblem.code) {
+                            alreadysolved = true;
+                        }
+                    });
+                    if (alreadysolved == false) {
+                        if (section == "c") {
+                            user.csolvecount++;
+                        } else if (section == "cpp") {
+                            user.cppsolvecount++;
+                        } else if (section == "java") {
+                            user.javasolvecount++;
+                        } else if (section == "py") {
+                            user.pysolvecount++;
+                        } else if (section == "ds") {
+                            user.dssolvecount++;
+                        } else if (section == "algo") {
+                            user.algosolvecount++;
+                        }
+                        user.totalsolvecount++;
+                        const newSolved = {
+                            code: curproblem.code,
+                            section: section
+                        }
+                        user.solved.unshift(newSolved);
+                        user.save();
+                        curuser = user;
+                    }
+                    Problem.findOne({
+                            code: curproblem.code
+                        })
+                        .then(problems => {
+                            problems.solvecount++;
+                            problems.save()
+                        });
+                }
+                //console.log(curoutput);
+                const newSubmission = {
+                    username: curuser.username,
+                    problemcode: curproblem.code,
+                    token: curtoken,
+                    verdict: verdict,
+                    time: curoutput.time,
+                    section: section,
+                    stdin: cursubmittedcode,
+                    lang: curlang
+                }
+                new Submission(newSubmission).save()
+            });
+    }
+
     var color = "red";
     if (verdict == "Accepted") {
         color = "green";
     }
+    //console.log(curoutput);
     res.render('verdict', {
         curuser: curuser,
         verdict: verdict,
@@ -1008,6 +1035,7 @@ app.get('/viewsolution/:id', ensureAuthenticated, function(req, res) {
                     alreadysolved = true;
                 }
             });
+            //console.log(submission);
             res.render('viewsolution', {
                 curuser: curuser,
                 submission: submission,

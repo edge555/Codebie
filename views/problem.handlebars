@@ -7,8 +7,11 @@
   <title>Problem</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+  <!-- Google fonts Open Sans -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700" rel="stylesheet">
   <link rel="stylesheet" href="lib/codemirror.css">
-
   <link rel="stylesheet" href="/css/problem.css">
 </head>
 
@@ -22,7 +25,6 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id=navbarResponsive>
-
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
               <a class="nav-link" href="/home">Dashboard<span class="sr-only">(current)</span></a>
@@ -60,12 +62,10 @@
     <!--Navigation Bar ends -->
     <!--Problem title starts -->
     <div class="row">
-
       <div class="top-content-wrapper col col-lg-6 col-md-6 col-sm-6">
         <div class="problem-title large-20 darker content" id="problem-title"
           style="margin-left:4.5%;margin-top:10px;float:left;">
           <h3 style="font-size:150%;">&nbsp;&nbsp;{{curproblem.name}}</h3>
-
         </div>
         <div class="vl" style="float: left;margin-left:4%;"></div>
         <div style="float:left;margin-left:5%;margin-top: 7px">
@@ -75,167 +75,181 @@
         </div>
       </div>
     </div>
-    <div class="  custompadding ">
-      <div class="row distance ">
-        <div class="col-lg-6 col-xl-6  col-md-6  col-sm-6 col-xs-6 scrollable " style="background-color:#F0F8FF;">
-          <!--content-->
-          <div class="container mt-1">
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="margin-top:2%">
-              <li class="nav-item">
-                <a class="nav-link active" id="pills-problem-tab" data-toggle="pill" href="#pills-problem" role="tab"
-                  aria-controls="pills-problem" aria-selected="true">Problem Statement</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="pills-mysubmissions-tab" data-toggle="pill" href="#pills-mysubmissions"
-                  role="tab" aria-controls="pills-mysubmissions" aria-selected="false">My Submissions</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="pills-allsubmissions-tab" data-toggle="pill" href="#pills-allsubmissions"
-                  role="tab" aria-controls="pills-allsubmissions" aria-selected="false">All Submissions</a>
-              </li>
-            </ul>
+    <form action="/problem" method="post" id="problemcode">
+      <div class="  custompadding ">
+        <div class="row distance ">
+          <div class="col-lg-6 col-xl-6  col-md-6  col-sm-6 col-xs-6 scrollable " style="background-color:#F0F8FF;">
+            <!--content-->
+            <div class="container mt-1">
+              <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="margin-top:2%">
+                <li class="nav-item">
+                  <a class="nav-link active" id="pills-problem-tab" data-toggle="pill" href="#pills-problem" role="tab"
+                    aria-controls="pills-problem" aria-selected="true">Problem Statement</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="pills-mysubmissions-tab" data-toggle="pill" href="#pills-mysubmissions"
+                    role="tab" aria-controls="pills-mysubmissions" aria-selected="false">My Submissions</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="pills-allsubmissions-tab" data-toggle="pill" href="#pills-allsubmissions"
+                    role="tab" aria-controls="pills-allsubmissions" aria-selected="false">All Submissions</a>
+                </li>
+              </ul>
+              <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-problem" role="tabpanel"
+                  aria-labelledby="pills-problem-tab">
+                  <div class="problemstatement" style="padding-left:2%;">
+                    <br>
+                    <h4>Statement</h4>
+                    <p>{{curproblem.statement}}</p>
+                    <h4>Constraints</h4>
+                    <p>{{curproblem.constraints}}</p>
+                    <h4>Time Limit</h4>
+                    <p>{{curproblem.timelimit}}s</p>
+                    <h4>Sample Input</h4>
+                    <p>{{curproblem.sampleinput}}</p>
+                    <h4>Sample Output</h4>
+                    <p>{{curproblem.sampleoutput}}</p>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="pills-mysubmissions" role="tabpanel"
+                  aria-labelledby="pills-mysubmissions-tab">
+                  <div class="mysubmissions">
+                    {{#if curmysub}}
+                    <table class="table table-light table-hover">
+                      <thead>
+                        <tr bgcolor="#66B2FF">
+                          <th scope="col"><u>No.</u></th>
+                          <th scope="col"><u>Verdict</u></th>
+                          <th scope="col"><u>Time</u></th>
+                          <th scope="col"><u>Solution</u></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          {{#each curmysub}}
+                        <tr>
+                          <th scope="row">{{math @index "+" 1}}</th>
+                          <td>{{verdict}}</td>
+                          {{#ifCond verdict '==' 'Compilation Error'}}
+                            <td>&nbsp;&nbsp;---</td>
+                          {{else}}
+                            <td>{{time}}s</td>
+                          {{/ifCond}}
+                      
+                          <td>
+                            <a href="/viewsolution/{{token}}" value="{{token}}"
+                              class="btn btn-outline-primary btn-block btn-border" id="btn-solve">view</a>
+                          </td>
+                        </tr>
+                        {{else}}
 
-            <div class="tab-content" id="pills-tabContent">
+                        {{/each}}
+                      </tbody>
+                    </table>
+                    {{else}}
+                    <h2>You didn't submit yet</h4>
+                      {{/if}}
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="pills-allsubmissions" role="tabpanel"
+                  aria-labelledby="pills-allsubmissions-tab">
+                  <div class="allsubmissions">
+                    {{#if curallsub}}
+                    <table class="table table-light table-hover">
+                      <thead>
+                        <tr bgcolor="#66B2FF">
+                          <th scope="col"><u>No.</u></th>
+                          <th scope="col"><u>Handle</u></th>
+                          <th scope="col"><u>Verdict</u></th>
+                          <th scope="col"><u>Time</u></th>
+                          <th scope="col"><u>Solution</u></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          {{#each curallsub}}
+                          <th scope="row">{{math @index "+" 1}}</th>
+                          <td>
+                            <a href="/profile/{{username}}" value="{{username}}">{{username}}</a>
+                          </td>
+                          <td>{{verdict}}</td>
+                          {{#ifCond verdict '==' 'Compilation Error'}}
+                            <td>&nbsp;&nbsp;---</td>
+                          {{else}}
+                            <td>{{time}}s</td>
+                          {{/ifCond}}
+                          <td>
+                            <a href="/viewsolution/{{token}}" value="{{token}}"
+                              class="btn btn-outline-primary btn-block btn-border" id="btn-solve">view</a>
+                          </td>
+                        </tr>
+                        {{else}}
 
-              <div class="tab-pane fade show active" id="pills-problem" role="tabpanel"
-                aria-labelledby="pills-problem-tab">
-                <div class="problemstatement" style="padding-left:2%;">
-                  <br>
-                  <h4>Statement</h4>
-                  <p>{{curproblem.statement}}</p>
-                  <h4>Constraints</h4>
-                  <p>{{curproblem.constraints}}</p>
-                  <h4>Time Limit</h4>
-                  <p>{{curproblem.timelimit}}s</p>
-                  <h4>Sample Input</h4>
-                  <p>{{curproblem.sampleinput}}</p>
-                  <h4>Sample Output</h4>
-                  <p>{{curproblem.sampleoutput}}</p>
+                        {{/each}}
+                      </tbody>
+                    </table>
+                    {{else}}
+                    <h2>You can't see solutions now</h4>
+                      {{/if}}
+                  </div>
                 </div>
               </div>
-
-              <div class="tab-pane fade" id="pills-mysubmissions" role="tabpanel"
-                aria-labelledby="pills-mysubmissions-tab">
-                <div class="mysubmissions">
-
-
-                  {{#if curmysub}}
-                  <table class="table table-light table-hover">
-                    <thead>
-                      <tr bgcolor="#66B2FF">
-                        <th scope="col"><u>No.</u></th>
-                        <th scope="col"><u>Verdict</u></th>
-                        <th scope="col"><u>Time</u></th>
-                        <th scope="col"><u>Solution</u></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        {{#each curmysub}}
-                      <tr>
-                        <th scope="row">{{math @index "+" 1}}</th>
-                        <td>{{verdict}}</td>
-                        <td>{{time}}</td>
-                        <td>
-                          <a href="/viewsolution/{{token}}" value="{{token}}"
-                            class="btn btn-outline-primary btn-block btn-border" id="btn-solve">view</a>
-                        </td>
-                      </tr>
-                      {{else}}
-
-                      {{/each}}
-                    </tbody>
-                  </table>
-                  {{else}}
-                  <h2>You didn't submit yet</h4>
-                    {{/if}}
+            </div>
+            <!-- -->
+            <div class="problem-desc" style="display: block;">
+              <div class="problem-description line-height-18 less-margin-2 darker content">
+                <div class="problem-title medium-margin weight-700 hidden" id="problem-title">
+                  This Problem
                 </div>
-              </div>
-              <div class="tab-pane fade" id="pills-allsubmissions" role="tabpanel"
-                aria-labelledby="pills-allsubmissions-tab">
-                <div class="allsubmissions">
-                  {{#if curallsub}}
-                  <table class="table table-light table-hover">
-                    <thead>
-                      <tr bgcolor="#66B2FF">
-                        <th scope="col"><u>No.</u></th>
-                        <th scope="col"><u>Handle</u></th>
-                        <th scope="col"><u>Verdict</u></th>
-                        <th scope="col"><u>Time</u></th>
-                        <th scope="col"><u>Solution</u></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        {{#each curallsub}}
-                        <th scope="row">{{math @index "+" 1}}</th>
-                        <td>
-                          <a href="/profile/{{username}}" value="{{username}}">{{username}}</a>
-                        </td>
-                        <td>{{verdict}}</td>
-                        <td>{{time}}</td>
-                        <td>
-                          <a href="/viewsolution/{{token}}" value="{{token}}"
-                            class="btn btn-outline-primary btn-block btn-border" id="btn-solve">view</a>
-                        </td>
-                      </tr>
-                      {{else}}
-
-                      {{/each}}
-                    </tbody>
-                  </table>
-                  {{else}}
-                  <h2>You can't see solutions now</h4>
-                    {{/if}}
-
+                <div class="ellaborate">
+                  <p>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-          <!-- -->
-          <div class="problem-desc" style="display: block;">
-            <div class="problem-description line-height-18 less-margin-2 darker content">
-              <div class="problem-title medium-margin weight-700 hidden" id="problem-title">
-                This Problem
-              </div>
-              <div class="ellaborate">
-                <p>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6 col-xl-6 col-md-6  col-sm-6 col-xs-6  " style="background-color: #FFF">
-          <form action="/problem" method="post" id="problemcode">
+          <div class="col-lg-6 col-xl-6 col-md-6  col-sm-6 col-xs-6  " style="background-color: #FFF">
             <div class="row">
               <div style="padding-left:3%;">
-                <p style="font-size:18px;color:#1e90ff"> <b>Write your code here!</b></p>
+                <p style="font-size:22px;color:#1e90ff"> <b>Insert your code here!</b></p>
               </div>
-              <div style="padding-top: 8px;padding-left:37.5%;">
+              &nbsp;&nbsp;&nbsp;
+              <form style="padding-top: 8px;padding-left:37.5%;">
                 <select name="language" id="language" style="width: 200px;height: 30px;float: right">
-                 
                   <option value="c" {{selected.c}}>C</option>
                   <option value="cpp" {{selected.cpp}}>C++</option>
-                  <option value="python"{{selected.py}}>Python</option>
+                  <option value="python" {{selected.py}}>Python</option>
                   <option value="java" {{selected.java}}>Java</option>
                 </select>
-              </div>
+              </form>
             </div>
             <div class="textarea-wrapper">
-              <textarea name="submittedcode" rows="10" cols="40" id="prog-input" spellcheck="false"></textarea>
+              <textarea name="submittedcode" rows="8" cols="40" id="prog-input" spellcheck="false"></textarea>
             </div>
-            <div class="row" style="padding-top:2%">
-              <div class="row " style="padding-left:55%">
-                <button name="submit" class="btn btn-outline-primary" id="execute"
-                  style="margin: 0 auto;padding:5px 45px;">
+            <div class="row" style="padding-top:1%">
+              <div class="row " style="padding-left:50%">
+                <button class="btn btn-outline-primary loading" id="execute" style="margin: 0 auto">
                   <h5>Submit</h5>
                 </button>
               </div>
             </div>
-          </form>
+          </div>
         </div>
       </div>
-    </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script type="text/javascript">
+        $(document).ready(function () {
+          $(".loading").click(function () {
+            $(this).addClass("activeloading");
+            // Add Success Class After 3.7 Seconds
+            setTimeout(function () {
+              $(".button").addClass("success");
+            }, 15000);
+          });
+        });
+      </script>
+    </form>
     <script src="ace/src/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/popper.min.js"></script>
@@ -243,7 +257,6 @@
     <script src="js/default.js"></script>
     <script src="js/index.js"></script>
     <script src="lib/codemirror.js"></script>
-
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
       integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
       </script>

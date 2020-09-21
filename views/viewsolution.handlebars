@@ -73,7 +73,11 @@
             <h5 style="text-align:center;float:left;">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Language
                 : {{fullLang submission.lang}} &nbsp;&nbsp;|</h5>
+            {{#ifCond submission.verdict '==' 'Compilation Error'}}
+            <h5 style="text-align:center;float:left;">&nbsp;&nbsp;&nbsp;&nbsp;Time : ---- </h5>
+            {{else}}
             <h5 style="text-align:center;float:left;">&nbsp;&nbsp;Time : {{submission.time}} sec </h5>
+            {{/ifCond}}
             <h5 style="text-align:center;float:left;">&nbsp;&nbsp;|&nbsp;
                 Submission Time : {{prettifyDate submission.date '1'}} </h5>
             </p>
@@ -95,15 +99,15 @@
             {{else}}
             <h1 style="text-align:center"> <b>You can't see this submission now</b></h1>
             <div class="container">
-                    <div class="center" style="padding-top:3%;padding-bottom:2%;">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button style="background-color:#0080FF;color:white; height:40px;width:150px;"
-                            onclick="goBack()">Go Back</button>
-                    </div>
+                <div class="center" style="padding-top:3%;padding-bottom:2%;">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button style="background-color:#0080FF;color:white; height:40px;width:150px;" onclick="goBack()">Go
+                        Back</button>
                 </div>
+            </div>
             {{/if}}
         </div>
         <script src="ace/src/ace.js" type="text/javascript" charset="utf-8"></script>

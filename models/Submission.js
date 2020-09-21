@@ -19,8 +19,7 @@ const SubmissionSchema = new Schema({
         required: true
     },
     time: {
-        type: Number,
-        default: 0
+        type: Number
     },
     memory: {
         type: Number,

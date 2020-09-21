@@ -63,7 +63,12 @@
       <div class="col-lg-4 col-xl-4">
         <h3 style="font-family: Cambria, Georgia, serif; font-size:100px;color:{{color}}"><b> {{verdict}}</b></h3>
         <h5>
-          <p style="padding-left:15%;font-size:50px;">Time : {{curoutput.time}} s</p>
+          {{#ifCond verdict '==' 'Compilation Error'}}
+            
+          {{else}}
+            <p style="padding-left:15%;font-size:50px;">Time : {{curoutput.time}} s</p>
+          {{/ifCond}}
+
         </h5>
       </div>
       <div class="col-lg-4 col-xl-4">
