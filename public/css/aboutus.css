@@ -1,35 +1,27 @@
 #nav-bar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .navbar {
-  padding: .6rem;
+    padding: .6rem;
 }
 
 .navbar-nav li {
-  color: #0328fc;
-  padding-right: 20px;
+    color: #0328fc;
+    padding-right: 20px;
 }
 
 .nav-link {
-  font-size: 1.1em !important;
+    font-size: 1.1em !important;
 }
 
 .navbar-nav li a {
-  font-weight: 600;
-  float: right;
-  text-align: left;
+    font-weight: 600;
+    float: right;
+    text-align: left;
 }
-
-
-
-
-
-
-
-
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
 
@@ -40,7 +32,8 @@
     margin: 0;
 }
 */
-body{
+
+body {
     font-family: 'Playfair Display', serif;
     display: grid;
     background-color: #f4f4f4;
@@ -48,38 +41,43 @@ body{
     min-height: 100vh;
     overflow: hidden;
 }
-#page{
+
+#page {
     display: grid;
     grid-template-columns: 1fr 1fr;
     min-height: 90vh;
     width: 85vw;
     margin: 0 auto;
 }
-.image{
-  background: url("images/hope.png") center/cover no-repeat;
-  padding-left: 5px;
 
+.image {
+    background: url("/images/hope.png") center/cover no-repeat;
+    padding-left: 5px;
 }
-.content{
+
+.content {
     background: #fff;
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
 }
-.content h2{
+
+.content h2 {
     text-transform: uppercase;
     font-size: 36px;
     letter-spacing: 6px;
     opacity: 0.9;
 }
-.content span{
+
+.content span {
     height: 0.5px;
     width: 80px;
     background: #777;
     margin: 30px 0;
 }
-.content p{
+
+.content p {
     padding-bottom: 15px;
     font-weight: 300;
     opacity: 0.7;
@@ -89,26 +87,25 @@ body{
     line-height: 1.7;
 }
 
-@media(max-width: 992px){
-    #page{
+@media(max-width: 992px) {
+    #page {
         grid-template-columns: 1fr;
         width: 100%;
     }
-    .image{
+    .image {
         height: 100vh;
     }
-    .content{
+    .content {
         height: 100vh;
     }
-    .content h2{
+    .content h2 {
         font-size: 20px;
         margin-top: 50px;
     }
-    .content span{
+    .content span {
         margin: 20px 0;
     }
-    .content p{
+    .content p {
         font-size: 14px;
     }
-
 }

@@ -25,6 +25,7 @@ var curproblem, curproblems, curtutorial, curtutorials;
 var cursubmittedcode, cureditproblem, curedittutorial;
 var curdeleteproblem, curdeletetutorial, curoutput;
 
+// Node mailer email
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -32,7 +33,6 @@ var transporter = nodemailer.createTransport({
         pass: 'dummypassw0rd'
     }
 });
-
 
 // Connect to mongoose
 mongoose.Promise = global.Promise;
@@ -378,6 +378,62 @@ app.get('/enter', function(req, res) {
     }
 });
 
+app.get('/editprofile/:id', ensureAuthenticated, function(req, res) {
+    console.log(req.params.id);
+    console.log(curuser);
+    if (req.params.id == curuser.username) {
+        res.render('editprofile', {
+            curuser: curuser
+        })
+    } else {
+        res.redirect('/home');
+    }
+});
+
+app.post('/editprofile/:id', ensureAuthenticated, function(req, res) {
+    bcrypt.compare(req.body.userpassword, curuser.password, (err, isMatch) => {
+        if (err) {
+            throw err
+        }
+        if (isMatch) {
+            if (Object.keys(req.body).length == 2) {
+                //console.log(curuser);
+                User.findOne({ username: curuser.username })
+                    .then(user => {
+                        //console.log(user);
+                        user.name = req.body.username;
+                        user.save();
+                        req.flash('success_msg', 'Name Updated');
+                        res.redirect('/profile/' + curuser.username);
+                    });
+            } else {
+                /* console.log(req.body);
+                if (req.body.usernewpassword != req.body.usernewpassword2) {
+                    req.flash('error_msg', 'New Password not matched');
+                    res.redirect('/editprofile/' + curuser.username);
+                } else {
+                    bcrypt.genSalt(10, function(err, salt) {
+                        bcrypt.hash(req.body.usernewpassword, salt, function(err, hash) {
+                            if (err) throw err;
+                            User.findOne({ username: curuser.username })
+                                .then(user => {
+                                    console.log(user);
+                                    user.password = hash;
+                                    user.save();
+                                    req.flash('success_msg', 'Password Changed');
+                                    res.redirect('/profile/' + curuser.username);
+                                });
+                        });
+                    });
+                } */
+            }
+        } else {
+            req.flash('error_msg', 'Incorrect Current Password');
+            res.redirect('/editprofile/' + curuser.username);
+        }
+    });
+});
+
 // Login Post
 app.post('/login', function(req, res, next) {
     User.findOne({ username: req.body.username })
@@ -385,7 +441,7 @@ app.post('/login', function(req, res, next) {
             if (user) {
                 curuser = user;
             }
-        })
+        });
     passport.authenticate('local', {
         successRedirect: '/home',
         failureRedirect: '/enter',
@@ -421,25 +477,28 @@ app.post('/register', function(req, res) {
             username: req.body.signupusername
         })
     } else {
-        const newUser = {
+        const newUser = new User({
             username: req.body.signupusername,
             email: req.body.signupemail,
-            password: req.body.signuppass,
-        }
+            password: req.body.signuppass
+        });
         bcrypt.genSalt(10, function(err, salt) {
             bcrypt.hash(newUser.password, salt, function(err, hash) {
-                if (err) throw err;
-                newUser.password = hash;
-                new User(newUser)
-                    .save()
-                    .then(user => {
-                        req.flash('success_msg', 'Registration Successful');
-                        res.redirect('/enter');
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        return;
-                    });
+                if (err) {
+                    throw err;
+                } else {
+                    newUser.password = hash;
+                    newUser
+                        .save()
+                        .then((user) => {
+                            req.flash('success_msg', 'Registration Successful');
+                            res.redirect('/enter');
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            return;
+                        });
+                }
             });
         });
     }
@@ -448,6 +507,7 @@ app.post('/register', function(req, res) {
 // Home Route
 app.get('/home', function(req, res) {
     // Store number of problems in each sections
+    //console.log(curuser);
     var tempCounter = getCounter(function(result) {
         counter = result;
         res.render('home', {
@@ -478,6 +538,13 @@ app.get('/logout', function(req, res) {
     req.logout();
     req.flash('success_msg', 'Logged Out');
     res.redirect('/');
+});
+
+// Private policy
+app.get('/privatepolicy', function(req, res) {
+    res.render('privatepolicy', {
+        curuser: curuser
+    })
 });
 
 // Problem show and submit page
