@@ -5,9 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Problem</title>
-  <link rel="shortcut icon" type="image/png" href="images/favicon.png">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+	<!-- Google fonts Open Sans -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700" rel="stylesheet">
   <link rel="stylesheet" href="lib/codemirror.css">
 
   <link rel="stylesheet" href="problem.css">
@@ -151,7 +153,7 @@
                                                                      <tr>
                                                                        <th scope="row">1</th>
                                                                        <td>accepted</td>
-                                                                      <td><p>&nbsp;&nbsp;&nbsp;<a href="#">View</a></p></td>
+                                                                       <td><a href="#">View</a></td>
                                                                      </tr>
                                                                    </tbody>
                                                                  </table>
@@ -177,7 +179,7 @@
                                                                        <th scope="row">1</th>
                                                                        <td>Mark</td>
                                                                        <td>accepted</td>
-                                                                       <td><p>&nbsp;&nbsp;&nbsp;<a href="#">View</a></p></td>
+                                                                       <td><a href="#">View</a></td>
                                                                      </tr>
                                                                    </tbody>
                                                                  </table>
@@ -191,9 +193,6 @@
 
 
                                 </div>
-
-
-
 
 
                           <!-- -->
@@ -214,11 +213,6 @@
                                             </div>
 
                                 </div>
-
-
-
-
-
 
 
                         </div>
@@ -243,21 +237,18 @@
 
 
                                 <div class="textarea-wrapper" >
-                                  <textarea rows="10" cols="40" id="prog-input" spellcheck="false"></textarea>
+                                  <textarea rows="8" cols="40" id="prog-input" spellcheck="false"></textarea>
                                 </div>
 
-                                <div class="row" style="padding-top:2%">
+                                <div class="row" style="padding-top:1%">
 
-                                  <div class="row " style="padding-left:4.5%" >
-                                            <button class="btn btn-outline-primary" id="execute" style="margin: 0 auto"><h5>Compile and Test</h5></button>
+                                  <div class="row " style="padding-left:50%" >
+                                            <button class="btn btn-outline-primary loading" id="execute" style="margin: 0 auto"><h5>Submit</h5></button>
                                   </div>
 
-                                  <div class="row " style="padding-left:55%" >
-                                            <button class="btn btn-outline-primary  " id="execute" style="margin: 0 auto;padding:5px 45px;"><h5>Submit</h5></button>
-                                  </div>
+
 
                                 </div>
-
 
 
 
@@ -267,7 +258,29 @@
 
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
+    <script type="text/javascript">
+
+    $(document).ready(function(){
+    	$(".loading").click(function(){
+    		$(this).addClass("activeloading");
+
+
+    		// Add Success Class After 3.7 Seconds
+    		setTimeout(function(){
+    			$(".button").addClass("success");
+    		}, 3700);
+
+
+
+        setTimeout(function(){
+        location.replace("https://www.youtube.com/")
+        }, 5000);
+    	});
+    });
+
+    </script>
 
     <script src="ace/src/ace.js" type="text/javascript" charset="utf-8"></script>
      <script src="js/jquery-3.4.1.min.js"></script>

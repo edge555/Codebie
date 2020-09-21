@@ -1,9 +1,11 @@
+
 body {
-    overflow-x: hidden;
-    /* Hide scrollbars */
+   overflow-x:    hidden; /* Hide scrollbars */
+
     font-size: 18px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Open Sans',sans-serif
     margin: 0;
+
     word-spacing: 1px;
     position: absolute;
     top: 0;
@@ -11,9 +13,10 @@ body {
     right: 0;
     bottom: 0;
     -webkit-font-smoothing: antialiased;
+
 }
 
-.badge-notification {
+.badge-notification{
     padding: 3px 5px 2px;
     position: absolute;
     top: 8px;
@@ -29,68 +32,83 @@ body {
     text-align: center;
     border-radius: 10px;
 }
-
 .badge-danger {
     background-color: #db5565;
 }
+
+
+
+
+
+
+
+
+
+
 
 .box {
     padding: 0 5px 0 5px;
 }
 
 .custompadding {
-    padding: 0 !important;
-    margin-left: 40px !important;
-    margin-right: 40px !important;
+   padding: 0 !important;
+
+   margin-left: 40px !important;
+   margin-right: 40px !important;
 }
 
-.distance {
-    padding: 5px;
+
+
+.distance{
+  padding:  5px;
 }
 
 .scrollable {
-    height: 800px;
-    overflow-y: scroll;
+  height: 800px;
+  overflow-y: scroll;
 }
+
+
+
+
+
+
 
 .problem-tabs {
     position: -webkit-sticky;
+
     top: 0;
     z-index: 99;
     border-top: 1px solid #d9deea;
+
 }
 
 .regular {
     font-size: 14px;
 }
-
 .tab-underline-blue {
     position: relative;
     border-bottom: 1px solid #e5e7e8;
-}
 
+}
 .tab {
     position: relative;
     float: left;
 }
-
-.clear {
-    clear: both;
+.clear{
+  clear: both;
 }
-
 div {
     display: block;
 }
 
-.problem-tabs .tab-underline-blue .tab .tab-name.selected,
-.problem-page .problem-tabs .tab-underline-blue .tab-name.selected {
+.problem-tabs .tab-underline-blue .tab .tab-name.selected, .problem-page  .problem-tabs .tab-underline-blue .tab-name.selected {
     -webkit-box-shadow: 0 -3px 0 0 #4c9cdf inset;
     -moz-box-shadow: 0 -3px 0 0 #4c9cdf inset;
     box-shadow: 0 -3px 0 0 #4c9cdf inset;
 }
 
-.problem-tabs .tab-underline-blue .tab .tab-name,
-.problem-page .problem-tabs .tab-underline-blue .tab-link .tab-name {
+.problem-tabs .tab-underline-blue .tab .tab-name, .problem-page  .problem-tabs .tab-underline-blue .tab-link .tab-name {
     color: #46535e;
     text-transform: uppercase;
     font-size: 12px;
@@ -101,18 +119,15 @@ div {
     font-weight: 700;
     display: inline-block;
 }
-
 .tab-underline-blue .tab .tab-name.tab-dark {
     color: #46535e;
     font-weight: 600;
 }
-
 .tab-underline-blue .tab .tab-name.selected {
     color: #4c9cdf!important;
     border-bottom: 3px solid #4c9cdf;
     font-weight: 600;
 }
-
 .tab-underline-blue .tab .tab-name {
     cursor: pointer;
     font-size: 14px;
@@ -120,158 +135,153 @@ div {
     margin-left: 10px;
     padding: 0 2px 7px 2px;
 }
-
 .problem-page .top-content-wrapper {
     background-color: #fff;
 }
-
-.problem-page .problem-title {
+.problem-page  .problem-title {
     font-size: 24px;
     padding: 10px 120px 0 40px;
     font-weight: 600;
     margin-bottom: 0;
     max-width: none;
 }
-
 .problem-detail .problem-title {
     max-width: 84%;
     font-size: 18px;
     line-height: 25px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Open Sans',sans-serif;
 }
-
 .less-margin-2-bottom {
     margin-bottom: 10px;
 }
-
 .darker {
     color: #252c33;
 }
-
 .large-20 {
     font-size: 20px;
 }
-
 .hidden {
     display: none;
 }
-
 .problem-page .left .problem-title .prob-indicator.hidden {
     display: none;
 }
-
 .problem-page .left .problem-title .prob-indicator {
     font-size: 12px;
     vertical-align: middle;
     margin-top: -2px;
 }
-
 .fa {
     display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
+
 }
 
-.problem-page .problem-title {
+.problem-page  .problem-title {
     font-size: 20px;
     word-break: break-all;
 }
-
 .medium-margin {
     margin: 20px 0 0 0;
 }
-
 .weight-700 {
     font-weight: 700;
 }
-
-.problem-page .left .problem-desc .problem-description .editorial-desc {
+.problem-page .left .problem-desc .problem-description  {
     font-size: 14px;
     line-height: 21px;
     margin: 0 10px 0 40px;
     background-color: #fff;
 }
-
 .problem-detail .problem-description {
     font-size: 13px;
     overflow-x: auto;
 }
-
 .line-height-18 {
     line-height: 18px;
 }
-
 .darker {
     color: #252c33;
 }
-
-.problem-page .editorial-desc,
-.problem-page .problem-page {
+.problem-page  .problem-page  .problem-page  {
     background-color: #fff;
     padding: 1px 10px 10px 40px;
     min-height: 50px;
     overflow-x: auto;
 }
-
 .body-font {
     font-size: 13px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Open Sans',sans-serif;
 }
 
+
+
+
+
 textarea {
-    background: url(http://i.imgur.com/2cOaJ.png);
-    min-width: 715px;
-    min-height: 435px;
-    background-attachment: local;
-    background-repeat: no-repeat;
-    padding-left: 35px;
-    padding-top: 10px;
-    border-color: #ccc;
-    font-size: 13px;
-    line-height: 16px;
+  background: url(http://i.imgur.com/2cOaJ.png);
+  min-width: 715px;
+  min-height: 415px;
+  background-attachment: local;
+  background-repeat: no-repeat;
+  padding-left: 35px;
+  padding-top: 10px;
+  border-color: #ccc;
+
+  font-size: 13px;
+  line-height: 16px;
 }
 
 .textarea-wrapper {
-    display: inline-block;
-    background-image: linear-gradient(#F1F1F1 50%, #F9F9F9 50%);
-    background-size: 100% 32px;
-    background-position: left 10px;
+  display: inline-block;
+  background-image: linear-gradient(#F1F1F1 50%, #F9F9F9 50%);
+  background-size: 100% 32px;
+  background-position: left 10px;
 }
-
 .vl {
-    border-left: 1px solid #000;
-    margin-top: 27px;
-    height: 12px;
+  border-left: 1px solid #000;
+  margin-top: 27px;
+  height: 12px;
 }
 
-#nav-bar {
-    position: sticky;
-    top: 0;
-    z-index: 10;
+
+.activeloading{
+  font-size: 0;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border-left-color: transparent;
+  animation: rotate 1.4s ease 0.5s infinite;
 }
 
-.navbar {
-    padding: .6rem;
+@keyframes rotate{
+  0%{
+    transform: rotate(360deg);
+  }
 }
 
-.navbar-nav li {
-    color: #0328fc;
-    padding-right: 20px;
+.success{
+  position: relative;
+  background-color: #fff;
+  animation: bounce .3s ease-in;
 }
-
-.nav-link {
-    font-size: 1.1em !important;
+@keyframes bounce{
+  0%{
+    transform: scale(0.9);
+  }
 }
-
-.navbar-nav li a {
-    font-weight: 600;
-    float: right;
-    text-align: left;
-}
-
-.padding-0 {
-    padding-right: 0;
-    padding-left: 0;
+.success:before{
+  content: '';
+  position: absolute;
+  background: url(images/done.png) no-repeat; /* Check Solid is fontawesome icon */
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 31px;
+  height: 31px;
+  line-height: 31px;
+  top: 8px;
 }
