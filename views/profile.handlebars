@@ -61,11 +61,11 @@
                 <p style="text-align: center;color:#148DDF ;"> <b>User Profile</b></p>
             </h1>
             <h5>
-                <p style="text-align:center;font-family: 'Arbutus Slab';">Name: {{user.name}} 
-                    {{#if curuser}}
+                <p style="text-align:center;font-family: 'Arbutus Slab';">Name: {{user.name}}
+                    {{#ifCond curuser.username '==' id}}
                         <a href="/editprofile/{{curuser.username}}"><i class="fa fa-edit" style="font-size:25px;color:#80C6F5;padding-left:2px;"></i></a>
                     {{else}}
-                    {{/if}}
+                    {{/ifCond}}
                 </p>
             </h5>
             <h5>
@@ -80,9 +80,7 @@
             <h3 style="padding-top:6px;">
                 <p style="text-align:center;color:#0E96F2">Statistics</p>
             </h3>
-
             <table class="table table-hover table-bordered" style="text-align: center;">
-
                 <tbody>
                     <tr>
                         <td style="font-size: 20px"><b>C ({{user.csolvecount}}/{{counter.ccnt}})</b></td>
@@ -188,5 +186,4 @@
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
             </script>
 </body>
-
 </html>

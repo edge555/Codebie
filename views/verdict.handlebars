@@ -38,7 +38,6 @@
             <li class="nav-item dropdown my-auto">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                <span><i class="fa fa-user"></i></span>
                 {{curuser.username}}
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -61,7 +60,7 @@
       <div class="col-lg-4 col-xl-4">
       </div>
       <div class="col-lg-4 col-xl-4">
-        <h3 style="font-family: Cambria, Georgia, serif; font-size:100px;color:{{color}}"><b> {{verdict}}</b></h3>
+        <h3 style="margin-top:20% ;font-family: Cambria, Georgia, serif; font-size:100px;color:{{color}}"><b> {{verdict}}</b></h3>
         <h5>
           {{#ifCond verdict '==' 'Compilation Error'}}
             

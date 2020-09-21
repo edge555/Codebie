@@ -93,6 +93,7 @@ app.engine('handlebars', exphbs({
                 "x": (lvalue * 100) / rvalue
             }[operator];
         },
+        // To formate Js Date
         prettifyDate: function(timestamp, check) {
             function addZero(i) {
                 if (i < 10) {
@@ -121,6 +122,7 @@ app.engine('handlebars', exphbs({
             }
             return result;
         },
+        // Comparing object
         ifCond: function(v1, operator, v2, options) {
             switch (operator) {
                 case '==':
@@ -169,7 +171,6 @@ app.engine('handlebars', exphbs({
 }));
 
 app.set('view engine', 'handlebars');
-
 // To use public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -398,6 +399,7 @@ app.get('/enter', function(req, res) {
     }
 });
 
+// Profile edit
 app.get('/editprofile/:id', ensureAuthenticated, function(req, res) {
     console.log(req.params.id);
     console.log(curuser);
@@ -462,6 +464,11 @@ app.post('/editprofile/:id', ensureAuthenticated, function(req, res) {
     });
 });
 
+// Valid checking regex
+function isValid(text) {
+    return /^[0-9a-zA-Z_.-]+$/.test(text);
+}
+
 // Login Post
 app.post('/login', function(req, res, next) {
     passport.authenticate('local', {
@@ -486,11 +493,17 @@ app.post('/register', function(req, res) {
                 errors.push({ text: "Username already taken" });
             }
         });
-    if (req.body.signuppass != req.body.signuppass2) {
-        errors.push({ text: "Password doesn't match" });
+    if (!isValid(req.body.signupusername)) {
+        errors.push({ text: "Invalid username" });
+    }
+    if (!isValid(req.body.signuppass)) {
+        errors.push({ text: "Invalid password" });
     }
     if (req.body.signuppass.length < 6) {
-        errors.push({ text: "Password too short" });
+        errors.push({ text: "Password too short, Minimum 6 characters" });
+    }
+    if (req.body.signuppass != req.body.signuppass2) {
+        errors.push({ text: "Password doesn't match" });
     }
     if (errors.length != 0) {
         res.render('enter', {
@@ -555,6 +568,7 @@ app.post('/home', function(req, res) {
     res.redirect('/section/' + section);
 });
 
+// Logout route
 app.get('/logout', function(req, res) {
     curuser = null;
     req.logout();
@@ -562,7 +576,7 @@ app.get('/logout', function(req, res) {
     res.redirect('/');
 });
 
-// Private policy
+// Private policy route
 app.get('/privatepolicy', function(req, res) {
     res.render('privatepolicy', {
         curuser: curuser
@@ -621,6 +635,7 @@ function gettoken(submission, input, callback) {
     });
 }
 
+// Counter for total problems
 function getCounter(callback) {
     counter = {
         ccnt: 0,
@@ -674,6 +689,7 @@ function getoutput(submissiontoken, callback) {
     });
 }
 
+// Get verdict
 function getverdict(submission, input, output, callback) {
     var submissiontoken, tempverdict;
     var token = gettoken(submission, input, function(result) {
@@ -832,6 +848,7 @@ app.get('/profile/:id', function(req, res) {
                     profilePySolve: profilePySolve,
                     profileDsSolve: profileDsSolve,
                     profileAlgoSolve: profileAlgoSolve,
+                    id: req.params.id
                 });
             })
     });
@@ -863,6 +880,7 @@ app.get('/recent', function(req, res) {
         })
 })
 
+// Show section route
 app.get('/section/:id', function(req, res) {
     Tutorial.find({ section: req.params.id })
         .lean()
@@ -908,7 +926,6 @@ app.get('/section/:id', function(req, res) {
         });
 });
 
-
 // Tutorial page
 app.get('/tutorial', ensureAuthenticated, function(req, res) {
     res.render('tutorial', {
@@ -936,6 +953,7 @@ app.get('/tutorials/:id', function(req, res) {
         });
 });
 
+// Verdict route
 app.get('/verdict', ensureAuthenticated, function(req, res) {
     //console.log(section);
     if (curoutput == null) {
@@ -1008,7 +1026,6 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
                 new Submission(newSubmission).save()
             });
     }
-
     var color = "red";
     if (verdict == "Accepted") {
         color = "green";
@@ -1024,7 +1041,6 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
 
 // View solution
 app.get('/viewsolution/:id', ensureAuthenticated, function(req, res) {
-    //console.log(req.params);
     //console.log(curuser);
     Submission.findOne({ token: req.params.id })
         .then(submission => {

@@ -15,13 +15,15 @@
         }
     </script>
 </head>
-
 <body>
     <!--Navigation Bar starts -->
     <section id="nav-bar">
-        <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+        <nav class="navbar navbar-expand-md navbar-light bg-white sticky-top">
             <div class="container-fluid">
                 <a href="/home" class="navbar-brand"><img src="/images/logo.png" style="width:80%; height:70%"></a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=#navbarResponsive>
+                    <span class="navbar-toggler-icon"></span>
+                </button>
                 <div class="collapse navbar-collapse" id=navbarResponsive>
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
@@ -57,47 +59,35 @@
                 </div>
             </div>
         </nav>
-        <!--Navigation Bar ends -->
-        <!--Content starts -->
-        <div class="content ">
-            {{#if alreadysolved}}
-            <h2 style="text-align:center"> <b>Solution</b></h2>
-            <div class="container">
-                <hr class="colored">
+    </section>
+    <!--Navigation Bar ends -->
+    <!--Content starts -->
+    <div class="content ">
+        {{#if alreadysolved}}
+        <h2 style="text-align:center"> <b>Solution</b></h2>
+        <div class="container">
+            <hr class="colored">
+        </div>
+        <p style="align:center">
+        <h5 style="text-align:center;"> Problem Code : <a href="/problems/{{submission.problemcode}}"
+                value="{{submission.problemcode}}">{{submission.problemcode}}</a>
+            | Handle : <a href="/profile/{{submission.username}}"
+                value="{{submission.username}}">{{submission.username}}</a> </h5>
+        <h5 style="text-align:center;float:left;">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Language
+            : {{fullLang submission.lang}} &nbsp;&nbsp;|</h5>
+        {{#ifCond submission.verdict '==' 'Compilation Error'}}
+        <h5 style="text-align:center;float:left;">&nbsp;&nbsp;&nbsp;&nbsp;Time : ---- </h5>
+        {{else}}
+        <h5 style="text-align:center;float:left;">&nbsp;&nbsp;Time : {{submission.time}} sec </h5>
+        {{/ifCond}}
+        <h5 style="text-align:center;float:left;">&nbsp;&nbsp;|&nbsp;
+            Submission Time : {{prettifyDate submission.date '1'}} </h5>
+        </p>
+        <div style="padding-top:5%">
+            <div class="textarea-wrapper">
+                <textarea rows="6" cols="35" id="prog-input" spellcheck="false">{{submission.stdin}}</textarea>
             </div>
-            <p style="align:center">
-            <h5 style="text-align:center;"> Problem Code : <a href="/problems/{{submission.problemcode}}"
-                    value="{{submission.problemcode}}">{{submission.problemcode}}</a>
-                | Handle : <a href="/profile/{{submission.username}}"
-                    value="{{submission.username}}">{{submission.username}}</a> </h5>
-            <h5 style="text-align:center;float:left;">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Language
-                : {{fullLang submission.lang}} &nbsp;&nbsp;|</h5>
-            {{#ifCond submission.verdict '==' 'Compilation Error'}}
-            <h5 style="text-align:center;float:left;">&nbsp;&nbsp;&nbsp;&nbsp;Time : ---- </h5>
-            {{else}}
-            <h5 style="text-align:center;float:left;">&nbsp;&nbsp;Time : {{submission.time}} sec </h5>
-            {{/ifCond}}
-            <h5 style="text-align:center;float:left;">&nbsp;&nbsp;|&nbsp;
-                Submission Time : {{prettifyDate submission.date '1'}} </h5>
-            </p>
-            <div style="padding-top:5%">
-                <div class="textarea-wrapper">
-                    <textarea rows="6" cols="35" id="prog-input" spellcheck="false">{{submission.stdin}}</textarea>
-                </div>
-                <div class="container">
-                    <div class="center" style="padding-top:3%;padding-bottom:2%;">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button style="background-color:#0080FF;color:white; height:40px;width:150px;"
-                            onclick="goBack()">Go Back</button>
-                    </div>
-                </div>
-            </div>
-            {{else}}
-            <h1 style="text-align:center"> <b>You can't see this submission now</b></h1>
             <div class="container">
                 <div class="center" style="padding-top:3%;padding-bottom:2%;">
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -108,24 +98,36 @@
                         Back</button>
                 </div>
             </div>
-            {{/if}}
         </div>
-        <script src="ace/src/ace.js" type="text/javascript" charset="utf-8"></script>
-        <script src="js/jquery-3.4.1.min.js"></script>
-        <script src="js/popper.min.js"></script>
-        <script src="bootstrap/js/bootstrap.min.js"></script>
-        <script src="js/default.js"></script>
-        <script src="js/index.js"></script>
-        <script src="lib/codemirror.js"></script>
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
-            </script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-            </script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
-            </script>
+        {{else}}
+        <h1 style="text-align:center"> <b>You can't see this submission now</b></h1>
+        <div class="container">
+            <div class="center" style="padding-top:3%;padding-bottom:2%;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button style="background-color:#0080FF;color:white; height:40px;width:150px;" onclick="goBack()">Go
+                    Back</button>
+            </div>
+        </div>
+        {{/if}}
+    </div>
+    <script src="ace/src/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/default.js"></script>
+    <script src="js/index.js"></script>
+    <script src="lib/codemirror.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+        </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+        </script>
 </body>
-
 </html>

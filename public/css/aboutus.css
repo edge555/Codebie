@@ -39,7 +39,7 @@ body {
     background-color: #f4f4f4;
     align-content: center;
     min-height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 #page {
