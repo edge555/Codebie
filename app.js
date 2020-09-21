@@ -52,6 +52,8 @@ require('./models/Tutorial');
 const Tutorial = mongoose.model('tutorials');
 require('./models/Submission');
 const Submission = mongoose.model('submissions');
+require('./models/Token');
+const Token = mongoose.model('tokens');
 
 // Passport config
 require('./config/passport')(passport);
@@ -143,6 +145,24 @@ app.engine('handlebars', exphbs({
                     return (v1 || v2) ? options.fn(this) : options.inverse(this);
                 default:
                     return options.inverse(this);
+            }
+        },
+        fullLang: function(lang) {
+            switch (lang) {
+                case 'c':
+                    return "C";
+                case 'cpp':
+                    return "C++";
+                case 'java':
+                    return "Java";
+                case 'py':
+                    return "Python";
+                case 'ds':
+                    return "Data Structure"
+                case 'algo':
+                    return "Algorithm";
+                default:
+                    return lang;
             }
         }
     }
@@ -551,6 +571,7 @@ app.get('/privatepolicy', function(req, res) {
 
 // Problem show and submit page
 app.get('/problem', function(req, res) {
+    console.log(section);
     res.render('problem', {
         curuser: curuser,
         curproblem: curproblem
@@ -718,6 +739,7 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
 
 // Find problem and redirect to show and submit page
 app.get('/problems/:id', function(req, res) {
+    console.log(section);
     //console.log(req.params.id);
     Problem.findOne({ code: req.params.id })
         .lean()
@@ -735,11 +757,27 @@ app.get('/problems/:id', function(req, res) {
                         }
                     })
                 }
+                selected = {
+                    c: "",
+                    cpp: "",
+                    java: "",
+                    py: "",
+                }
+                if (section == "c") {
+                    selected.c = "selected";
+                } else if (section == "java") {
+                    selected.java = "selected";
+                } else if (section == "py") {
+                    selected.py = "selected";
+                } else {
+                    selected.cpp = "selected";
+                }
                 res.render('problem', {
                     curproblem: curproblem,
                     curuser: curuser,
                     curmysub: curmysub,
-                    curallsub: submissions
+                    curallsub: submissions,
+                    selected: selected
                 });
             });
         });
@@ -945,18 +983,15 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
             }
             new Submission(newSubmission).save()
         });
-
-    var image;
+    var color = "red";
     if (verdict == "Accepted") {
-        image = "images/congrats.gif";
-    } else {
-        image = "images/sorry.gif";
+        color = "green";
     }
     res.render('verdict', {
         curuser: curuser,
         verdict: verdict,
         curoutput: curoutput,
-        image: image
+        color: color
     });
 });
 

@@ -72,9 +72,9 @@
                     value="{{submission.username}}">{{submission.username}}</a> </h5>
             <h5 style="text-align:center;float:left;">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Language
-                : {{submission.lang}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</h5>
-            <h5 style="text-align:center;float:left;">&nbsp;Time : {{submission.time}} sec </h5>
-            <h5 style="text-align:center;float:left;">&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                : {{fullLang submission.lang}} &nbsp;&nbsp;|</h5>
+            <h5 style="text-align:center;float:left;">&nbsp;&nbsp;Time : {{submission.time}} sec </h5>
+            <h5 style="text-align:center;float:left;">&nbsp;&nbsp;|&nbsp;
                 Submission Time : {{prettifyDate submission.date '1'}} </h5>
             </p>
             <div style="padding-top:5%">
