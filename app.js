@@ -407,17 +407,25 @@ app.post('/editprofile/:id', ensureAuthenticated, function(req, res) {
                         res.redirect('/profile/' + curuser.username);
                     });
             } else {
-                /* console.log(req.body);
+                //console.log(req.body);
+                var errors = [];
                 if (req.body.usernewpassword != req.body.usernewpassword2) {
-                    req.flash('error_msg', 'New Password not matched');
-                    res.redirect('/editprofile/' + curuser.username);
+                    errors.push({ text: "Password doesn't match" });
+                }
+                if (req.body.usernewpassword.length < 6) {
+                    errors.push({ text: "Password too short" });
+                }
+                if (errors.length != 0) {
+                    res.render('editprofile', {
+                        errors: errors,
+                        curuser: req.user
+                    });
                 } else {
                     bcrypt.genSalt(10, function(err, salt) {
                         bcrypt.hash(req.body.usernewpassword, salt, function(err, hash) {
                             if (err) throw err;
                             User.findOne({ username: curuser.username })
                                 .then(user => {
-                                    console.log(user);
                                     user.password = hash;
                                     user.save();
                                     req.flash('success_msg', 'Password Changed');
@@ -425,10 +433,10 @@ app.post('/editprofile/:id', ensureAuthenticated, function(req, res) {
                                 });
                         });
                     });
-                } */
+                }
             }
         } else {
-            req.flash('error_msg', 'Incorrect Current Password');
+            req.flash('error_msg', 'Current Password is incorrect');
             res.redirect('/editprofile/' + curuser.username);
         }
     });
@@ -436,12 +444,6 @@ app.post('/editprofile/:id', ensureAuthenticated, function(req, res) {
 
 // Login Post
 app.post('/login', function(req, res, next) {
-    User.findOne({ username: req.body.username })
-        .then(user => {
-            if (user) {
-                curuser = user;
-            }
-        });
     passport.authenticate('local', {
         successRedirect: '/home',
         failureRedirect: '/enter',
@@ -507,7 +509,7 @@ app.post('/register', function(req, res) {
 // Home Route
 app.get('/home', function(req, res) {
     // Store number of problems in each sections
-    //console.log(curuser);
+    curuser = req.user;
     var tempCounter = getCounter(function(result) {
         counter = result;
         res.render('home', {
@@ -519,7 +521,7 @@ app.get('/home', function(req, res) {
 
 app.post('/home', function(req, res) {
     section = req.body.submit;
-    console.log(section);
+    //console.log(section);
     Problem.find({ section: req.body.submit })
         .lean()
         .then(problems => {
