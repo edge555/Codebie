@@ -29,7 +29,7 @@ var curdeleteproblem, curdeletetutorial, curoutput;
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'mailfornodemailer@gmail.com',
+        user: 'codebie.infedgelab@gmail.com',
         pass: 'dummypassw0rd'
     }
 });
@@ -258,7 +258,7 @@ app.post('/admin/addproblem', ensureAuthenticated, function(req, res) {
     new Problem(newProblem)
         .save()
         .then(problem => {
-            res.redirect('admin');
+            res.redirect('/admin');
         });
 });
 
@@ -301,7 +301,7 @@ app.post('/admin/editproblem', ensureAuthenticated, function(req, res) {
             problems.solvecount = req.body.solvecount;
             problems.save()
                 .then(problems => {
-                    res.redirect('admin');
+                    res.redirect('/admin');
                 });
         });
 });
@@ -316,8 +316,6 @@ app.get('/admin/addtutorial', ensureAuthenticated, function(req, res) {
 });
 
 app.post('/admin/addtutorial', ensureAuthenticated, function(req, res) {
-    console.log(req.body);
-    console.log(req.body.statement);
     const newTutorial = {
         name: req.body.name,
         code: req.body.code,
@@ -327,7 +325,7 @@ app.post('/admin/addtutorial', ensureAuthenticated, function(req, res) {
     new Tutorial(newTutorial)
         .save()
         .then(tutorials => {
-            res.redirect('admin');
+            res.redirect('/admin');
         });
 });
 
@@ -359,7 +357,7 @@ app.post('/admin/edittutorial', ensureAuthenticated, function(req, res) {
             tutorials.section = req.body.section;
             tutorials.save()
                 .then(tutorials => {
-                    res.redirect('admin');
+                    res.redirect('/admin');
                 });
         });
 });

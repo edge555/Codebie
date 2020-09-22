@@ -54,47 +54,19 @@
       </div>
     </nav>
   </section>
-
   <div class="container mt-5">
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" id="pills-tutorial-tab" data-toggle="pill" href="#pills-tutorial" role="tab"
-          aria-controls="pills-tutorial" aria-selected="true">Tutorial</a>
+        <a class="nav-link active" id="pills-problem-tab" data-toggle="pill" href="#pills-problem" role="tab"
+          aria-controls="pills-problem" aria-selected="true">Problems</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="pills-problem-tab" data-toggle="pill" href="#pills-problem" role="tab"
-          aria-controls="pills-problem" aria-selected="false">Problems</a>
+        <a class="nav-link" id="pills-tutorial-tab" data-toggle="pill" href="#pills-tutorial" role="tab"
+          aria-controls="pills-tutorial" aria-selected="false">Tutorials</a>
       </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
-      <div class="tab-pane fade show active" id="pills-tutorial" role="tabpanel" aria-labelledby="pills-tutorial-tab">
-        <div class="row">
-
-          <form class="d-flex col-lg-9 col-xl-9">
-            <div class="col-lg-12 col-xl-12">
-              <!-- Card design -->
-              {{#each curtutorials}}
-              <div class="card mt-2">
-                <div class="card-body ">
-                  <div class="row">
-                    <div class="col-lg-9 col-xl-9">
-                      <h5 class="card-title">{{name}}</h5>
-                    </div>
-                    <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
-                      <a href="/tutorials/{{code}}" value="{{code}}" class="btn btn-outline-primary btn-block btn-border"
-                        id="btn-solve">Read</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {{else}}
-              <h1>Empty</h1>
-              {{/each}}
-            </div>
-          </form>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="pills-problem" role="tabpanel" aria-labelledby="pills-problem-tab">
+      <div class="tab-pane fade show active" id="pills-problem" role="tabpanel" aria-labelledby="pills-problem-tab">
         <div class="row">
           <div class="col-lg-9 col-xl-9">
             {{#each curnotsolvedproblems}}
@@ -105,13 +77,13 @@
                     <h5 class="card-title">{{name}}</h5>
                     <p class="badge badge-secondary"> Total Solved: {{solvecount}}</p>
                     {{#ifCond difficulty '==' 1}}
-                        <p class="badge badge-success">Easy</p>
+                    <p class="badge badge-success">Easy</p>
                     {{/ifCond}}
                     {{#ifCond difficulty '==' 2}}
-                        <p class="badge badge-warning">Medium</p>
+                    <p class="badge badge-warning">Medium</p>
                     {{/ifCond}}
                     {{#ifCond difficulty '==' 3}}
-                        <p class="badge badge-danger">Hard</p>
+                    <p class="badge badge-danger">Hard</p>
                     {{/ifCond}}
                   </div>
                   <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
@@ -132,13 +104,13 @@
                     <h5 class="card-title">{{name}}</h5>
                     <p class="badge badge-secondary"> Total Solved: {{solvecount}}</p>
                     {{#ifCond difficulty '==' 1}}
-                        <p class="badge badge-success">Easy</p>
+                    <p class="badge badge-success">Easy</p>
                     {{/ifCond}}
                     {{#ifCond difficulty '==' 2}}
-                        <p class="badge badge-warning">Medium</p>
+                    <p class="badge badge-warning">Medium</p>
                     {{/ifCond}}
                     {{#ifCond difficulty '==' 3}}
-                        <p class="badge badge-danger">Hard</p>
+                    <p class="badge badge-danger">Hard</p>
                     {{/ifCond}}
                   </div>
                   <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
@@ -151,6 +123,32 @@
             {{else}}
             {{/each}}
           </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="pills-tutorial" role="tabpanel" aria-labelledby="pills-tutorial-tab">
+        <div class="row">
+          <form class="d-flex col-lg-9 col-xl-9">
+            <div class="col-lg-12 col-xl-12">
+              <!-- Card design -->
+              {{#each curtutorials}}
+              <div class="card mt-2">
+                <div class="card-body ">
+                  <div class="row">
+                    <div class="col-lg-9 col-xl-9">
+                      <h5 class="card-title">{{name}}</h5>
+                    </div>
+                    <div class="col-lg-3 col-xl-3 my-auto text-right align-items-center">
+                      <a href="/tutorials/{{code}}" value="{{code}}"
+                        class="btn btn-outline-primary btn-block btn-border" id="btn-solve">Read</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {{else}}
+              <h1>Empty</h1>
+              {{/each}}
+            </div>
+          </form>
         </div>
       </div>
     </div>
