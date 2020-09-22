@@ -209,17 +209,17 @@ app.get('/admin', ensureAuthenticated, function(req, res) {
 app.post('/admin', ensureAuthenticated, function(req, res) {
     //console.log(req.body);
     if (req.body.submit == "addproblem") {
-        res.redirect('adminaddproblem');
+        res.redirect('admin/addproblem');
     } else if (req.body.submit == "editproblem") {
         cureditproblem = req.body.problemname;
-        res.redirect('admineditproblem');
+        res.redirect('admin/editproblem');
     } else if (req.body.submit == "deleteproblem") {
         curdeleteproblem = req.body.problemname;
     } else if (req.body.submit == "addtutorial") {
-        res.redirect('adminaddtutorial');
+        res.redirect('admin/addtutorial');
     } else if (req.body.submit == "edittutorial") {
         curedittutorial = req.body.tutorialname;
-        res.redirect('adminedittutorial');
+        res.redirect('admin/edittutorial');
     } else {
         curdeletetutorial = req.body.tutorialname;
         Tutorial.deleteOne({ code: curdeletetutorial })
@@ -230,16 +230,16 @@ app.post('/admin', ensureAuthenticated, function(req, res) {
 });
 
 // To add problems
-app.get('/adminaddproblem', ensureAuthenticated, function(req, res) {
+app.get('/admin/addproblem', ensureAuthenticated, function(req, res) {
     if (adminids.includes(curuser.username)) {
-        res.render('admin/adminaddproblem');
+        res.render('admin/addproblem');
     } else {
         res.render('accessdenied');
     }
 });
 
-app.post('/adminaddproblem', ensureAuthenticated, function(req, res) {
-    console.log(req.body);
+app.post('/admin/addproblem', ensureAuthenticated, function(req, res) {
+    //console.log(req.body);
     const newProblem = {
         name: req.body.name,
         code: req.body.code,
@@ -263,14 +263,14 @@ app.post('/adminaddproblem', ensureAuthenticated, function(req, res) {
 });
 
 // To edit problems
-app.get('/admineditproblem', ensureAuthenticated, function(req, res) {
+app.get('/admin/editproblem', ensureAuthenticated, function(req, res) {
     //console.log(cureditproblem);
     if (adminids.includes(curuser.username)) {
         Problem.findOne({ code: cureditproblem })
             .lean()
             .then(problems => {
                 //console.log(problems);
-                res.render('admin/admineditproblem', {
+                res.render('admin/editproblem', {
                     cureditproblem: problems,
                 });
             });
@@ -280,8 +280,7 @@ app.get('/admineditproblem', ensureAuthenticated, function(req, res) {
     }
 });
 
-app.post('/admineditproblem', ensureAuthenticated, function(req, res) {
-    //console.log("Admin edit problem");
+app.post('/admin/editproblem', ensureAuthenticated, function(req, res) {
     Problem.findOne({
             code: cureditproblem
         })
@@ -308,16 +307,16 @@ app.post('/admineditproblem', ensureAuthenticated, function(req, res) {
 });
 
 // To add tutorial
-app.get('/adminaddtutorial', ensureAuthenticated, function(req, res) {
+app.get('/admin/addtutorial', ensureAuthenticated, function(req, res) {
     if (adminids.includes(curuser.username)) {
-        res.render('admin/adminaddtutorial');
+        res.render('admin/addtutorial');
     } else {
         res.render('accessdenied');
     }
 });
 
-app.post('/adminaddtutorial', ensureAuthenticated, function(req, res) {
-    //console.log(req.body);
+app.post('/admin/addtutorial', ensureAuthenticated, function(req, res) {
+    console.log(req.body);
     console.log(req.body.statement);
     const newTutorial = {
         name: req.body.name,
@@ -333,12 +332,12 @@ app.post('/adminaddtutorial', ensureAuthenticated, function(req, res) {
 });
 
 // To edit tutorial
-app.get('/adminedittutorial', ensureAuthenticated, function(req, res) {
+app.get('/admin/edittutorial', ensureAuthenticated, function(req, res) {
     if (adminids.includes(curuser.username)) {
         //console.log(curedittutorial);
         Tutorial.findOne({ code: curedittutorial })
             .then(tutorials => {
-                res.render('admin/adminedittutorial', {
+                res.render('admin/edittutorial', {
                     curedittutorial: tutorials
                 });
             })
@@ -348,7 +347,7 @@ app.get('/adminedittutorial', ensureAuthenticated, function(req, res) {
     }
 });
 
-app.post('/adminedittutorial', ensureAuthenticated, function(req, res) {
+app.post('/admin/edittutorial', ensureAuthenticated, function(req, res) {
     Tutorial.findOne({
             code: curedittutorial
         })
@@ -936,6 +935,27 @@ app.get('/section/:id', function(req, res) {
         });
 });
 
+// View submission
+app.get('/submission/:id', ensureAuthenticated, function(req, res) {
+    //console.log(curuser);
+    Submission.findOne({ token: req.params.id })
+        .then(submission => {
+            //console.log(submission);
+            alreadysolved = false;
+            curuser.solved.forEach(solve => {
+                if (solve.code == submission.problemcode) {
+                    alreadysolved = true;
+                }
+            });
+            //console.log(submission);
+            res.render('submission', {
+                curuser: curuser,
+                submission: submission,
+                alreadysolved: alreadysolved
+            });
+        })
+});
+
 // Troubleshooting
 app.get('/troubleshoot', function(req, res) {
     if (req.user) {
@@ -1063,26 +1083,6 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
     });
 });
 
-// View solution
-app.get('/viewsolution/:id', ensureAuthenticated, function(req, res) {
-    //console.log(curuser);
-    Submission.findOne({ token: req.params.id })
-        .then(submission => {
-            //console.log(submission);
-            alreadysolved = false;
-            curuser.solved.forEach(solve => {
-                if (solve.code == submission.problemcode) {
-                    alreadysolved = true;
-                }
-            });
-            //console.log(submission);
-            res.render('viewsolution', {
-                curuser: curuser,
-                submission: submission,
-                alreadysolved: alreadysolved
-            });
-        })
-});
 const port = process.env.PORT || 3000;
 app.listen(port, function() {
     console.log("Server started");
