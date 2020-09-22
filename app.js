@@ -166,6 +166,11 @@ app.engine('handlebars', exphbs({
                 default:
                     return lang;
             }
+        },
+        breaklines: function(text) {
+            text = Handlebars.Utils.escapeExpression(text);
+            text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+            return new Handlebars.SafeString(text);
         }
     }
 }));
@@ -231,7 +236,7 @@ app.get('/adminaddproblem', ensureAuthenticated, function(req, res) {
 });
 
 app.post('/adminaddproblem', ensureAuthenticated, function(req, res) {
-    //console.log(req.body);
+    console.log(req.body);
     const newProblem = {
         name: req.body.name,
         code: req.body.code,
@@ -310,6 +315,7 @@ app.get('/adminaddtutorial', ensureAuthenticated, function(req, res) {
 
 app.post('/adminaddtutorial', ensureAuthenticated, function(req, res) {
     //console.log(req.body);
+    console.log(req.body.statement);
     const newTutorial = {
         name: req.body.name,
         code: req.body.code,
@@ -408,6 +414,7 @@ app.get('/editprofile/:id', ensureAuthenticated, function(req, res) {
             curuser: curuser
         })
     } else {
+        req.flash('error_msg', 'You can not edit this profile');
         res.redirect('/home');
     }
 });
@@ -926,6 +933,19 @@ app.get('/section/:id', function(req, res) {
         });
 });
 
+// Troubleshooting
+app.get('/troubleshoot', function(req, res) {
+    if (req.user) {
+        res.redirect('/home');
+    } else {
+        res.render('troubleshoot');
+    }
+});
+
+app.post('/troubleshoot', function(req, res) {
+    console.log(req.body);
+});
+
 // Tutorial page
 app.get('/tutorial', ensureAuthenticated, function(req, res) {
     res.render('tutorial', {
@@ -933,6 +953,7 @@ app.get('/tutorial', ensureAuthenticated, function(req, res) {
         curtutorial: curtutorial
     });
 })
+
 
 // Find and show tutorial
 app.get('/tutorials/:id', function(req, res) {

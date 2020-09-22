@@ -100,15 +100,15 @@
                   <div class="problemstatement" style="padding-left:2%;">
                     <br>
                     <h4>Statement</h4>
-                    <p>{{curproblem.statement}}</p>
+                    <p>{{breaklines curproblem.statement}}</p>
                     <h4>Constraints</h4>
-                    <p>{{curproblem.constraints}}</p>
+                    <p>{{breaklines curproblem.constraints}}</p>
                     <h4>Time Limit</h4>
                     <p>{{curproblem.timelimit}}s</p>
                     <h4>Sample Input</h4>
-                    <p>{{curproblem.sampleinput}}</p>
+                    <p>{{breaklines curproblem.sampleinput}}</p>
                     <h4>Sample Output</h4>
-                    <p>{{curproblem.sampleoutput}}</p>
+                    <p>{{breaklines curproblem.sampleoutput}}</p>
                   </div>
                 </div>
                 <div class="tab-pane fade" id="pills-mysubmissions" role="tabpanel"
@@ -147,7 +147,7 @@
                       </tbody>
                     </table>
                     {{else}}
-                    <h2>You didn't submit yet</h4>
+                    <h2>You didn't submit yet</h2>
                       {{/if}}
                   </div>
                 </div>
@@ -189,7 +189,7 @@
                       </tbody>
                     </table>
                     {{else}}
-                    <h2>No submissions yet/h4>
+                    <h2>No submissions yet</h2>
                       {{/if}}
                   </div>
                 </div>
