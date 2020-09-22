@@ -382,16 +382,16 @@ app.post('/contactus', function(req, res) {
     //console.log(req.body);
     var mailOptions = {
         from: req.body.useremail,
-        to: 'vapormaster4@gmail.com',
-        subject: "Codebie " + req.body.usersubject,
-        text: req.body.username + "\n" + req.body.useremail + "\n" + req.body.usermessage
+        to: 'infedgelab@gmail.com',
+        subject: "Codebie",
+        text: "Name : " + req.body.username + "\n" + "Email : " + req.body.useremail + "\n" + "Subject : " + req.body.usersubject + "\n" + "Message : " + req.body.usermessage
     };
     transporter.sendMail(mailOptions, function(error, info) {
         if (error) {
             console.log(error);
         } else {
             req.flash('success_msg', 'Successful');
-            res.redirect('/home')
+            res.redirect('/contactus')
         }
     });
 });
