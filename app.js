@@ -190,6 +190,165 @@ app.use(function(req, res, next) {
     next();
 });
 
+// Counter for problem sections
+function getCounter(callback) {
+    counter = {
+        ccnt: 0,
+        cppcnt: 0,
+        javacnt: 0,
+        pycnt: 0,
+        dscnt: 0,
+        algocnt: 0,
+        totalcnt: 0
+    }
+    Problem.find({})
+        .then(problems => {
+            //console.log(problems);
+            problems.forEach(problem => {
+                //console.log(problem.section);
+                if (problem.section == "c") {
+                    counter.ccnt++;
+                } else if (problem.section == "cpp") {
+                    counter.cppcnt++;
+                } else if (problem.section == "java") {
+                    counter.javacnt++;
+                } else if (problem.section == "py") {
+                    counter.pycnt++;
+                } else if (problem.section == "ds") {
+                    counter.dscnt++;
+                } else if (problem.section == "algo") {
+                    counter.algocnt++;
+                }
+                counter.totalcnt++
+            });
+            callback(counter);
+        });
+}
+
+// Judge0 API call to get execution info
+function getoutput(submissiontoken, callback) {
+    console.log(submissiontoken);
+    var req = unirest("GET", "https://judge0.p.rapidapi.com/submissions/" + submissiontoken);
+    req.headers({
+        "x-rapidapi-host": "judge0.p.rapidapi.com",
+        "x-rapidapi-key": "f29463abbdmsh6850c751a0bc89fp11dfc2jsn113becd1a344",
+        "useQueryString": true
+    });
+    req.end(function(res) {
+        if (res.error) {
+            verdict = "Compilation Error";
+            callback(verdict);
+        } else {
+            callback(res.body);
+        }
+    });
+}
+
+// Judge0 API call for submitting code
+function gettoken(submission, input, callback) {
+    // Judge0 API for submitting code
+    var req = unirest("POST", "https://judge0.p.rapidapi.com/submissions");
+    req.headers({
+        "x-rapidapi-host": "judge0.p.rapidapi.com",
+        "x-rapidapi-key": "f29463abbdmsh6850c751a0bc89fp11dfc2jsn113becd1a344",
+        "content-type": "application/json",
+        "accept": "application/json",
+        "useQueryString": true
+    });
+    /* 
+    Language ids:
+    C (GCC 9.2.0) : 50,
+    C++ (GCC 7.4.0) : 52,
+    Java (OpenJDK 8) : 27,
+    Python (3.8.1) : 71
+    */
+    //console.log(submission);
+    var lang_id;
+    curlang = submission.language;
+    if (submission.language == "c") {
+        lang_id = 50;
+    } else if (submission.language == "cpp") {
+        lang_id = 52;
+    } else if (submission.language == "java") {
+        lang_id = 27;
+    } else {
+        lang_id = 71;
+    }
+    req.type("json");
+    req.send({
+        "language_id": lang_id,
+        "source_code": submission.code,
+        "stdin": input
+    });
+    req.end(function(res) {
+        if (res.error)
+            throw new Error(res.error);
+        callback(res.body.token);
+    });
+}
+
+// Get verdict
+function getverdict(submission, input, output, callback) {
+    var submissiontoken, tempverdict;
+    var token = gettoken(submission, input, function(result) {
+        submissiontoken = result;
+        curtoken = submissiontoken;
+    });
+    setTimeout(function() {
+        //console.log(submissiontoken);
+        var check = getoutput(submissiontoken, function(result) {
+            curoutput = result;
+            if (section != "algo" && section != "ds" && section != submission.language) {
+                tempverdict = "Language Rejected";
+            } else {
+                if (result == "Compilation Error") {
+                    curoutput = null;
+                    tempverdict = result;
+                } else {
+                    if (curoutput.time > curproblem.timelimit) {
+                        tempverdict = "Time Limit";
+                    } else if (curoutput.stdout == output) {
+                        tempverdict = "Accepted";
+                    } else {
+                        tempverdict = "Wrong Answer";
+                    }
+                }
+            }
+            callback(tempverdict);
+        });
+    }, 7000);
+}
+
+// Valid checking regex
+function isValid(text) {
+    return /^[0-9a-zA-Z_.-]+$/.test(text);
+}
+
+// Generate alphanumaric string
+function randomString() {
+    var result = '';
+    var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    for (var i = 32; i > 0; --i) {
+        result += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return result;
+}
+
+// Nodemailer mail sending function
+function sendMail(sender, receiver, subject, text) {
+    var mailOptions = {
+        from: sender,
+        to: receiver,
+        subject: subject,
+        text: text
+    };
+    transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+            console.log(error);
+        }
+    });
+}
+
 // About us
 app.get('/aboutus', function(req, res) {
     res.render('aboutus', {
@@ -380,20 +539,14 @@ app.get('/contactus', function(req, res) {
 
 app.post('/contactus', function(req, res) {
     //console.log(req.body);
-    var mailOptions = {
-        from: req.body.useremail,
-        to: 'infedgelab@gmail.com',
-        subject: "Codebie",
-        text: "Name : " + req.body.username + "\n" + "Email : " + req.body.useremail + "\n" + "Subject : " + req.body.usersubject + "\n" + "Message : " + req.body.usermessage
-    };
-    transporter.sendMail(mailOptions, function(error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            req.flash('success_msg', 'Successful');
-            res.redirect('/contactus')
-        }
-    });
+    var from = req.body.useremail;
+    var to = 'infedgelab@gmail.com';
+    var subject = "Codebie";
+    var text = "Name : " + req.body.username + "\n" + "Email : " + req.body.useremail + "\n" +
+        "Subject : " + req.body.usersubject + "\n" + "Message : " + req.body.usermessage;
+    sendMail(from, to, subject, text);
+    req.flash('success_msg', 'Successful');
+    res.redirect('/contactus')
 });
 
 // Login/Signup Route
@@ -407,8 +560,6 @@ app.get('/enter', function(req, res) {
 
 // Profile edit
 app.get('/editprofile/:id', ensureAuthenticated, function(req, res) {
-    console.log(req.params.id);
-    console.log(curuser);
     if (req.params.id == curuser.username) {
         res.render('editprofile', {
             curuser: curuser
@@ -471,11 +622,6 @@ app.post('/editprofile/:id', ensureAuthenticated, function(req, res) {
     });
 });
 
-// Valid checking regex
-function isValid(text) {
-    return /^[0-9a-zA-Z_.-]+$/.test(text);
-}
-
 // Login Post
 app.post('/login', function(req, res, next) {
     passport.authenticate('local', {
@@ -514,10 +660,11 @@ app.post('/register', function(req, res) {
     }
     if (errors.length != 0) {
         res.render('enter', {
-            errors: errors,
-            email: req.body.signupemail,
-            username: req.body.signupusername
-        })
+                errors: errors,
+                email: req.body.signupemail,
+                username: req.body.signupusername
+            })
+            // Check if account activation token exists
     } else {
         const newUser = new User({
             username: req.body.signupusername,
@@ -533,7 +680,10 @@ app.post('/register', function(req, res) {
                     newUser
                         .save()
                         .then((user) => {
-                            req.flash('success_msg', 'Registration Successful');
+                            var subject = "Codebie Registration"
+                            var text = "Welcome to Codebie! Please click on this link http://localhost:3000/token/" + randomString() + " to activate your account. This link will expire after 10 minutes";
+                            sendMail("codebie.infedgelab@gmail.com", user.email, subject, text)
+                            req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
                             res.redirect('/enter');
                         })
                         .catch((err) => {
@@ -598,135 +748,6 @@ app.get('/problem', function(req, res) {
         curproblem: curproblem
     });
 });
-
-// Judge0 API call for submitting code
-function gettoken(submission, input, callback) {
-    // Judge0 API for submitting code
-    var req = unirest("POST", "https://judge0.p.rapidapi.com/submissions");
-    req.headers({
-        "x-rapidapi-host": "judge0.p.rapidapi.com",
-        "x-rapidapi-key": "f29463abbdmsh6850c751a0bc89fp11dfc2jsn113becd1a344",
-        "content-type": "application/json",
-        "accept": "application/json",
-        "useQueryString": true
-    });
-    /* 
-    Language ids:
-    C (GCC 9.2.0) : 50,
-    C++ (GCC 7.4.0) : 52,
-    Java (OpenJDK 8) : 27,
-    Python (3.8.1) : 71
-    */
-    //console.log(submission);
-    var lang_id;
-    curlang = submission.language;
-    if (submission.language == "c") {
-        lang_id = 50;
-    } else if (submission.language == "cpp") {
-        lang_id = 52;
-    } else if (submission.language == "java") {
-        lang_id = 27;
-    } else {
-        lang_id = 71;
-    }
-    req.type("json");
-    req.send({
-        "language_id": lang_id,
-        "source_code": submission.code,
-        "stdin": input
-    });
-    req.end(function(res) {
-        if (res.error)
-            throw new Error(res.error);
-        callback(res.body.token);
-    });
-}
-
-// Counter for total problems
-function getCounter(callback) {
-    counter = {
-        ccnt: 0,
-        cppcnt: 0,
-        javacnt: 0,
-        pycnt: 0,
-        dscnt: 0,
-        algocnt: 0,
-        totalcnt: 0
-    }
-    Problem.find({})
-        .then(problems => {
-            //console.log(problems);
-            problems.forEach(problem => {
-                //console.log(problem.section);
-                if (problem.section == "c") {
-                    counter.ccnt++;
-                } else if (problem.section == "cpp") {
-                    counter.cppcnt++;
-                } else if (problem.section == "java") {
-                    counter.javacnt++;
-                } else if (problem.section == "py") {
-                    counter.pycnt++;
-                } else if (problem.section == "ds") {
-                    counter.dscnt++;
-                } else if (problem.section == "algo") {
-                    counter.algocnt++;
-                }
-                counter.totalcnt++
-            });
-            callback(counter);
-        });
-}
-
-// Judge0 API call to get execution info
-function getoutput(submissiontoken, callback) {
-    console.log(submissiontoken);
-    var req = unirest("GET", "https://judge0.p.rapidapi.com/submissions/" + submissiontoken);
-    req.headers({
-        "x-rapidapi-host": "judge0.p.rapidapi.com",
-        "x-rapidapi-key": "f29463abbdmsh6850c751a0bc89fp11dfc2jsn113becd1a344",
-        "useQueryString": true
-    });
-    req.end(function(res) {
-        if (res.error) {
-            verdict = "Compilation Error";
-            callback(verdict);
-        } else {
-            callback(res.body);
-        }
-    });
-}
-
-// Get verdict
-function getverdict(submission, input, output, callback) {
-    var submissiontoken, tempverdict;
-    var token = gettoken(submission, input, function(result) {
-        submissiontoken = result;
-        curtoken = submissiontoken;
-    });
-    setTimeout(function() {
-        //console.log(submissiontoken);
-        var check = getoutput(submissiontoken, function(result) {
-            curoutput = result;
-            if (section != "algo" && section != "ds" && section != submission.language) {
-                tempverdict = "Language Rejected";
-            } else {
-                if (result == "Compilation Error") {
-                    curoutput = null;
-                    tempverdict = result;
-                } else {
-                    if (curoutput.time > curproblem.timelimit) {
-                        tempverdict = "Time Limit";
-                    } else if (curoutput.stdout == output) {
-                        tempverdict = "Accepted";
-                    } else {
-                        tempverdict = "Wrong Answer";
-                    }
-                }
-            }
-            callback(tempverdict);
-        });
-    }, 7000);
-}
 
 app.post('/problem', ensureAuthenticated, function(req, res) {
     if (req.user) {
@@ -954,6 +975,18 @@ app.get('/submission/:id', ensureAuthenticated, function(req, res) {
         })
 });
 
+// Token route
+app.get('/token/:id', function(req, res) {
+    if (req.user) {
+        res.redirect('/home');
+    } else {
+        console.log(req.params.id);
+        // Activate account
+
+        // Reset pass
+    }
+});
+
 // Troubleshooting
 app.get('/troubleshoot', function(req, res) {
     if (req.user) {
@@ -964,7 +997,22 @@ app.get('/troubleshoot', function(req, res) {
 });
 
 app.post('/troubleshoot', function(req, res) {
-    console.log(req.body);
+    //console.log(req.body);
+    User.findOne({ email: req.body.email })
+        .then(user => {
+            if (user) {
+                // Check if token was requested
+                var subject = "Codebie Password Reset"
+                var text = "Greetings from Codebie! Click on this link http://localhost:3000/token/" + randomString() + " to reset your password. This link will expire after 10 minutes";
+                sendMail("codebie.infedgelab@gmail.com", req.body.useremail, subject, text)
+                req.flash('success_msg', 'An email sent to your inbox with password reset link. Please check spam folder also');
+                res.redirect('/enter');
+            } else {
+                req.flash('error_msg', 'Email not registered');
+                res.redirect('/enter');
+            }
+        })
+
 });
 
 // Tutorial page

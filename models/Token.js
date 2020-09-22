@@ -13,11 +13,6 @@ const TokenSchema = new Schema({
     email: {
         type: String,
         required: true
-    },
-    createDate: {
-        type: Date,
-        default: Date.now
     }
-
 });
 mongoose.model('tokens', TokenSchema);
