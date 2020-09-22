@@ -34,15 +34,6 @@ var transporter = nodemailer.createTransport({
     }
 });
 
-// Connect to mongoose
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/codebie', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.log(err));
-
 // Load Models
 require('./models/User');
 const User = mongoose.model('users');
@@ -57,6 +48,18 @@ const Token = mongoose.model('tokens');
 
 // Passport config
 require('./config/passport')(passport);
+
+const db = require('./config/database');
+
+// Connect to mongoose
+mongoose.Promise = global.Promise;
+mongoose.connect(db.mongoURI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(() => console.log('MongoDB Connected'))
+    .catch(err => console.log(err));
+
 
 // Body Parser
 app.use(bodyParser.json());
@@ -1080,7 +1083,7 @@ app.get('/viewsolution/:id', ensureAuthenticated, function(req, res) {
             });
         })
 });
-
-app.listen(3000, function() {
-    console.log("Server started on port 3000");
+const port = process.env.PORT || 3000;
+app.listen(port, function() {
+    console.log("Server started");
 });
