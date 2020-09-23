@@ -4,6 +4,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const Handlebars = require('handlebars');
 const mongoose = require('mongoose');
+const MongoClient = require('mongodb').MongoClient;
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const flash = require('connect-flash');
@@ -50,16 +51,32 @@ const Token = mongoose.model('tokens');
 require('./config/passport')(passport);
 
 const db = require('./config/database');
-
 // Connect to mongoose
 mongoose.Promise = global.Promise;
 mongoose.connect(db.mongoURI, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
-    .then(() => console.log('MongoDB Connected'))
+    .then((err, db) => {
+        console.log('MongoDB Connected')
+    })
     .catch(err => console.log(err));
 
+// Create TTL index
+var dbo;
+MongoClient.connect(db.mongoURI, { useUnifiedTopology: true }, (err, db) => {
+    if (err)
+        throw err;
+    //Retrieve your chosen database and collection (table)
+    dbo = db.db("codebie");
+    dbo.collection("tokens")
+        .createIndex({ "createdAt": 1 }, { expireAfterSeconds: 300 },
+            (err, dbResult) => {
+                if (err) throw err;
+                console.log("Index Created");
+            });
+
+})
 
 // Body Parser
 app.use(bodyParser.json());
@@ -532,6 +549,7 @@ app.get('/', function(req, res) {
 
 // Contact us
 app.get('/contactus', function(req, res) {
+
     res.render('contactus', {
         curuser: curuser
     })
@@ -984,6 +1002,18 @@ app.get('/token/:id', function(req, res) {
         // Activate account
 
         // Reset pass
+        Token.find({
+                token: req.params.id,
+                purpose: "resetpass"
+            })
+            .then(tokens => {
+                if (tokens) {
+
+                } else {
+                    req.flash('error_msg', 'Token expired');
+                    res.redirect('/enter');
+                }
+            })
     }
 });
 
@@ -998,15 +1028,37 @@ app.get('/troubleshoot', function(req, res) {
 
 app.post('/troubleshoot', function(req, res) {
     //console.log(req.body);
-    User.findOne({ email: req.body.email })
+    User.findOne({ email: req.body.useremail })
         .then(user => {
             if (user) {
-                // Check if token was requested
-                var subject = "Codebie Password Reset"
-                var text = "Greetings from Codebie! Click on this link http://localhost:3000/token/" + randomString() + " to reset your password. This link will expire after 10 minutes";
-                sendMail("codebie.infedgelab@gmail.com", req.body.useremail, subject, text)
-                req.flash('success_msg', 'An email sent to your inbox with password reset link. Please check spam folder also');
-                res.redirect('/enter');
+                Token.find({
+                        email: req.body.email,
+                        purpose: "resetpass"
+                    })
+                    .then(tokens => {
+                        if (tokens) {
+                            req.flash('error_msg', 'A password reset token already exists. Please wait for a few minutes.');
+                            res.redirect('/enter');
+                        } else {
+                            var token = randomString();
+                            var temp = {
+                                createdAt: new Date(),
+                                token: token,
+                                purpose: "resetpass",
+                                email: req.body.useremail
+                            };
+                            dbo.collection("tokens").insertOne(temp, (err, doc) => {
+                                if (!err)
+                                    console.log('Token inserted');
+                            });
+                            var subject = "Codebie Password Reset"
+                            var text = "Greetings from Codebie! Click on this link http://localhost:3000/token/" + token + " to reset your password. This link will expire after 10 minutes";
+                            sendMail("codebie.infedgelab@gmail.com", req.body.useremail, subject, text)
+                            req.flash('success_msg', 'An email sent to your inbox with password reset link. Please check spam folder also');
+                            res.redirect('/enter');
+                        }
+                    });
+
             } else {
                 req.flash('error_msg', 'Email not registered');
                 res.redirect('/enter');
