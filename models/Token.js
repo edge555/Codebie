@@ -13,6 +13,9 @@ const TokenSchema = new Schema({
     email: {
         type: String,
         required: true
-    }
+    },
+    info: [{
+        type: String
+    }]
 });
 mongoose.model('tokens', TokenSchema);

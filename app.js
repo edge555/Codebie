@@ -70,7 +70,7 @@ MongoClient.connect(db.mongoURI, { useUnifiedTopology: true }, (err, db) => {
     //Retrieve your chosen database and collection (table)
     dbo = db.db("codebie");
     dbo.collection("tokens")
-        .createIndex({ "createdAt": 1 }, { expireAfterSeconds: 300 },
+        .createIndex({ "createdAt": 1 }, { expireAfterSeconds: 600 },
             (err, dbResult) => {
                 if (err) throw err;
                 console.log("Index Created");
@@ -652,6 +652,16 @@ app.post('/login', function(req, res, next) {
 // Register post
 app.post('/register', function(req, res) {
     var errors = [];
+    console.log(req.body.signupemail);
+    Token.findOne({
+            email: req.body.signupemail,
+            purpose: "activation"
+        })
+        .then(tokens => {
+            if (tokens) {
+                errors.push({ text: "An activation token already exists. Please wait for a few minutes" });
+            }
+        });
     User.findOne({ email: req.body.signupemail })
         .then(user => {
             if (user) {
@@ -664,8 +674,12 @@ app.post('/register', function(req, res) {
                 errors.push({ text: "Username already taken" });
             }
         });
+
     if (!isValid(req.body.signupusername)) {
         errors.push({ text: "Invalid username" });
+    }
+    if (req.body.signupusername.length < 6) {
+        errors.push({ text: "Username too short, Minimum 6 characters" });
     }
     if (!isValid(req.body.signuppass)) {
         errors.push({ text: "Invalid password" });
@@ -676,42 +690,39 @@ app.post('/register', function(req, res) {
     if (req.body.signuppass != req.body.signuppass2) {
         errors.push({ text: "Password doesn't match" });
     }
-    if (errors.length != 0) {
-        res.render('enter', {
+    setTimeout(function() {
+        if (errors.length != 0) {
+            res.render('enter', {
                 errors: errors,
                 email: req.body.signupemail,
                 username: req.body.signupusername
             })
-            // Check if account activation token exists
-    } else {
-        const newUser = new User({
-            username: req.body.signupusername,
-            email: req.body.signupemail,
-            password: req.body.signuppass
-        });
-        bcrypt.genSalt(10, function(err, salt) {
-            bcrypt.hash(newUser.password, salt, function(err, hash) {
-                if (err) {
-                    throw err;
-                } else {
-                    newUser.password = hash;
-                    newUser
-                        .save()
-                        .then((user) => {
-                            var subject = "Codebie Registration"
-                            var text = "Welcome to Codebie! Please click on this link http://localhost:3000/token/" + randomString() + " to activate your account. This link will expire after 10 minutes";
-                            sendMail("codebie.infedgelab@gmail.com", user.email, subject, text)
-                            req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
-                            res.redirect('/enter');
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                            return;
-                        });
-                }
+        } else {
+            console.log(req.body);
+            var info = [];
+            info.push(req.body.signupusername);
+            info.push(req.body.signupemail);
+            info.push(req.body.signuppass);
+            var token = randomString();
+            var temp = {
+                createdAt: new Date(),
+                token: token,
+                purpose: "activation",
+                email: req.body.signupemail,
+                info: info
+            };
+            dbo.collection("tokens").insertOne(temp, (err, doc) => {
+                if (!err)
+                    console.log('Token inserted');
             });
-        });
-    }
+            var subject = "Codebie Registration"
+            var text = "Welcome to Codebie! Please click on this link http://localhost:3000/token/" + token + " to activate your account. This link will expire after 10 minutes";
+            sendMail("codebie.infedgelab@gmail.com", req.body.signupemail, subject, text)
+            req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
+            res.redirect('/enter');
+        }
+    }, 5000);
+
 });
 
 // Home Route
@@ -995,20 +1006,50 @@ app.get('/submission/:id', ensureAuthenticated, function(req, res) {
 
 // Token route
 app.get('/token/:id', function(req, res) {
+    console.log(req.params.id);
     if (req.user) {
         res.redirect('/home');
     } else {
-        console.log(req.params.id);
-        // Activate account
-
-        // Reset pass
-        Token.find({
-                token: req.params.id,
-                purpose: "resetpass"
+        Token.findOne({
+                token: req.params.id
             })
             .then(tokens => {
                 if (tokens) {
-
+                    console.log(tokens);
+                    if (tokens.purpose == "resetpass") {
+                        // Reset pass
+                    } else if (tokens.purpose == "activation") {
+                        //console.log(tokens.info);
+                        var temp = [];
+                        tokens.info.forEach(token => {
+                                temp.push(token);
+                            })
+                            // Activate account
+                        const newUser = new User({
+                            username: temp[0],
+                            email: temp[1],
+                            password: temp[2]
+                        });
+                        bcrypt.genSalt(10, function(err, salt) {
+                            bcrypt.hash(newUser.password, salt, function(err, hash) {
+                                if (err) {
+                                    throw err;
+                                } else {
+                                    newUser.password = hash;
+                                    newUser
+                                        .save()
+                                        .then((user) => {
+                                            req.flash('success_msg', 'Account activation Successful.');
+                                            res.redirect('/enter');
+                                        })
+                                        .catch((err) => {
+                                            console.log(err);
+                                            return;
+                                        });
+                                }
+                            });
+                        });
+                    }
                 } else {
                     req.flash('error_msg', 'Token expired');
                     res.redirect('/enter');
@@ -1064,7 +1105,6 @@ app.post('/troubleshoot', function(req, res) {
                 res.redirect('/enter');
             }
         })
-
 });
 
 // Tutorial page
