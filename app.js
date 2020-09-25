@@ -716,7 +716,7 @@ app.post('/register', function(req, res) {
                     console.log('Token inserted');
             });
             var subject = "Codebie Registration"
-            var text = "Welcome to Codebie! Please click on this link http://localhost:3000/token/" + token + " to activate your account. This link will expire after 10 minutes";
+            var text = "Welcome to Codebie! Please click on this link https://codebie-aust.herokuapp.com/token/" + token + " to activate your account. This link will expire after 10 minutes";
             sendMail("codebie.infedgelab@gmail.com", req.body.signupemail, subject, text)
             req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
             res.redirect('/enter');
@@ -937,6 +937,53 @@ app.get('/recent', function(req, res) {
         })
 })
 
+
+
+app.get('/resetpass/:id', function(req, res) {
+    if (req.user) {
+        res.redirect('/home');
+    } else {
+        res.render('resetpass', {
+            id: req.params.id
+        });
+    }
+})
+
+app.post('/resetpass/:id', function(req, res) {
+    console.log(req.params.id);
+    var errors = [];
+    if (req.body.usernewpassword != req.body.usernewpassword2) {
+        errors.push({ text: "Password doesn't match" });
+    }
+    if (req.body.usernewpassword.length < 6) {
+        errors.push({ text: "Password too short" });
+    }
+    if (errors.length != 0) {
+        res.render('resetpass', {
+            errors: errors
+        });
+    } else {
+        Token.findOne({ token: req.params.id })
+            .then(token => {
+                bcrypt.genSalt(10, function(err, salt) {
+                    bcrypt.hash(req.body.usernewpassword, salt, function(err, hash) {
+                        if (err) throw err;
+                        User.findOne({ email: token.email })
+                            .then(user => {
+                                user.password = hash;
+                                user.save();
+                                Token.deleteOne({ token: req.params.id })
+                                    .then(() => {
+                                        req.flash('success_msg', 'Password Changed');
+                                        res.redirect('/enter');
+                                    });
+                            });
+                    });
+                });
+            });
+    }
+})
+
 // Show section route
 app.get('/section/:id', function(req, res) {
     Tutorial.find({ section: req.params.id })
@@ -1015,16 +1062,13 @@ app.get('/token/:id', function(req, res) {
             })
             .then(tokens => {
                 if (tokens) {
-                    console.log(tokens);
                     if (tokens.purpose == "resetpass") {
-                        // Reset pass
+                        res.redirect('/resetpass/' + req.params.id);
                     } else if (tokens.purpose == "activation") {
-                        //console.log(tokens.info);
                         var temp = [];
                         tokens.info.forEach(token => {
-                                temp.push(token);
-                            })
-                            // Activate account
+                            temp.push(token);
+                        })
                         const newUser = new User({
                             username: temp[0],
                             email: temp[1],
@@ -1039,8 +1083,11 @@ app.get('/token/:id', function(req, res) {
                                     newUser
                                         .save()
                                         .then((user) => {
-                                            req.flash('success_msg', 'Account activation Successful.');
-                                            res.redirect('/enter');
+                                            Token.deleteOne({ token: req.params.id })
+                                                .then(() => {
+                                                    req.flash('success_msg', 'Account activation Successful.');
+                                                    res.redirect('/enter');
+                                                });
                                         })
                                         .catch((err) => {
                                             console.log(err);
@@ -1072,12 +1119,13 @@ app.post('/troubleshoot', function(req, res) {
     User.findOne({ email: req.body.useremail })
         .then(user => {
             if (user) {
-                Token.find({
-                        email: req.body.email,
+                Token.findOne({
+                        email: req.body.useremail,
                         purpose: "resetpass"
                     })
                     .then(tokens => {
                         if (tokens) {
+                            console.log(tokens);
                             req.flash('error_msg', 'A password reset token already exists. Please wait for a few minutes.');
                             res.redirect('/enter');
                         } else {
@@ -1093,7 +1141,7 @@ app.post('/troubleshoot', function(req, res) {
                                     console.log('Token inserted');
                             });
                             var subject = "Codebie Password Reset"
-                            var text = "Greetings from Codebie! Click on this link http://localhost:3000/token/" + token + " to reset your password. This link will expire after 10 minutes";
+                            var text = "Greetings from Codebie! Click on this link https://codebie-aust.herokuapp.com/token/" + token + " to reset your password. This link will expire after 10 minutes";
                             sendMail("codebie.infedgelab@gmail.com", req.body.useremail, subject, text)
                             req.flash('success_msg', 'An email sent to your inbox with password reset link. Please check spam folder also');
                             res.redirect('/enter');
