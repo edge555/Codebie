@@ -24,24 +24,18 @@ const ProblemSchema = new Schema({
         type: Number,
         default: 1
     },
-    memorylimit: {
+    testcaseno: {
         type: Number,
-        default: 100000
+        default: 2
     },
-    sampleinput: {
+    inputs: [{
         type: String,
         required: true
-    },
-    sampleoutput: {
+    }],
+    outputs: [{
         type: String,
         required: true
-    },
-    hiddeninput: {
-        type: String
-    },
-    hiddenoutput: {
-        type: String
-    },
+    }],
     section: {
         type: String
     },

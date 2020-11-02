@@ -20,6 +20,8 @@ const { ensureAuthenticated } = require('./helpers/auth');
 var curmysub = [],
     cursolvedproblems = [],
     curnotsolvedproblems = [],
+    curverdicts = [];
+    tempverdicts = [];
     adminids = ["edge555"];
 var section, curuser, curlang, curtoken, verdict;
 var curproblem, curproblems, curtutorial, curtutorials;
@@ -30,7 +32,7 @@ var curdeleteproblem, curdeletetutorial, curoutput;
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'codebie.infedgelab@gmail.com',
+        user: 'codebieaust@gmail.com',
         pass: 'dummypassw0rd'
     }
 });
@@ -253,7 +255,7 @@ function getoutput(submissiontoken, callback) {
     });
     req.end(function(res) {
         if (res.error) {
-            verdict = "Compilation Error";
+            verdict = "CE";
             callback(verdict);
         } else {
             callback(res.body);
@@ -305,7 +307,7 @@ function gettoken(submission, input, callback) {
 }
 
 // Get verdict
-function getverdict(submission, input, output, callback) {
+function getverdict(submission, input, output,tc, callback) {
     var submissiontoken, tempverdict;
     var token = gettoken(submission, input, function(result) {
         submissiontoken = result;
@@ -316,24 +318,24 @@ function getverdict(submission, input, output, callback) {
         var check = getoutput(submissiontoken, function(result) {
             curoutput = result;
             if (section != "algo" && section != "ds" && section != submission.language) {
-                tempverdict = "Language Rejected";
+                tempverdict = tc+" LR";
             } else {
-                if (result == "Compilation Error") {
+                if (result == "CE") {
                     curoutput = null;
-                    tempverdict = result;
+                    tempverdict = tc+" "+result;
                 } else {
                     if (curoutput.time > curproblem.timelimit) {
-                        tempverdict = "Time Limit";
+                        tempverdict = tc+" TL";
                     } else if (curoutput.stdout == output) {
-                        tempverdict = "Accepted";
+                        tempverdict = tc+" AC";
                     } else {
-                        tempverdict = "Wrong Answer";
+                        tempverdict = tc+" WA";
                     }
                 }
             }
             callback(tempverdict);
         });
-    }, 7000);
+    }, 5000);
 }
 
 // Valid checking regex
@@ -415,18 +417,27 @@ app.get('/admin/addproblem', ensureAuthenticated, function(req, res) {
 });
 
 app.post('/admin/addproblem', ensureAuthenticated, function(req, res) {
-    //console.log(req.body);
-    const newProblem = {
+    console.log(req.body);
+    var testcaseno = req.body.testcaseno;
+    var inputs=[],outputs=[];
+    for(var i=0;i<testcaseno;i++){
+        inputs.push(eval(`req.body.input${i}`));
+    }
+    for(var i=0;i<testcaseno;i++){
+        outputs.push(eval(`req.body.output${i}`));
+    }
+    console.log(inputs);
+    console.log(outputs);
+     const newProblem = {
         name: req.body.name,
         code: req.body.code,
         difficulty: req.body.difficulty,
         statement: req.body.statement,
         constraints: req.body.constraints,
         timelimit: req.body.timelimit,
-        sampleinput: req.body.sampleinput,
-        sampleoutput: req.body.sampleoutput,
-        hiddeninput: req.body.hiddeninput,
-        hiddenoutput: req.body.hiddenoutput,
+        testcaseno: req.body.testcaseno,
+        inputs : inputs,
+        outputs : outputs,
         section: req.body.section,
         tags: req.body.tags,
         solvecount: 0
@@ -435,7 +446,7 @@ app.post('/admin/addproblem', ensureAuthenticated, function(req, res) {
         .save()
         .then(problem => {
             res.redirect('/admin');
-        });
+        }); 
 });
 
 // To edit problems
@@ -461,6 +472,14 @@ app.post('/admin/editproblem', ensureAuthenticated, function(req, res) {
             code: cureditproblem
         })
         .then(problems => {
+            var testcaseno = req.body.testcaseno;
+            var inputs=[],outputs=[];
+            for(var i=0;i<testcaseno;i++){
+                inputs.push(eval(`req.body.input${i}`));
+            }
+            for(var i=0;i<testcaseno;i++){
+                outputs.push(eval(`req.body.output${i}`));
+            }
             //console.log(req.body);
             problems.name = req.body.name;
             problems.code = req.body.code;
@@ -468,15 +487,15 @@ app.post('/admin/editproblem', ensureAuthenticated, function(req, res) {
             problems.statement = req.body.statement;
             problems.constraints = req.body.constraints;
             problems.timelimit = req.body.timelimit;
-            problems.sampleinput = req.body.sampleinput;
-            problems.sampleoutput = req.body.sampleoutput;
-            problems.hiddeninput = req.body.hiddeninput;
-            problems.hiddenoutput = req.body.hiddenoutput;
+            problems.testcaseno = req.body.testcaseno;
+            problems.inputs = inputs;
+            problems.outputs = outputs;
             problems.section = req.body.section;
             problems.tags = req.body.tags;
             problems.solvecount = req.body.solvecount;
             problems.save()
                 .then(problems => {
+                    console.log(problems);
                     res.redirect('/admin');
                 });
         });
@@ -698,7 +717,7 @@ app.post('/register', function(req, res) {
                 username: req.body.signupusername
             })
         } else {
-            console.log(req.body);
+            //console.log(req.body);
             var info = [];
             info.push(req.body.signupusername);
             info.push(req.body.signupemail);
@@ -716,8 +735,8 @@ app.post('/register', function(req, res) {
                     console.log('Token inserted');
             });
             var subject = "Codebie Registration"
-            var text = "Welcome to Codebie! Please click on this link https://codebie-aust.herokuapp.com/token/" + token + " to activate your account. This link will expire after 10 minutes";
-            sendMail("codebie.infedgelab@gmail.com", req.body.signupemail, subject, text)
+            var text = "Welcome to Codebie! Please click on this link http://localhost:3000/token/" + token + " to activate your account. This link will expire after 10 minutes";
+            sendMail("codebieaust@gmail.com", req.body.signupemail, subject, text)
             req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
             res.redirect('/enter');
         }
@@ -791,31 +810,27 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
                 code: req.body.submittedcode,
                 language: req.body.language
             }
-            var sampleverdict, hiddenverdict;
-            var verdict1 = getverdict(submission, curproblem.sampleinput, curproblem.sampleoutput, function(result) {
-                console.log(result);
-                sampleverdict = result;
-            });
-            var verdict2 = getverdict(submission, curproblem.hiddeninput, curproblem.hiddenoutput, function(result) {
-                console.log(result);
-                hiddenverdict = result;
-            });
+            //console.log(curproblem);
+            var testcaseno = curproblem.testcaseno;
+            var inputs = curproblem.inputs;
+            var outputs = curproblem.outputs;
+            tempverdicts = [];
+            
+            for(var i=0;i<testcaseno;i++){
+                var verdict1 = getverdict(submission, inputs[i], outputs[i],i, function(result) {
+                    tempverdicts.push(result);
+                });
+            }
+            
             setTimeout(function() {
-                if (sampleverdict == "Language Rejected") {
-                    verdict = "Language Rejected";
-                } else if (sampleverdict == "Compilation Error" || hiddenverdict == "Compilation Error") {
-                    verdict = "Compilation Error";
-                } else if (sampleverdict == "Time Limit" || hiddenverdict == "Time Limit") {
-                    verdict = "Time Limit";
-                } else if (sampleverdict == "Wrong Answer" || hiddenverdict == "Wrong Answer") {
-                    verdict = "Wrong Answer";
-                } else {
-                    verdict = "Accepted";
-                }
-                res.redirect('verdict');
-            }, 12000);
+                tempverdicts.sort();
+                curverdicts = [];
+                tempverdicts.forEach(tv=>{
+                    curverdicts.push(tv.substring(2));
+                })
+                res.redirect('verdict'); 
+            }, 9000); 
         }
-
     } else {
         req.flash('error_msg', 'You must be logged in to submit');
         res.redirect('/enter');
@@ -1032,21 +1047,23 @@ app.get('/section/:id', function(req, res) {
 
 // View submission
 app.get('/submission/:id', ensureAuthenticated, function(req, res) {
-    //console.log(curuser);
+    console.log(curuser);
     Submission.findOne({ token: req.params.id })
         .then(submission => {
-            //console.log(submission);
-            alreadysolved = false;
-            curuser.solved.forEach(solve => {
-                if (solve.code == submission.problemcode) {
-                    alreadysolved = true;
-                }
-            });
-            //console.log(submission);
+            canSee = false;
+            if(submission.username==curuser.username){
+                canSee = true;
+            } else{
+                curuser.solved.forEach(solve => {
+                    if (solve.code == submission.problemcode) {
+                        canSee = true;
+                    }
+                });
+            }
             res.render('submission', {
                 curuser: curuser,
                 submission: submission,
-                alreadysolved: alreadysolved
+                canSee: canSee
             });
         })
 });
@@ -1141,8 +1158,8 @@ app.post('/troubleshoot', function(req, res) {
                                     console.log('Token inserted');
                             });
                             var subject = "Codebie Password Reset"
-                            var text = "Greetings from Codebie! Click on this link https://codebie-aust.herokuapp.com/token/" + token + " to reset your password. This link will expire after 10 minutes";
-                            sendMail("codebie.infedgelab@gmail.com", req.body.useremail, subject, text)
+                            var text = "Greetings from Codebie! Click on this link http://localhost:3000/token/" + token + " to reset your password. This link will expire after 10 minutes";
+                            sendMail("codebieaust@gmail.com", req.body.useremail, subject, text)
                             req.flash('success_msg', 'An email sent to your inbox with password reset link. Please check spam folder also');
                             res.redirect('/enter');
                         }
@@ -1204,8 +1221,30 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
                 username: curuser.username
             })
             .then(user => {
-                var alreadysolved = false;
-                if (verdict == "Accepted") {
+                var alreadysolved = false,ce=false,wa=false,tl=false,lr=false;
+                curverdicts.forEach(cv=>{
+                    if(cv=="WA"){
+                        wa=true;
+                    } else if(cv=="CE"){
+                        ce=true;
+                    } else if(cv=="TL"){
+                        tl=true;
+                    } else if(cv=="LR"){
+                        lr=true;
+                    }
+                });
+                if(lr==true){
+                    verdict="Language Rejected";
+                } else if(ce==true){
+                    verdict="Compilation Error";
+                } else if(tl==true){
+                    verdict="Time Limit Exceeded";
+                } else if(wa==true){
+                    verdict="Wrong Answer";
+                } else {
+                    verdict="Accepted";
+                }
+                if ( verdict=="Accepted") {
                     user.solved.forEach(solve => {
                         if (solve.code == curproblem.code) {
                             alreadysolved = true;
@@ -1247,7 +1286,8 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
                     username: curuser.username,
                     problemcode: curproblem.code,
                     token: curtoken,
-                    verdict: verdict,
+                    verdict : verdict,
+                    verdicts: curverdicts,
                     time: curoutput.time,
                     section: section,
                     stdin: cursubmittedcode,
@@ -1256,17 +1296,20 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
                 new Submission(newSubmission).save()
             });
     }
-    var color = "red";
-    if (verdict == "Accepted") {
-        color = "green";
-    }
-    //console.log(curoutput);
-    res.render('verdict', {
-        curuser: curuser,
-        verdict: verdict,
-        curoutput: curoutput,
-        color: color
-    });
+    
+    setTimeout(function() {
+        var color = "red";
+        if (verdict == "Accepted") {
+            color = "green";
+        }
+        res.render('verdict', {
+            curuser: curuser,
+            verdict: verdict,
+            curverdicts : curverdicts,
+            curoutput: curoutput,
+            color: color
+        });
+    }, 5000); 
 });
 
 const port = process.env.PORT || 3000;
