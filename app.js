@@ -264,7 +264,7 @@ function getoutput(submissiontoken, callback) {
 }
 
 // Judge0 API call for submitting code
-function gettoken(submission, input, callback) {
+function gettoken(submission, input,output,timelimit, callback) {
     // Judge0 API for submitting code
     var req = unirest("POST", "https://judge0.p.rapidapi.com/submissions");
     req.headers({
@@ -281,7 +281,6 @@ function gettoken(submission, input, callback) {
     Java (OpenJDK 8) : 27,
     Python (3.8.1) : 71
     */
-    //console.log(submission);
     var lang_id;
     curlang = submission.language;
     if (submission.language == "c") {
@@ -297,11 +296,15 @@ function gettoken(submission, input, callback) {
     req.send({
         "language_id": lang_id,
         "source_code": submission.code,
-        "stdin": input
+        "stdin": input,
+        "expected_output": output,
+        "cpu_time_limit": timelimit
     });
     req.end(function(res) {
-        if (res.error)
+        if (res.error){
+            console.log(res.body);
             throw new Error(res.error);
+        }
         callback(res.body.token);
     });
 }
@@ -309,7 +312,7 @@ function gettoken(submission, input, callback) {
 // Get verdict
 function getverdict(submission, input, output,tc, callback) {
     var submissiontoken, tempverdict;
-    var token = gettoken(submission, input, function(result) {
+    var token = gettoken(submission, input,output,curproblem.timelimit, function(result) {
         submissiontoken = result;
         curtoken = submissiontoken;
     });
@@ -317,6 +320,7 @@ function getverdict(submission, input, output,tc, callback) {
         //console.log(submissiontoken);
         var check = getoutput(submissiontoken, function(result) {
             curoutput = result;
+            console.log(curoutput);
             if (section != "algo" && section != "ds" && section != submission.language) {
                 tempverdict = tc+" LR";
             } else {
@@ -418,16 +422,14 @@ app.get('/admin/addproblem', ensureAuthenticated, function(req, res) {
 
 app.post('/admin/addproblem', ensureAuthenticated, function(req, res) {
     console.log(req.body);
-    var testcaseno = req.body.testcaseno;
+    var testcasecount = req.body.testcasecount;
     var inputs=[],outputs=[];
-    for(var i=0;i<testcaseno;i++){
+    for(var i=0;i<testcasecount;i++){
         inputs.push(eval(`req.body.input${i}`));
     }
-    for(var i=0;i<testcaseno;i++){
+    for(var i=0;i<testcasecount;i++){
         outputs.push(eval(`req.body.output${i}`));
     }
-    console.log(inputs);
-    console.log(outputs);
      const newProblem = {
         name: req.body.name,
         code: req.body.code,
@@ -435,7 +437,8 @@ app.post('/admin/addproblem', ensureAuthenticated, function(req, res) {
         statement: req.body.statement,
         constraints: req.body.constraints,
         timelimit: req.body.timelimit,
-        testcaseno: req.body.testcaseno,
+        testcasecount: req.body.testcasecount,
+        samplecount: req.body.samplecount,
         inputs : inputs,
         outputs : outputs,
         section: req.body.section,
@@ -455,10 +458,10 @@ app.get('/admin/editproblem', ensureAuthenticated, function(req, res) {
     if (adminids.includes(curuser.username)) {
         Problem.findOne({ code: cureditproblem })
             .lean()
-            .then(problems => {
+            .then(problem => {
                 //console.log(problems);
                 res.render('admin/editproblem', {
-                    cureditproblem: problems,
+                    cureditproblem: problem,
                 });
             });
 
@@ -472,12 +475,12 @@ app.post('/admin/editproblem', ensureAuthenticated, function(req, res) {
             code: cureditproblem
         })
         .then(problems => {
-            var testcaseno = req.body.testcaseno;
+            var testcasecount = req.body.testcasecount;
             var inputs=[],outputs=[];
-            for(var i=0;i<testcaseno;i++){
+            for(var i=0;i<testcasecount;i++){
                 inputs.push(eval(`req.body.input${i}`));
             }
-            for(var i=0;i<testcaseno;i++){
+            for(var i=0;i<testcasecount;i++){
                 outputs.push(eval(`req.body.output${i}`));
             }
             //console.log(req.body);
@@ -487,7 +490,8 @@ app.post('/admin/editproblem', ensureAuthenticated, function(req, res) {
             problems.statement = req.body.statement;
             problems.constraints = req.body.constraints;
             problems.timelimit = req.body.timelimit;
-            problems.testcaseno = req.body.testcaseno;
+            problems.testcasecount = req.body.testcasecount;
+            problems.samplecount = req.body.samplecount;
             problems.inputs = inputs;
             problems.outputs = outputs;
             problems.section = req.body.section;
@@ -568,14 +572,12 @@ app.get('/', function(req, res) {
 
 // Contact us
 app.get('/contactus', function(req, res) {
-
     res.render('contactus', {
         curuser: curuser
     })
 });
 
 app.post('/contactus', function(req, res) {
-    //console.log(req.body);
     var from = req.body.useremail;
     var to = 'infedgelab@gmail.com';
     var subject = "Codebie";
@@ -790,7 +792,7 @@ app.get('/privatepolicy', function(req, res) {
 
 // Problem show and submit page
 app.get('/problem', function(req, res) {
-    console.log(section);
+    //console.log(section);
     res.render('problem', {
         curuser: curuser,
         curproblem: curproblem
@@ -810,13 +812,13 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
                 code: req.body.submittedcode,
                 language: req.body.language
             }
-            //console.log(curproblem);
-            var testcaseno = curproblem.testcaseno;
+
+            var testcasecount = curproblem.testcasecount;
             var inputs = curproblem.inputs;
             var outputs = curproblem.outputs;
             tempverdicts = [];
             
-            for(var i=0;i<testcaseno;i++){
+            for(var i=0;i<testcasecount;i++){
                 var verdict1 = getverdict(submission, inputs[i], outputs[i],i, function(result) {
                     tempverdicts.push(result);
                 });
@@ -829,7 +831,7 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
                     curverdicts.push(tv.substring(2));
                 })
                 res.redirect('verdict'); 
-            }, 9000); 
+            }, 6000); 
         }
     } else {
         req.flash('error_msg', 'You must be logged in to submit');
@@ -841,10 +843,14 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
 app.get('/problems/:id', function(req, res) {
     Problem.findOne({ code: req.params.id })
         .lean()
-        .then(problems => {
+        .then(problem => {
             curmysub = [];
-            curproblem = problems;
+            var sampleio=[];
+            curproblem = problem;
             //console.log(curproblem);
+            for(var i=0;i<curproblem.samplecount;i++){
+                sampleio.push([curproblem.inputs[i],curproblem.outputs[i]]);
+            }
             Submission.find({
                 problemcode: curproblem.code
             }).then(submissions => {
@@ -875,6 +881,7 @@ app.get('/problems/:id', function(req, res) {
                     curuser: curuser,
                     curmysub: curmysub,
                     curallsub: submissions,
+                    sampleio : sampleio,
                     selected: selected
                 });
             });
@@ -951,8 +958,6 @@ app.get('/recent', function(req, res) {
             });
         })
 })
-
-
 
 app.get('/resetpass/:id', function(req, res) {
     if (req.user) {
@@ -1047,7 +1052,6 @@ app.get('/section/:id', function(req, res) {
 
 // View submission
 app.get('/submission/:id', ensureAuthenticated, function(req, res) {
-    console.log(curuser);
     Submission.findOne({ token: req.params.id })
         .then(submission => {
             canSee = false;
@@ -1132,7 +1136,6 @@ app.get('/troubleshoot', function(req, res) {
 });
 
 app.post('/troubleshoot', function(req, res) {
-    //console.log(req.body);
     User.findOne({ email: req.body.useremail })
         .then(user => {
             if (user) {

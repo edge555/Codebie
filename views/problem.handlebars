@@ -99,16 +99,20 @@
                   aria-labelledby="pills-problem-tab">
                   <div class="problemstatement" style="padding-left:2%;">
                     <br>
-                    <h4>Statement</h4>
+                    <h5>Statement</h5>
                     <p>{{breaklines curproblem.statement}}</p>
-                    <h4>Constraints</h4>
+                    <h5>Constraints</h5>
                     <p>{{breaklines curproblem.constraints}}</p>
-                    <h4>Time Limit</h4>
+                    <h5>Time Limit</h5>
                     <p>{{curproblem.timelimit}}s</p>
-                    <h4>Sample Input</h4>
-                    <p>{{breaklines curproblem.inputs.[0]}}</p>
-                    <h4>Sample Output</h4>
-                    <p>{{breaklines curproblem.outputs.[0]}}</p>
+                    {{#each sampleio}}
+                      <br>
+                      <h5>Sample Input {{math @index "+" 1}}</h5>
+                      <p>{{this.[0]}}</p>
+                      <h5>Sample Output {{math @index "+" 1}}</h5>
+                      <p>{{this.[1]}}</p>
+                      
+                    {{/each}}
                   </div>
                 </div>
                 <div class="tab-pane fade" id="pills-mysubmissions" role="tabpanel"

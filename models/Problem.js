@@ -24,9 +24,13 @@ const ProblemSchema = new Schema({
         type: Number,
         default: 1
     },
-    testcaseno: {
+    testcasecount: {
         type: Number,
         default: 2
+    },
+    samplecount: {
+        type: Number,
+        default: 1
     },
     inputs: [{
         type: String,
@@ -50,7 +54,7 @@ const ProblemSchema = new Schema({
         statement: {
             type: String
         },
-        authorCode: {
+        authorUsername: {
             type: String
         }
     },
