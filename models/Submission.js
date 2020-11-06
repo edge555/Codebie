@@ -15,8 +15,7 @@ const SubmissionSchema = new Schema({
         required: true
     },
     verdict:{
-        type: String,
-        required: true
+        type: String
     },
     verdicts: [{
         type: String

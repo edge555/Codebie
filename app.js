@@ -185,6 +185,14 @@ app.engine('handlebars', exphbs({
                     return "Data Structure"
                 case 'algo':
                     return "Algorithm";
+                case 'AC':
+                    return "Accepted";
+                case 'WA':
+                    return "Wrong Answer";
+                case 'TL':
+                    return "Time Limit";
+                case 'RT':
+                    return "Runtime Error";
                 default:
                     return lang;
             }
@@ -302,7 +310,7 @@ function gettoken(submission, input,output,timelimit, callback) {
     });
     req.end(function(res) {
         if (res.error){
-            console.log(res.body);
+            //console.log(res.body);
             throw new Error(res.error);
         }
         callback(res.body.token);
@@ -320,7 +328,7 @@ function getverdict(submission, input, output,tc, callback) {
         //console.log(submissiontoken);
         var check = getoutput(submissiontoken, function(result) {
             curoutput = result;
-            console.log(curoutput);
+            //console.log(curoutput);
             if (section != "algo" && section != "ds" && section != submission.language) {
                 tempverdict = tc+" LR";
             } else {
@@ -367,7 +375,7 @@ function sendMail(sender, receiver, subject, text) {
     };
     transporter.sendMail(mailOptions, function(error, info) {
         if (error) {
-            console.log(error);
+            //console.log(error);
         }
     });
 }
@@ -421,7 +429,7 @@ app.get('/admin/addproblem', ensureAuthenticated, function(req, res) {
 });
 
 app.post('/admin/addproblem', ensureAuthenticated, function(req, res) {
-    console.log(req.body);
+    //console.log(req.body);
     var testcasecount = req.body.testcasecount;
     var inputs=[],outputs=[];
     for(var i=0;i<testcasecount;i++){
@@ -499,7 +507,7 @@ app.post('/admin/editproblem', ensureAuthenticated, function(req, res) {
             problems.solvecount = req.body.solvecount;
             problems.save()
                 .then(problems => {
-                    console.log(problems);
+                    //console.log(problems);
                     res.redirect('/admin');
                 });
         });
@@ -673,7 +681,7 @@ app.post('/login', function(req, res, next) {
 // Register post
 app.post('/register', function(req, res) {
     var errors = [];
-    console.log(req.body.signupemail);
+    //console.log(req.body.signupemail);
     Token.findOne({
             email: req.body.signupemail,
             purpose: "activation"
@@ -812,26 +820,27 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
                 code: req.body.submittedcode,
                 language: req.body.language
             }
-
+            //console.log(submission);
             var testcasecount = curproblem.testcasecount;
             var inputs = curproblem.inputs;
             var outputs = curproblem.outputs;
             tempverdicts = [];
-            
+            //console.log(curproblem);
             for(var i=0;i<testcasecount;i++){
                 var verdict1 = getverdict(submission, inputs[i], outputs[i],i, function(result) {
                     tempverdicts.push(result);
+                    //console.log(result);
                 });
             }
-            
             setTimeout(function() {
                 tempverdicts.sort();
                 curverdicts = [];
                 tempverdicts.forEach(tv=>{
                     curverdicts.push(tv.substring(2));
                 })
+                //console.log(curverdicts);
                 res.redirect('verdict'); 
-            }, 6000); 
+            }, 10000); 
         }
     } else {
         req.flash('error_msg', 'You must be logged in to submit');
@@ -867,8 +876,10 @@ app.get('/problems/:id', function(req, res) {
                     java: "",
                     py: "",
                 }
+                var defaultCode="";
                 if (section == "c") {
                     selected.c = "selected";
+                    //defaultCode=""
                 } else if (section == "java") {
                     selected.java = "selected";
                 } else if (section == "py") {
@@ -1205,13 +1216,14 @@ app.get('/tutorials/:id', function(req, res) {
 
 // Verdict route
 app.get('/verdict', ensureAuthenticated, function(req, res) {
-    //console.log(section);
     if (curoutput == null) {
         if (curtoken) {
+            verdict="Compilation Error";
             const newSubmission = {
                 username: curuser.username,
                 problemcode: curproblem.code,
                 token: curtoken,
+                time : 0,
                 verdict: verdict,
                 section: section,
                 stdin: cursubmittedcode,
@@ -1296,7 +1308,7 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
                     stdin: cursubmittedcode,
                     lang: curlang
                 }
-                new Submission(newSubmission).save()
+                new Submission(newSubmission).save();
             });
     }
     

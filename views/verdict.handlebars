@@ -60,16 +60,26 @@
       <div class="col-lg-4 col-xl-4">
       </div>
       <div class="col-lg-4 col-xl-4">
-        <h3 style="margin-top:45%;text-align:center ;font-family: Cambria, Georgia, serif; font-size:56px;color:{{color}}"><b> {{verdict}}</b></h3>
+        <h3 style="margin-top:30%;text-align:center ;font-family: Cambria, Georgia, serif; font-size:56px;color:{{color}}"><b> {{verdict}}</b></h3>
         <h5>
           {{#ifCond verdict '==' 'Compilation Error'}}
             
           {{else}}
             <p style="padding-left:15%;font-size:50px;">Time : {{curoutput.time}} s</p>
+            <table style="width:100%">
+            <tr>
+              <th>Test Case</th>
+              <th>Verdict</th>
+            </tr>
+            {{#each curverdicts}}
+            <tr>
+              <td>{{math @index "+" 1}}</td>
+              <td>{{fullLang this}}</td>
+            </tr>
+            {{/each}}
+          </table>
           {{/ifCond}}
-
         </h5>
-        <h5>{{curverdicts}}</h5>
       </div>
       <div class="col-lg-4 col-xl-4">
       </div>

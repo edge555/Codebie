@@ -240,19 +240,18 @@
           </div>
         </div>
       </div>
+    
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
       <script type="text/javascript">
-        $(document).ready(function () {
+        $(function(){
           $(".loading").click(function () {
-            $(this).addClass("activeloading");
-            // Add Success Class After 3.7 Seconds
-            setTimeout(function () {
-              $(".button").addClass("success");
-            }, 15000);
+            $(".loading").addClass("activeloading");
+            $(".loading").attr("disabled", true);
+            $('#problemcode').submit();
           });
         });
       </script>
-    </form>
+    </form>>
     <script src="ace/src/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/popper.min.js"></script>
