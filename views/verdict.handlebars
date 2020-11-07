@@ -66,7 +66,7 @@
             
           {{else}}
             <p style="padding-left:15%;font-size:50px;">Time : {{curoutput.time}} s</p>
-            <table style="width:100%">
+            <table class="table table-striped" style="width:100%">
             <tr>
               <th>Test Case</th>
               <th>Verdict</th>
@@ -74,7 +74,14 @@
             {{#each curverdicts}}
             <tr>
               <td>{{math @index "+" 1}}</td>
-              <td>{{fullLang this}}</td>
+              <td>
+              {{#ifCond this '==' 'AC'}}
+                  <font color="#008000">
+              {{else}}
+                  <font color="#ff0000">
+              {{/ifCond}}
+              {{fullLang this}}</font>
+              </td>
             </tr>
             {{/each}}
           </table>

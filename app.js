@@ -286,7 +286,7 @@ function gettoken(submission, input,output,timelimit, callback) {
     Language ids:
     C (GCC 9.2.0) : 50,
     C++ (GCC 7.4.0) : 52,
-    Java (OpenJDK 8) : 27,
+    Java (OpenJDK 8) : 62,
     Python (3.8.1) : 71
     */
     var lang_id;
@@ -296,7 +296,7 @@ function gettoken(submission, input,output,timelimit, callback) {
     } else if (submission.language == "cpp") {
         lang_id = 52;
     } else if (submission.language == "java") {
-        lang_id = 27;
+        lang_id = 62;
     } else {
         lang_id = 71;
     }
@@ -310,7 +310,7 @@ function gettoken(submission, input,output,timelimit, callback) {
     });
     req.end(function(res) {
         if (res.error){
-            //console.log(res.body);
+            console.log(res.body);
             throw new Error(res.error);
         }
         callback(res.body.token);
@@ -754,6 +754,14 @@ app.post('/register', function(req, res) {
 
 });
 
+// FAQ Route 
+app.get('/faq', function(req, res) {
+    // Store number of problems in each sections
+    res.render('faq', {
+        curuser: curuser
+    });
+});
+
 // Home Route
 app.get('/home', function(req, res) {
     // Store number of problems in each sections
@@ -876,19 +884,22 @@ app.get('/problems/:id', function(req, res) {
                     java: "",
                     py: "",
                 }
-                var defaultCode="";
+                var defaultCode="#include <bits/stdc++.h>\nusing namespace std;\nint main()\n{\n\n}";
                 if (section == "c") {
                     selected.c = "selected";
-                    //defaultCode=""
+                    defaultCode="#include <stdio.h>\nint main()\n{\n\n}"
                 } else if (section == "java") {
                     selected.java = "selected";
+                    defaultCode="import java.util.*;\nclass Main {\n    public static void main(String[] args) {\n      Scanner sc = new Scanner(System.in);\n\n  }\n}"
                 } else if (section == "py") {
                     selected.py = "selected";
+                    defaultCode="";
                 } else {
                     selected.cpp = "selected";
                 }
                 res.render('problem', {
                     curproblem: curproblem,
+                    defaultCode : defaultCode,
                     curuser: curuser,
                     curmysub: curmysub,
                     curallsub: submissions,

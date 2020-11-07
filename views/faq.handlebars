@@ -4,20 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recent Submissions</title>
+    <title>View Solution</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="lib/codemirror.css">
-
-    <link rel="stylesheet" href="/css/recent.css">
+    <link rel="stylesheet" href="/css/viewsolution.css">
 </head>
-
 <body>
     <!--Navigation Bar starts -->
     <section id="nav-bar">
-        <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+        <nav class="navbar navbar-expand-md navbar-light bg-white sticky-top">
             <div class="container-fluid">
-                <a href="/home" class="navbar-brand"><img src="images/logo.png" style="width:80%; height:70%"></a>
+                <a href="/home" class="navbar-brand"><img src="/images/logo.png" style="width:80%; height:70%"></a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=#navbarResponsive>
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -38,7 +36,6 @@
                         <li class="nav-item dropdown my-auto">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span><i class="fa fa-user"></i></span>
                                 {{curuser.username}}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -58,47 +55,10 @@
             </div>
         </nav>
     </section>
-    <div class="wrapper">
-        <h4 style="color: #176AF7;font-family: Cambria, Georgia, serif;"> <b>Recent Submissions</b></h4>
-        <div class="table-responsive-lg" style="padding-left:3%;padding-right:3%;padding-top:1%;">
-            <table class="table table-light table-hover">
-                <thead>
-                    <tr bgcolor="#66B2FF">
-                        <th scope="col">Handle</th>
-                        <th scope="col">Problem</th>
-                        <th scope="col">Verdict</th>
-                        <th scope="col">Language</th>
-                        <th scope="col">Time</th>
-                        <th scope="col">Solution</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each submission}}
-                    <tr>
-                        <td>
-                            <a href="/profile/{{username}}" value="{{username}}">{{username}}</a>
-                        </td>
-                        <td>
-                            <a href="/problems/{{problemcode}}" value="{{problemcode}}">{{problemcode}}</a>
-                        </td>
-                        {{#ifCond verdict '==' 'Accepted'}}
-                            <td> <font color="#008000">{{verdict}}</font></td>
-                        {{else}}
-                            <td> <font color="#ff0000">{{verdict}}</font></td>
-                        {{/ifCond}}
-                        
-                        <td>{{fullLang lang}}</td>
-                        <td>{{prettifyDate date 1}}</td>
-                        <td>
-                            <a href="/submission/{{token}}" value="{{token}}"
-                                class="btn btn-outline-primary btn-block btn-border" id="btn-solve">view</a>
-                        </td>
-                    </tr>
-                    {{else}}
-                    {{/each}}
-                </tbody>
-            </table>
-        </div>
+    <!--Navigation Bar ends -->
+    <!--Content starts -->
+    <div class="content ">
+       
     </div>
     <script src="ace/src/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/jquery-3.4.1.min.js"></script>
@@ -107,18 +67,6 @@
     <script src="js/default.js"></script>
     <script src="js/index.js"></script>
     <script src="lib/codemirror.js"></script>
-    <div class="footer">
-        <div class="d-flex" style="background-color: #1a53ff;margin-top:15px">
-            <div class="mr-auto p-2">
-                <h5><a style="color : #fff ; margin-left:10px"> &copy;2020 codebie</a></h5>
-            </div>
-            <div class="p-2"><a style="color : #fff" href="/privatepolicy">Privacy Policy</a></div>
-            <div class="vl"></div>
-            <div class="p-2" style="margin-right:10px"><a style="color : #fff" href="/aboutus">About Us</a></div>
-            <div class="vl"></div>
-            <div class="p-2" style="margin-right:10px"><a style="color : #fff" href="/faq">FAQ</a></div>
-        </div>
-    </div>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
         </script>
@@ -129,5 +77,4 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
         </script>
 </body>
-
 </html>

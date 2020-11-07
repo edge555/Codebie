@@ -73,7 +73,14 @@
                     value="{{submission.problemcode}}">{{submission.problemcode}}</a>
                 || Handle : <a href="/profile/{{submission.username}}"
                     value="{{submission.username}}">{{submission.username}}</a> || Language : {{fullLang submission.lang}}</h5>
-            <h5 style="text-align:center;">Verdict : {{submission.verdict}} || Time : {{submission.time}}s || Submission Time : {{prettifyDate submission.date '1'}}</h5>
+            <h5 style="text-align:center;">Verdict :
+                {{#ifCond submission.verdict '==' 'Accepted'}}
+                    <font color="#008000">
+                {{else}}
+                    <font color="#ff0000">
+                {{/ifCond}}
+                    {{submission.verdict}} </font>
+            || Time : {{submission.time}}s || Submission Time : {{prettifyDate submission.date '1'}}</h5>
         </p>
         <div style="padding-top:2%">
             <div class="textarea-wrapper">
@@ -86,11 +93,12 @@
                 </div>
             </div>
         </div>
-        <div style="padding-top:5%">
+        
+        <div style="padding-top:5%;padding-bottom:2%;">
             {{#ifCond submission.verdict '==' 'Compilation Error'}}
                 
             {{else}}
-                <table style="width:100%">
+                <table class="table table-striped" style="padding-top: 3%">
                     <tr>
                     <th>Test Case</th>
                     <th>Verdict</th>
@@ -98,7 +106,14 @@
                     {{#each submission.verdicts}}
                     <tr>
                     <td>{{math @index "+" 1}}</td>
-                    <td>{{fullLang this}}</td>
+                    <td>
+                    {{#ifCond this '==' 'AC'}}
+                        <font color="#008000">
+                    {{else}}
+                        <font color="#ff0000">
+                    {{/ifCond}}
+                    {{fullLang this}}</font>
+                    </td>
                     </tr>
                     {{/each}}
                 </table>
