@@ -1,5 +1,3 @@
 /node_modules
-*.txt
-*.cpp
-code.exe
-
+.env
+/config

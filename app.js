@@ -16,7 +16,7 @@ const { exec } = require("child_process");
 const fs = require('fs');
 const unirest = require('unirest');
 const { ensureAuthenticated } = require('./helpers/auth');
-
+require('dotenv').config()
 var curmysub = [],
     cursolvedproblems = [],
     curnotsolvedproblems = [],
@@ -32,8 +32,8 @@ var curdeleteproblem, curdeletetutorial, curoutput;
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'codebieaust@gmail.com',
-        pass: 'dummypassw0rd'
+        user: process.env.NODEMAILER_MAIL,
+        pass: process.env.NODEMAILER_PASS
     }
 });
 
