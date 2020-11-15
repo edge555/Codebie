@@ -23,10 +23,13 @@ var curmysub = [],
     curverdicts = [];
     tempverdicts = [];
     adminids = ["edge555"];
-var section, curuser, curlang, curtoken, verdict;
+var section, curlang, curtoken, verdict;
 var curproblem, curproblems, curtutorial, curtutorials;
 var cursubmittedcode, cureditproblem, curedittutorial;
 var curdeleteproblem, curdeletetutorial, curoutput;
+
+var url = 'codebie-aust.herokuapp.com';
+//var url = 'localhost:3000';
 
 // Node mailer email
 var transporter = nodemailer.createTransport({
@@ -383,13 +386,13 @@ function sendMail(sender, receiver, subject, text) {
 // About us
 app.get('/aboutus', function(req, res) {
     res.render('aboutus', {
-        curuser: curuser
+        curuser: req.user
     });
 });
 
 // Admin access
 app.get('/admin', ensureAuthenticated, function(req, res) {
-    if (adminids.includes(curuser.username)) {
+    if (adminids.includes(req.user.username)) {
         res.render('admin/admin');
     } else {
         res.render('accessdenied');
@@ -421,7 +424,7 @@ app.post('/admin', ensureAuthenticated, function(req, res) {
 
 // To add problems
 app.get('/admin/addproblem', ensureAuthenticated, function(req, res) {
-    if (adminids.includes(curuser.username)) {
+    if (adminids.includes(req.user.username)) {
         res.render('admin/addproblem');
     } else {
         res.render('accessdenied');
@@ -463,7 +466,7 @@ app.post('/admin/addproblem', ensureAuthenticated, function(req, res) {
 // To edit problems
 app.get('/admin/editproblem', ensureAuthenticated, function(req, res) {
     //console.log(cureditproblem);
-    if (adminids.includes(curuser.username)) {
+    if (adminids.includes(req.user.username)) {
         Problem.findOne({ code: cureditproblem })
             .lean()
             .then(problem => {
@@ -515,7 +518,7 @@ app.post('/admin/editproblem', ensureAuthenticated, function(req, res) {
 
 // To add tutorial
 app.get('/admin/addtutorial', ensureAuthenticated, function(req, res) {
-    if (adminids.includes(curuser.username)) {
+    if (adminids.includes(req.user.username)) {
         res.render('admin/addtutorial');
     } else {
         res.render('accessdenied');
@@ -538,7 +541,7 @@ app.post('/admin/addtutorial', ensureAuthenticated, function(req, res) {
 
 // To edit tutorial
 app.get('/admin/edittutorial', ensureAuthenticated, function(req, res) {
-    if (adminids.includes(curuser.username)) {
+    if (adminids.includes(req.user.username)) {
         //console.log(curedittutorial);
         Tutorial.findOne({ code: curedittutorial })
             .then(tutorials => {
@@ -571,7 +574,7 @@ app.post('/admin/edittutorial', ensureAuthenticated, function(req, res) {
 
 // Index route
 app.get('/', function(req, res) {
-    if (curuser == null) {
+    if (req.user == null) {
         res.render('index');
     } else {
         res.redirect('home');
@@ -581,13 +584,13 @@ app.get('/', function(req, res) {
 // Contact us
 app.get('/contactus', function(req, res) {
     res.render('contactus', {
-        curuser: curuser
+        curuser: req.user
     })
 });
 
 app.post('/contactus', function(req, res) {
     var from = req.body.useremail;
-    var to = 'infedgelab@gmail.com';
+    var to = process.env.RECEIVER_MAIL;
     var subject = "Codebie";
     var text = "Name : " + req.body.username + "\n" + "Email : " + req.body.useremail + "\n" +
         "Subject : " + req.body.usersubject + "\n" + "Message : " + req.body.usermessage;
@@ -598,18 +601,20 @@ app.post('/contactus', function(req, res) {
 
 // Login/Signup Route
 app.get('/enter', function(req, res) {
-    if (curuser == null) {
+    console.log(req.user);
+    if (req.user == null) {
         res.render('enter');
     } else {
+        
         res.redirect('home');
     }
 });
 
 // Profile edit
 app.get('/editprofile/:id', ensureAuthenticated, function(req, res) {
-    if (req.params.id == curuser.username) {
+    if (req.params.id == req.user.username) {
         res.render('editprofile', {
-            curuser: curuser
+            curuser: req.user
         })
     } else {
         req.flash('error_msg', 'You can not edit this profile');
@@ -618,20 +623,20 @@ app.get('/editprofile/:id', ensureAuthenticated, function(req, res) {
 });
 
 app.post('/editprofile/:id', ensureAuthenticated, function(req, res) {
-    bcrypt.compare(req.body.userpassword, curuser.password, (err, isMatch) => {
+    bcrypt.compare(req.body.userpassword, req.user.password, (err, isMatch) => {
         if (err) {
             throw err
         }
         if (isMatch) {
             if (Object.keys(req.body).length == 2) {
                 //console.log(curuser);
-                User.findOne({ username: curuser.username })
+                User.findOne({ username: req.user.username })
                     .then(user => {
                         //console.log(user);
                         user.name = req.body.username;
                         user.save();
                         req.flash('success_msg', 'Name Updated');
-                        res.redirect('/profile/' + curuser.username);
+                        res.redirect('/profile/' + req.user.username);
                     });
             } else {
                 //console.log(req.body);
@@ -651,12 +656,12 @@ app.post('/editprofile/:id', ensureAuthenticated, function(req, res) {
                     bcrypt.genSalt(10, function(err, salt) {
                         bcrypt.hash(req.body.usernewpassword, salt, function(err, hash) {
                             if (err) throw err;
-                            User.findOne({ username: curuser.username })
+                            User.findOne({ username: req.user.username })
                                 .then(user => {
                                     user.password = hash;
                                     user.save();
                                     req.flash('success_msg', 'Password Changed');
-                                    res.redirect('/profile/' + curuser.username);
+                                    res.redirect('/profile/' + req.user.username);
                                 });
                         });
                     });
@@ -664,7 +669,7 @@ app.post('/editprofile/:id', ensureAuthenticated, function(req, res) {
             }
         } else {
             req.flash('error_msg', 'Current Password is incorrect');
-            res.redirect('/editprofile/' + curuser.username);
+            res.redirect('/editprofile/' + req.user.username);
         }
     });
 });
@@ -745,31 +750,30 @@ app.post('/register', function(req, res) {
                     console.log('Token inserted');
             });
             var subject = "Codebie Registration"
-            var text = "Welcome to Codebie! Please click on this link http://localhost:3000/token/" + token + " to activate your account. This link will expire after 10 minutes";
-            sendMail("codebieaust@gmail.com", req.body.signupemail, subject, text)
+            var text = "Welcome to Codebie! Please click on this link http://"+url+"/token/" + token + " to activate your account. This link will expire after 10 minutes";
+            sendMail(NODEMAILER_MAIL, req.body.signupemail, subject, text)
             req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
             res.redirect('/enter');
         }
     }, 5000);
-
 });
 
 // FAQ Route 
 app.get('/faq', function(req, res) {
     // Store number of problems in each sections
     res.render('faq', {
-        curuser: curuser
+        curuser: req.user
     });
 });
 
 // Home Route
 app.get('/home', function(req, res) {
+    //console.log(req.user);
     // Store number of problems in each sections
-    curuser = req.user;
     var tempCounter = getCounter(function(result) {
         counter = result;
         res.render('home', {
-            curuser: curuser,
+            curuser: req.user,
             counter: counter
         });
     });
@@ -777,7 +781,6 @@ app.get('/home', function(req, res) {
 
 app.post('/home', function(req, res) {
     section = req.body.submit;
-    //console.log(section);
     Problem.find({ section: req.body.submit })
         .lean()
         .then(problems => {
@@ -793,7 +796,7 @@ app.post('/home', function(req, res) {
 
 // Logout route
 app.get('/logout', function(req, res) {
-    curuser = null;
+    //curuser = null;
     req.logout();
     req.flash('success_msg', 'Logged Out');
     res.redirect('/');
@@ -802,7 +805,7 @@ app.get('/logout', function(req, res) {
 // Private policy route
 app.get('/privatepolicy', function(req, res) {
     res.render('privatepolicy', {
-        curuser: curuser
+        curuser: req.user
     })
 });
 
@@ -810,7 +813,7 @@ app.get('/privatepolicy', function(req, res) {
 app.get('/problem', function(req, res) {
     //console.log(section);
     res.render('problem', {
-        curuser: curuser,
+        curuser: req.user,
         curproblem: curproblem
     });
 });
@@ -871,9 +874,9 @@ app.get('/problems/:id', function(req, res) {
             Submission.find({
                 problemcode: curproblem.code
             }).then(submissions => {
-                if (curuser) {
+                if (req.user) {
                     submissions.forEach(submission => {
-                        if (submission.username == curuser.username) {
+                        if (submission.username == req.user.username) {
                             curmysub.push(submission);
                         }
                     })
@@ -900,7 +903,7 @@ app.get('/problems/:id', function(req, res) {
                 res.render('problem', {
                     curproblem: curproblem,
                     defaultCode : defaultCode,
-                    curuser: curuser,
+                    curuser: req.user,
                     curmysub: curmysub,
                     curallsub: submissions,
                     sampleio : sampleio,
@@ -941,7 +944,7 @@ app.get('/profile/:id', function(req, res) {
                 });
                 res.render('profile', {
                     user: user,
-                    curuser: curuser,
+                    curuser: req.user,
                     counter: counter,
                     profileCSolve: profileCSolve,
                     profileCppSolve: profileCppSolve,
@@ -959,11 +962,11 @@ app.get('/profile/:id', function(req, res) {
 app.get('/ranklist', function(req, res) {
     User.find({})
         .sort({ totalsolvecount: 'desc' })
-        .then(user => {
+        .then(users => {
             //console.log(user);
             res.render('ranklist', {
-                curuser: curuser,
-                user: user
+                curuser: req.user,
+                user: users
             });
         })
 })
@@ -975,7 +978,7 @@ app.get('/recent', function(req, res) {
         .limit(20)
         .then(submissions => {
             res.render('recent', {
-                curuser: curuser,
+                curuser: req.user,
                 submission: submissions
             });
         })
@@ -1035,13 +1038,14 @@ app.get('/section/:id', function(req, res) {
             Problem.find({ section: req.params.id })
                 .lean()
                 .then(problems => {
+                   
                     curproblems = problems;
                     // Seperating solved and non solved problems
                     var mysolvedcode = [];
                     cursolvedproblems = [];
                     curnotsolvedproblems = [];
-                    if (curuser) {
-                        curuser.solved.forEach(solve => {
+                    if (req.user) {
+                        req.user.solved.forEach(solve => {
                             if (solve.section == section) {
                                 mysolvedcode.push(solve.code)
                             }
@@ -1063,7 +1067,7 @@ app.get('/section/:id', function(req, res) {
                         }
                     }
                     res.render('section', {
-                        curuser: curuser,
+                        curuser: req.user,
                         cursolvedproblems: cursolvedproblems,
                         curnotsolvedproblems: curnotsolvedproblems,
                         curtutorials: curtutorials
@@ -1077,17 +1081,17 @@ app.get('/submission/:id', ensureAuthenticated, function(req, res) {
     Submission.findOne({ token: req.params.id })
         .then(submission => {
             canSee = false;
-            if(submission.username==curuser.username){
+            if(submission.username==req.user.username){
                 canSee = true;
             } else{
-                curuser.solved.forEach(solve => {
+                req.user.solved.forEach(solve => {
                     if (solve.code == submission.problemcode) {
                         canSee = true;
                     }
                 });
             }
             res.render('submission', {
-                curuser: curuser,
+                curuser: req.user,
                 submission: submission,
                 canSee: canSee
             });
@@ -1183,8 +1187,8 @@ app.post('/troubleshoot', function(req, res) {
                                     console.log('Token inserted');
                             });
                             var subject = "Codebie Password Reset"
-                            var text = "Greetings from Codebie! Click on this link http://localhost:3000/token/" + token + " to reset your password. This link will expire after 10 minutes";
-                            sendMail("codebieaust@gmail.com", req.body.useremail, subject, text)
+                            var text = "Greetings from Codebie! Click on this link http://"+url+"/token/" + token + " to reset your password. This link will expire after 10 minutes";
+                            sendMail(NODEMAILER_MAIL, req.body.useremail, subject, text)
                             req.flash('success_msg', 'An email sent to your inbox with password reset link. Please check spam folder also');
                             res.redirect('/enter');
                         }
@@ -1200,11 +1204,10 @@ app.post('/troubleshoot', function(req, res) {
 // Tutorial page
 app.get('/tutorial', ensureAuthenticated, function(req, res) {
     res.render('tutorial', {
-        curuser: curuser,
+        curuser: req.user,
         curtutorial: curtutorial
     });
 })
-
 
 // Find and show tutorial
 app.get('/tutorials/:id', function(req, res) {
@@ -1217,7 +1220,7 @@ app.get('/tutorials/:id', function(req, res) {
             Tutorial.find({ section: curtutorial.section })
                 .then(tutorials => {
                     res.render('tutorial', {
-                        curuser: curuser,
+                        curuser: req.user,
                         curtutorial: tutorial,
                         cursectiontutorials: tutorials
                     });
@@ -1231,7 +1234,7 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
         if (curtoken) {
             verdict="Compilation Error";
             const newSubmission = {
-                username: curuser.username,
+                username: req.user.username,
                 problemcode: curproblem.code,
                 token: curtoken,
                 time : 0,
@@ -1244,7 +1247,7 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
         }
     } else {
         User.findOne({
-                username: curuser.username
+                username: req.user.username
             })
             .then(user => {
                 var alreadysolved = false,ce=false,wa=false,tl=false,lr=false;
@@ -1297,7 +1300,7 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
                         }
                         user.solved.unshift(newSolved);
                         user.save();
-                        curuser = user;
+                        //curuser = user;
                     }
                     Problem.findOne({
                             code: curproblem.code
@@ -1309,7 +1312,7 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
                 }
                 //console.log(curoutput);
                 const newSubmission = {
-                    username: curuser.username,
+                    username: req.user.username,
                     problemcode: curproblem.code,
                     token: curtoken,
                     verdict : verdict,
@@ -1329,7 +1332,7 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
             color = "green";
         }
         res.render('verdict', {
-            curuser: curuser,
+            curuser: req.user,
             verdict: verdict,
             curverdicts : curverdicts,
             curoutput: curoutput,
