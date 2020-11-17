@@ -751,7 +751,7 @@ app.post('/register', function(req, res) {
             });
             var subject = "Codebie Registration"
             var text = "Welcome to Codebie! Please click on this link http://"+url+"/token/" + token + " to activate your account. This link will expire after 10 minutes";
-            sendMail(NODEMAILER_MAIL, req.body.signupemail, subject, text)
+            sendMail(process.env.NODEMAILER_MAIL, req.body.signupemail, subject, text)
             req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
             res.redirect('/enter');
         }
