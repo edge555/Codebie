@@ -18,15 +18,13 @@ const fs = require('fs');
 const unirest = require('unirest');
 const { ensureAuthenticated } = require('./helpers/auth');
 require('dotenv').config()
-var curmysub = [],
-    cursolvedproblems = [],
-    curnotsolvedproblems = [],
-    curverdicts = [];
-    tempverdicts = [];
+var curverdicts = [];
     adminids = ["edge555"];
-var verdict;
-var curproblem, curproblems, curtutorial, curtutorials;
-var cursubmittedcode, cureditproblem, curedittutorial;
+var verdict,cursubmittedcode;
+var curproblem, curtutorial;
+
+// admin vars
+var cureditproblem, curedittutorial;
 var curdeleteproblem, curdeletetutorial;
 
 //var urlAddress = 'codebie-aust.herokuapp.com';
@@ -338,7 +336,6 @@ function getverdict(req,submission, input, output,tc, callback) {
     setTimeout(function() {
         //console.log(submissiontoken);
         var check = getoutput(submissiontoken, function(result) {
-            //curoutput = result;
             if (req.session.section != "algo" && req.session.section != "ds" && req.session.section != submission.language) {
                 tempverdict = tc+" LR";
                 temp2.push(result);
@@ -358,7 +355,6 @@ function getverdict(req,submission, input, output,tc, callback) {
                     temp2.push(result);
                 }
             }
-            //console.log("Temp2 = "+temp2);
             var temp=[];
             temp.push(tempverdict,temp2);
             callback(temp);
@@ -391,7 +387,7 @@ function sendMail(sender, receiver, subject, text) {
     };
     transporter.sendMail(mailOptions, function(error, info) {
         if (error) {
-            //console.log(error);
+            console.log(error);
         }
     });
 }
@@ -793,17 +789,6 @@ app.get('/home', function(req, res) {
 
 app.post('/home', function(req, res) {
     req.session.section = req.body.submit;
-    Problem.find({ section: req.body.submit })
-        .lean()
-        .then(problems => {
-            curproblems = problems;
-        });
-    Tutorial.find({ section: req.body.submit })
-        .lean()
-        .then(tutorials => {
-            curtutorials = tutorials;
-        });
-    
     res.redirect('/section/' + req.session.section);
 });
 
@@ -844,36 +829,26 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
                 code: req.body.submittedcode,
                 language: req.body.language
             }
-            //console.log(submission);
             var testcasecount = curproblem.testcasecount;
             var inputs = curproblem.inputs;
             var outputs = curproblem.outputs;
             var temp;
-            tempverdicts = [];
-            //console.log(curproblem);
+            var tempverdicts = [];
             for(var i=0;i<testcasecount;i++){
                 var verdict1 = getverdict(req,submission, inputs[i], outputs[i],i, function(result) {
-                   // console.log(result);
                     tempverdicts.push(result[0]);
                     temp=result[1];
-                    //console.log(result);
                 });
             }
             setTimeout(function() {
-                /* console.log("Var temp = ",temp);
-                console.log("before =");
-                console.log(req.session); */
                 req.session.curlang = temp[0];
                 req.session.curtoken = temp[1];
                 req.session.curoutput=temp[2];
-               /*  console.log("after =");
-                console.log(req.session); */
                 tempverdicts.sort();
                 curverdicts = [];
                 tempverdicts.forEach(tv=>{
                     curverdicts.push(tv.substring(2));
                 })
-                //console.log(curverdicts);
                 res.redirect('verdict'); 
             }, 10000); 
         }
@@ -888,10 +863,9 @@ app.get('/problems/:id', function(req, res) {
     Problem.findOne({ code: req.params.id })
         .lean()
         .then(problem => {
-            curmysub = [];
+            var curmysub = [];
             var sampleio=[];
             curproblem = problem;
-            //console.log(curproblem);
             for(var i=0;i<curproblem.samplecount;i++){
                 sampleio.push([curproblem.inputs[i],curproblem.outputs[i]]);
             }
@@ -1056,19 +1030,18 @@ app.post('/resetpass/:id', function(req, res) {
 // Show section route
 app.get('/section/:id', function(req, res) {
     //console.log(req.session);
-
     Tutorial.find({ section: req.params.id })
         .lean()
         .then(tutorials => {
-            curtutorials = tutorials;
+            var curtutorials = tutorials;
             Problem.find({ section: req.params.id })
                 .lean()
                 .then(problems => {
-                    curproblems = problems;
+                    var curproblems = problems;
                     // Seperating solved and non solved problems
                     var mysolvedcode = [];
-                    cursolvedproblems = [];
-                    curnotsolvedproblems = [];
+                    var cursolvedproblems = [];
+                    var curnotsolvedproblems = [];
                     if (req.user) {
                         req.user.solved.forEach(solve => {
                             if (solve.section == req.session.section) {
