@@ -1,7 +1,6 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
 const path = require('path');
-const url = require("url");
 const bodyParser = require('body-parser');
 const Handlebars = require('handlebars');
 const mongoose = require('mongoose');
@@ -18,17 +17,14 @@ const fs = require('fs');
 const unirest = require('unirest');
 const { ensureAuthenticated } = require('./helpers/auth');
 require('dotenv').config()
-var curverdicts = [];
-    adminids = ["edge555"];
-var verdict,cursubmittedcode;
-var curproblem, curtutorial;
+var adminids = ["edge555"];
 
 // admin vars
 var cureditproblem, curedittutorial;
 var curdeleteproblem, curdeletetutorial;
 
-//var urlAddress = 'codebie-aust.herokuapp.com';
-var urlAddress = 'localhost:3000';
+//var url = 'codebie-aust.herokuapp.com';
+var url = 'localhost:3000';
 
 // Node mailer email
 var transporter = nodemailer.createTransport({
@@ -50,6 +46,8 @@ require('./models/Submission');
 const Submission = mongoose.model('submissions');
 require('./models/Token');
 const Token = mongoose.model('tokens');
+require('./models/Global');
+const Global = mongoose.model('globals');
 
 // Passport config
 require('./config/passport')(passport);
@@ -232,9 +230,7 @@ function getCounter(callback) {
     }
     Problem.find({})
         .then(problems => {
-            //console.log(problems);
             problems.forEach(problem => {
-                //console.log(problem.section);
                 if (problem.section == "c") {
                     counter.ccnt++;
                 } else if (problem.section == "cpp") {
@@ -265,7 +261,7 @@ function getoutput(submissiontoken, callback) {
     });
     req.end(function(res) {
         if (res.error) {
-            verdict = "CE";
+            var verdict = "CE";
             callback(verdict);
         } else {
             callback(res.body);
@@ -326,11 +322,10 @@ function gettoken(req,submission, input,output,timelimit, callback) {
 function getverdict(req,submission, input, output,tc, callback) {
     var submissiontoken, tempverdict;
     var temp2=[];
-    var token = gettoken(req, submission, input, output,curproblem.timelimit, function(result) {
+    var token = gettoken(req, submission, input, output,req.session.curproblem.timelimit, function(result) {
         // result = [submissiontoken,curlang]
         submissiontoken = result[0];
         temp2.push(result[1]);
-        //curtoken = submissiontoken;
         temp2.push(submissiontoken);
     });
     setTimeout(function() {
@@ -341,11 +336,10 @@ function getverdict(req,submission, input, output,tc, callback) {
                 temp2.push(result);
             } else {
                 if (result == "CE") {
-                    //curoutput = null;
                     temp2.push(null);
                     tempverdict = tc+" "+result;
                 } else {
-                    if (result.time > curproblem.timelimit) {
+                    if (result.time > req.session.curproblem.timelimit) {
                         tempverdict = tc+" TL";
                     } else if (result.stdout == output) {
                         tempverdict = tc+" AC";
@@ -409,7 +403,6 @@ app.get('/admin', ensureAuthenticated, function(req, res) {
 });
 
 app.post('/admin', ensureAuthenticated, function(req, res) {
-    //console.log(req.body);
     if (req.body.submit == "addproblem") {
         res.redirect('admin/addproblem');
     } else if (req.body.submit == "editproblem") {
@@ -441,7 +434,6 @@ app.get('/admin/addproblem', ensureAuthenticated, function(req, res) {
 });
 
 app.post('/admin/addproblem', ensureAuthenticated, function(req, res) {
-    //console.log(req.body);
     var testcasecount = req.body.testcasecount;
     var inputs=[],outputs=[];
     for(var i=0;i<testcasecount;i++){
@@ -474,12 +466,10 @@ app.post('/admin/addproblem', ensureAuthenticated, function(req, res) {
 
 // To edit problems
 app.get('/admin/editproblem', ensureAuthenticated, function(req, res) {
-    //console.log(cureditproblem);
     if (adminids.includes(req.user.username)) {
         Problem.findOne({ code: cureditproblem })
             .lean()
             .then(problem => {
-                //console.log(problems);
                 res.render('admin/editproblem', {
                     cureditproblem: problem,
                 });
@@ -503,7 +493,6 @@ app.post('/admin/editproblem', ensureAuthenticated, function(req, res) {
             for(var i=0;i<testcasecount;i++){
                 outputs.push(eval(`req.body.output${i}`));
             }
-            //console.log(req.body);
             problems.name = req.body.name;
             problems.code = req.body.code;
             problems.difficulty = req.body.difficulty;
@@ -519,7 +508,6 @@ app.post('/admin/editproblem', ensureAuthenticated, function(req, res) {
             problems.solvecount = req.body.solvecount;
             problems.save()
                 .then(problems => {
-                    //console.log(problems);
                     res.redirect('/admin');
                 });
         });
@@ -551,7 +539,6 @@ app.post('/admin/addtutorial', ensureAuthenticated, function(req, res) {
 // To edit tutorial
 app.get('/admin/edittutorial', ensureAuthenticated, function(req, res) {
     if (adminids.includes(req.user.username)) {
-        //console.log(curedittutorial);
         Tutorial.findOne({ code: curedittutorial })
             .then(tutorials => {
                 res.render('admin/edittutorial', {
@@ -569,7 +556,6 @@ app.post('/admin/edittutorial', ensureAuthenticated, function(req, res) {
             code: curedittutorial
         })
         .then(tutorials => {
-            //console.log(req.body);
             tutorials.name = req.body.name;
             tutorials.code = req.body.code;
             tutorials.statement = req.body.statement;
@@ -637,17 +623,14 @@ app.post('/editprofile/:id', ensureAuthenticated, function(req, res) {
         }
         if (isMatch) {
             if (Object.keys(req.body).length == 2) {
-                //console.log(curuser);
                 User.findOne({ username: req.user.username })
                     .then(user => {
-                        //console.log(user);
                         user.name = req.body.username;
                         user.save();
                         req.flash('success_msg', 'Name Updated');
                         res.redirect('/profile/' + req.user.username);
                     });
             } else {
-                //console.log(req.body);
                 var errors = [];
                 if (req.body.usernewpassword != req.body.usernewpassword2) {
                     errors.push({ text: "Password doesn't match" });
@@ -694,7 +677,6 @@ app.post('/login', function(req, res, next) {
 // Register post
 app.post('/register', function(req, res) {
     var errors = [];
-    //console.log(req.body.signupemail);
     Token.findOne({
             email: req.body.signupemail,
             purpose: "activation"
@@ -740,7 +722,6 @@ app.post('/register', function(req, res) {
                 username: req.body.signupusername
             })
         } else {
-            //console.log(req.body);
             var info = [];
             info.push(req.body.signupusername);
             info.push(req.body.signupemail);
@@ -758,7 +739,7 @@ app.post('/register', function(req, res) {
                     console.log('Token inserted');
             });
             var subject = "Codebie Registration"
-            var text = "Welcome to Codebie! Please click on this link http://"+urlAddress+"/token/" + token + " to activate your account. This link will expire after 10 minutes";
+            var text = "Welcome to Codebie! Please click on this link http://"+url+"/token/" + token + " to activate your account. This link will expire after 10 minutes";
             sendMail(process.env.NODEMAILER_MAIL, req.body.signupemail, subject, text)
             req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
             res.redirect('/enter');
@@ -776,7 +757,6 @@ app.get('/faq', function(req, res) {
 
 // Home Route
 app.get('/home', function(req, res) {
-    //console.log(req.user);
     // Store number of problems in each sections
     var tempCounter = getCounter(function(result) {
         counter = result;
@@ -794,7 +774,6 @@ app.post('/home', function(req, res) {
 
 // Logout route
 app.get('/logout', function(req, res) {
-    //curuser = null;
     req.logout();
     req.flash('success_msg', 'Logged Out');
     res.redirect('/');
@@ -809,29 +788,28 @@ app.get('/privatepolicy', function(req, res) {
 
 // Problem show and submit page
 app.get('/problem', function(req, res) {
-    //console.log(section);
     res.render('problem', {
         curuser: req.user,
-        curproblem: curproblem
+        curproblem: req.session.curproblem
     });
 });
 
 app.post('/problem', ensureAuthenticated, function(req, res) {
     if (req.user) {
         if (req.body.submittedcode.length == 0) {
-            verdict = "Compilation Error";
+            req.session.verdict = "Compilation Error";
             req.session.curtoken = null;
             req.session.curoutput = null;
             res.redirect('verdict');
         } else {
-            cursubmittedcode = req.body.submittedcode;
+            req.session.cursubmittedcode = req.body.submittedcode;
             var submission = {
                 code: req.body.submittedcode,
                 language: req.body.language
             }
-            var testcasecount = curproblem.testcasecount;
-            var inputs = curproblem.inputs;
-            var outputs = curproblem.outputs;
+            var testcasecount = req.session.curproblem.testcasecount;
+            var inputs = req.session.curproblem.inputs;
+            var outputs = req.session.curproblem.outputs;
             var temp;
             var tempverdicts = [];
             for(var i=0;i<testcasecount;i++){
@@ -845,9 +823,9 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
                 req.session.curtoken = temp[1];
                 req.session.curoutput=temp[2];
                 tempverdicts.sort();
-                curverdicts = [];
+                req.session.curverdicts = [];
                 tempverdicts.forEach(tv=>{
-                    curverdicts.push(tv.substring(2));
+                    req.session.curverdicts.push(tv.substring(2));
                 })
                 res.redirect('verdict'); 
             }, 10000); 
@@ -865,12 +843,12 @@ app.get('/problems/:id', function(req, res) {
         .then(problem => {
             var curmysub = [];
             var sampleio=[];
-            curproblem = problem;
-            for(var i=0;i<curproblem.samplecount;i++){
-                sampleio.push([curproblem.inputs[i],curproblem.outputs[i]]);
+            req.session.curproblem = problem;
+            for(var i=0;i<req.session.curproblem.samplecount;i++){
+                sampleio.push([req.session.curproblem.inputs[i],req.session.curproblem.outputs[i]]);
             }
             Submission.find({
-                problemcode: curproblem.code
+                problemcode: req.session.curproblem.code
             }).then(submissions => {
                 if (req.user) {
                     submissions.forEach(submission => {
@@ -899,7 +877,7 @@ app.get('/problems/:id', function(req, res) {
                     selected.cpp = "selected";
                 }
                 res.render('problem', {
-                    curproblem: curproblem,
+                    curproblem: req.session.curproblem,
                     defaultCode : defaultCode,
                     curuser: req.user,
                     curmysub: curmysub,
@@ -913,12 +891,10 @@ app.get('/problems/:id', function(req, res) {
 
 // Profile page
 app.get('/profile/:id', function(req, res) {
-    //console.log(req.params.id);
     var tempCounter = getCounter(function(result) {
         counter = result;
         User.findOne({ username: req.params.id })
             .then(user => {
-                //console.log(user.solved);
                 profileCSolve = [];
                 profileCppSolve = [];
                 profileJavaSolve = [];
@@ -961,7 +937,6 @@ app.get('/ranklist', function(req, res) {
     User.find({})
         .sort({ totalsolvecount: 'desc' })
         .then(users => {
-            //console.log(user);
             res.render('ranklist', {
                 curuser: req.user,
                 user: users
@@ -1029,7 +1004,6 @@ app.post('/resetpass/:id', function(req, res) {
 
 // Show section route
 app.get('/section/:id', function(req, res) {
-    //console.log(req.session);
     Tutorial.find({ section: req.params.id })
         .lean()
         .then(tutorials => {
@@ -1185,7 +1159,7 @@ app.post('/troubleshoot', function(req, res) {
                                     console.log('Token inserted');
                             });
                             var subject = "Codebie Password Reset"
-                            var text = "Greetings from Codebie! Click on this link http://"+urlAddress+"/token/" + token + " to reset your password. This link will expire after 10 minutes";
+                            var text = "Greetings from Codebie! Click on this link http://"+url+"/token/" + token + " to reset your password. This link will expire after 10 minutes";
                             sendMail(NODEMAILER_MAIL, req.body.useremail, subject, text)
                             req.flash('success_msg', 'An email sent to your inbox with password reset link. Please check spam folder also');
                             res.redirect('/enter');
@@ -1199,23 +1173,12 @@ app.post('/troubleshoot', function(req, res) {
         })
 });
 
-// Tutorial page
-app.get('/tutorial', ensureAuthenticated, function(req, res) {
-    res.render('tutorial', {
-        curuser: req.user,
-        curtutorial: curtutorial
-    });
-})
-
 // Find and show tutorial
 app.get('/tutorials/:id', function(req, res) {
-    //console.log(req.params);
     Tutorial.findOne({ code: req.params.id })
         .lean()
         .then(tutorial => {
-            //console.log(tutorial);
-            curtutorial = tutorial;
-            Tutorial.find({ section: curtutorial.section })
+            Tutorial.find({ section: tutorial.section })
                 .then(tutorials => {
                     res.render('tutorial', {
                         curuser: req.user,
@@ -1230,15 +1193,15 @@ app.get('/tutorials/:id', function(req, res) {
 app.get('/verdict', ensureAuthenticated, function(req, res) {
     if (req.session.curoutput == null) {
         if (req.session.curtoken) {
-            verdict="Compilation Error";
+            req.session.verdict="Compilation Error";
             const newSubmission = {
                 username: req.user.username,
-                problemcode: curproblem.code,
+                problemcode: req.session.curproblem.code,
                 token: req.session.curtoken,
                 time : 0,
-                verdict: verdict,
+                verdict: req.session.verdict,
                 section: req.session.section,
-                stdin: cursubmittedcode,
+                stdin: req.session.cursubmittedcode,
                 lang: req.session.curlang
             }
             new Submission(newSubmission).save()
@@ -1249,7 +1212,7 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
             })
             .then(user => {
                 var alreadysolved = false,ce=false,wa=false,tl=false,lr=false;
-                curverdicts.forEach(cv=>{
+                req.session.curverdicts.forEach(cv=>{
                     if(cv=="WA"){
                         wa=true;
                     } else if(cv=="CE"){
@@ -1261,19 +1224,19 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
                     }
                 });
                 if(lr==true){
-                    verdict="Language Rejected";
+                    req.session.verdict="Language Rejected";
                 } else if(ce==true){
-                    verdict="Compilation Error";
+                    req.session.verdict="Compilation Error";
                 } else if(tl==true){
-                    verdict="Time Limit Exceeded";
+                    req.session.verdict="Time Limit Exceeded";
                 } else if(wa==true){
-                    verdict="Wrong Answer";
+                    req.session.verdict="Wrong Answer";
                 } else {
-                    verdict="Accepted";
+                    req.session.verdict="Accepted";
                 }
-                if ( verdict=="Accepted") {
+                if ( req.session.verdict=="Accepted") {
                     user.solved.forEach(solve => {
-                        if (solve.code == curproblem.code) {
+                        if (solve.code == req.session.curproblem.code) {
                             alreadysolved = true;
                         }
                     });
@@ -1293,31 +1256,29 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
                         }
                         user.totalsolvecount++;
                         const newSolved = {
-                            code: curproblem.code,
+                            code: req.session.curproblem.code,
                             section: req.session.section
                         }
                         user.solved.unshift(newSolved);
                         user.save();
-                        //curuser = user;
                     }
                     Problem.findOne({
-                            code: curproblem.code
+                            code: req.session.curproblem.code
                         })
                         .then(problems => {
                             problems.solvecount++;
                             problems.save()
                         });
                 }
-                //console.log(curoutput);
                 const newSubmission = {
                     username: req.user.username,
-                    problemcode: curproblem.code,
+                    problemcode: req.session.curproblem.code,
                     token: req.session.curtoken,
-                    verdict : verdict,
-                    verdicts: curverdicts,
+                    verdict : req.session.verdict,
+                    verdicts: req.session.curverdicts,
                     time: req.session.curoutput.time,
                     section: req.session.section,
-                    stdin: cursubmittedcode,
+                    stdin: req.session.cursubmittedcode,
                     lang: req.session.curlang
                 }
                 new Submission(newSubmission).save();
@@ -1326,13 +1287,13 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
     
     setTimeout(function() {
         var color = "red";
-        if (verdict == "Accepted") {
+        if (req.session.verdict == "Accepted") {
             color = "green";
         }
         res.render('verdict', {
             curuser: req.user,
-            verdict: verdict,
-            curverdicts : curverdicts,
+            verdict: req.session.verdict,
+            curverdicts : req.session.curverdicts,
             curoutput: req.session.curoutput,
             color: color
         });
