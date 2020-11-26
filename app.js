@@ -1,6 +1,7 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
 const path = require('path');
+const url = require("url");
 const bodyParser = require('body-parser');
 const Handlebars = require('handlebars');
 const mongoose = require('mongoose');
@@ -23,13 +24,13 @@ var curmysub = [],
     curverdicts = [];
     tempverdicts = [];
     adminids = ["edge555"];
-var section, curlang, curtoken, verdict;
+var verdict;
 var curproblem, curproblems, curtutorial, curtutorials;
 var cursubmittedcode, cureditproblem, curedittutorial;
-var curdeleteproblem, curdeletetutorial, curoutput;
+var curdeleteproblem, curdeletetutorial;
 
-var url = 'codebie-aust.herokuapp.com';
-//var url = 'localhost:3000';
+//var urlAddress = 'codebie-aust.herokuapp.com';
+var urlAddress = 'localhost:3000';
 
 // Node mailer email
 var transporter = nodemailer.createTransport({
@@ -275,7 +276,7 @@ function getoutput(submissiontoken, callback) {
 }
 
 // Judge0 API call for submitting code
-function gettoken(submission, input,output,timelimit, callback) {
+function gettoken(req,submission, input,output,timelimit, callback) {
     // Judge0 API for submitting code
     var req = unirest("POST", "https://judge0.p.rapidapi.com/submissions");
     req.headers({
@@ -293,7 +294,7 @@ function gettoken(submission, input,output,timelimit, callback) {
     Python (3.8.1) : 71
     */
     var lang_id;
-    curlang = submission.language;
+    //curlang = submission.language;
     if (submission.language == "c") {
         lang_id = 50;
     } else if (submission.language == "cpp") {
@@ -314,41 +315,53 @@ function gettoken(submission, input,output,timelimit, callback) {
     req.end(function(res) {
         if (res.error){
             console.log(res.body);
-            throw new Error(res.error);
+            //throw new Error(res.error);
         }
-        callback(res.body.token);
+        var temp=[];
+        temp.push(res.body.token);
+        temp.push(submission.language);
+        callback(temp);
     });
 }
 
 // Get verdict
-function getverdict(submission, input, output,tc, callback) {
+function getverdict(req,submission, input, output,tc, callback) {
     var submissiontoken, tempverdict;
-    var token = gettoken(submission, input,output,curproblem.timelimit, function(result) {
-        submissiontoken = result;
-        curtoken = submissiontoken;
+    var temp2=[];
+    var token = gettoken(req, submission, input, output,curproblem.timelimit, function(result) {
+        // result = [submissiontoken,curlang]
+        submissiontoken = result[0];
+        temp2.push(result[1]);
+        //curtoken = submissiontoken;
+        temp2.push(submissiontoken);
     });
     setTimeout(function() {
         //console.log(submissiontoken);
         var check = getoutput(submissiontoken, function(result) {
-            curoutput = result;
-            //console.log(curoutput);
-            if (section != "algo" && section != "ds" && section != submission.language) {
+            //curoutput = result;
+            if (req.session.section != "algo" && req.session.section != "ds" && req.session.section != submission.language) {
                 tempverdict = tc+" LR";
+                temp2.push(result);
             } else {
                 if (result == "CE") {
-                    curoutput = null;
+                    //curoutput = null;
+                    temp2.push(null);
                     tempverdict = tc+" "+result;
                 } else {
-                    if (curoutput.time > curproblem.timelimit) {
+                    if (result.time > curproblem.timelimit) {
                         tempverdict = tc+" TL";
-                    } else if (curoutput.stdout == output) {
+                    } else if (result.stdout == output) {
                         tempverdict = tc+" AC";
                     } else {
                         tempverdict = tc+" WA";
                     }
+                    temp2.push(result);
                 }
             }
-            callback(tempverdict);
+            //console.log("Temp2 = "+temp2);
+            var temp=[];
+            temp.push(tempverdict,temp2);
+            callback(temp);
         });
     }, 5000);
 }
@@ -601,7 +614,6 @@ app.post('/contactus', function(req, res) {
 
 // Login/Signup Route
 app.get('/enter', function(req, res) {
-    console.log(req.user);
     if (req.user == null) {
         res.render('enter');
     } else {
@@ -750,7 +762,7 @@ app.post('/register', function(req, res) {
                     console.log('Token inserted');
             });
             var subject = "Codebie Registration"
-            var text = "Welcome to Codebie! Please click on this link http://"+url+"/token/" + token + " to activate your account. This link will expire after 10 minutes";
+            var text = "Welcome to Codebie! Please click on this link http://"+urlAddress+"/token/" + token + " to activate your account. This link will expire after 10 minutes";
             sendMail(process.env.NODEMAILER_MAIL, req.body.signupemail, subject, text)
             req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
             res.redirect('/enter');
@@ -780,7 +792,7 @@ app.get('/home', function(req, res) {
 });
 
 app.post('/home', function(req, res) {
-    section = req.body.submit;
+    req.session.section = req.body.submit;
     Problem.find({ section: req.body.submit })
         .lean()
         .then(problems => {
@@ -791,7 +803,8 @@ app.post('/home', function(req, res) {
         .then(tutorials => {
             curtutorials = tutorials;
         });
-    res.redirect('/section/' + section);
+    
+    res.redirect('/section/' + req.session.section);
 });
 
 // Logout route
@@ -822,8 +835,8 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
     if (req.user) {
         if (req.body.submittedcode.length == 0) {
             verdict = "Compilation Error";
-            curtoken = null;
-            curoutput = null;
+            req.session.curtoken = null;
+            req.session.curoutput = null;
             res.redirect('verdict');
         } else {
             cursubmittedcode = req.body.submittedcode;
@@ -835,15 +848,26 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
             var testcasecount = curproblem.testcasecount;
             var inputs = curproblem.inputs;
             var outputs = curproblem.outputs;
+            var temp;
             tempverdicts = [];
             //console.log(curproblem);
             for(var i=0;i<testcasecount;i++){
-                var verdict1 = getverdict(submission, inputs[i], outputs[i],i, function(result) {
-                    tempverdicts.push(result);
+                var verdict1 = getverdict(req,submission, inputs[i], outputs[i],i, function(result) {
+                   // console.log(result);
+                    tempverdicts.push(result[0]);
+                    temp=result[1];
                     //console.log(result);
                 });
             }
             setTimeout(function() {
+                /* console.log("Var temp = ",temp);
+                console.log("before =");
+                console.log(req.session); */
+                req.session.curlang = temp[0];
+                req.session.curtoken = temp[1];
+                req.session.curoutput=temp[2];
+               /*  console.log("after =");
+                console.log(req.session); */
                 tempverdicts.sort();
                 curverdicts = [];
                 tempverdicts.forEach(tv=>{
@@ -888,13 +912,13 @@ app.get('/problems/:id', function(req, res) {
                     py: "",
                 }
                 var defaultCode="#include <bits/stdc++.h>\nusing namespace std;\nint main()\n{\n\n}";
-                if (section == "c") {
+                if (req.session.section == "c") {
                     selected.c = "selected";
                     defaultCode="#include <stdio.h>\nint main()\n{\n\n}"
-                } else if (section == "java") {
+                } else if (req.session.section == "java") {
                     selected.java = "selected";
                     defaultCode="import java.util.*;\nclass Main {\n    public static void main(String[] args) {\n      Scanner sc = new Scanner(System.in);\n\n  }\n}"
-                } else if (section == "py") {
+                } else if (req.session.section == "py") {
                     selected.py = "selected";
                     defaultCode="";
                 } else {
@@ -975,7 +999,7 @@ app.get('/ranklist', function(req, res) {
 app.get('/recent', function(req, res) {
     Submission.find({})
         .sort({ date: 'desc' })
-        .limit(20)
+        .limit(30)
         .then(submissions => {
             res.render('recent', {
                 curuser: req.user,
@@ -1031,6 +1055,8 @@ app.post('/resetpass/:id', function(req, res) {
 
 // Show section route
 app.get('/section/:id', function(req, res) {
+    //console.log(req.session);
+
     Tutorial.find({ section: req.params.id })
         .lean()
         .then(tutorials => {
@@ -1038,7 +1064,6 @@ app.get('/section/:id', function(req, res) {
             Problem.find({ section: req.params.id })
                 .lean()
                 .then(problems => {
-                   
                     curproblems = problems;
                     // Seperating solved and non solved problems
                     var mysolvedcode = [];
@@ -1046,7 +1071,7 @@ app.get('/section/:id', function(req, res) {
                     curnotsolvedproblems = [];
                     if (req.user) {
                         req.user.solved.forEach(solve => {
-                            if (solve.section == section) {
+                            if (solve.section == req.session.section) {
                                 mysolvedcode.push(solve.code)
                             }
                         });
@@ -1187,7 +1212,7 @@ app.post('/troubleshoot', function(req, res) {
                                     console.log('Token inserted');
                             });
                             var subject = "Codebie Password Reset"
-                            var text = "Greetings from Codebie! Click on this link http://"+url+"/token/" + token + " to reset your password. This link will expire after 10 minutes";
+                            var text = "Greetings from Codebie! Click on this link http://"+urlAddress+"/token/" + token + " to reset your password. This link will expire after 10 minutes";
                             sendMail(NODEMAILER_MAIL, req.body.useremail, subject, text)
                             req.flash('success_msg', 'An email sent to your inbox with password reset link. Please check spam folder also');
                             res.redirect('/enter');
@@ -1230,18 +1255,18 @@ app.get('/tutorials/:id', function(req, res) {
 
 // Verdict route
 app.get('/verdict', ensureAuthenticated, function(req, res) {
-    if (curoutput == null) {
-        if (curtoken) {
+    if (req.session.curoutput == null) {
+        if (req.session.curtoken) {
             verdict="Compilation Error";
             const newSubmission = {
                 username: req.user.username,
                 problemcode: curproblem.code,
-                token: curtoken,
+                token: req.session.curtoken,
                 time : 0,
                 verdict: verdict,
-                section: section,
+                section: req.session.section,
                 stdin: cursubmittedcode,
-                lang: curlang
+                lang: req.session.curlang
             }
             new Submission(newSubmission).save()
         }
@@ -1280,23 +1305,23 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
                         }
                     });
                     if (alreadysolved == false) {
-                        if (section == "c") {
+                        if (req.session.section == "c") {
                             user.csolvecount++;
-                        } else if (section == "cpp") {
+                        } else if (req.session.section == "cpp") {
                             user.cppsolvecount++;
-                        } else if (section == "java") {
+                        } else if (req.session.section == "java") {
                             user.javasolvecount++;
-                        } else if (section == "py") {
+                        } else if (req.session.section == "py") {
                             user.pysolvecount++;
-                        } else if (section == "ds") {
+                        } else if (req.session.section == "ds") {
                             user.dssolvecount++;
-                        } else if (section == "algo") {
+                        } else if (req.session.section == "algo") {
                             user.algosolvecount++;
                         }
                         user.totalsolvecount++;
                         const newSolved = {
                             code: curproblem.code,
-                            section: section
+                            section: req.session.section
                         }
                         user.solved.unshift(newSolved);
                         user.save();
@@ -1314,13 +1339,13 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
                 const newSubmission = {
                     username: req.user.username,
                     problemcode: curproblem.code,
-                    token: curtoken,
+                    token: req.session.curtoken,
                     verdict : verdict,
                     verdicts: curverdicts,
-                    time: curoutput.time,
-                    section: section,
+                    time: req.session.curoutput.time,
+                    section: req.session.section,
                     stdin: cursubmittedcode,
-                    lang: curlang
+                    lang: req.session.curlang
                 }
                 new Submission(newSubmission).save();
             });
@@ -1335,7 +1360,7 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
             curuser: req.user,
             verdict: verdict,
             curverdicts : curverdicts,
-            curoutput: curoutput,
+            curoutput: req.session.curoutput,
             color: color
         });
     }, 5000); 
