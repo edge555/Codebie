@@ -46,8 +46,6 @@ require('./models/Submission');
 const Submission = mongoose.model('submissions');
 require('./models/Token');
 const Token = mongoose.model('tokens');
-require('./models/Global');
-const Global = mongoose.model('globals');
 
 // Passport config
 require('./config/passport')(passport);
@@ -1066,6 +1064,20 @@ app.get('/submission/:id', ensureAuthenticated, function(req, res) {
                 curuser: req.user,
                 submission: submission,
                 canSee: canSee
+            });
+        })
+});
+
+// View submission
+app.get('/submissions/:id', function(req, res) {
+    //console.log(req.params.id);
+    Submission.find({ username: req.params.id })
+        .sort({ date: 'desc' })
+        .then(submissions => {
+            res.render('submissions', {
+                curuser: req.user,
+                user : req.params.id,
+                submission: submissions
             });
         })
 });
