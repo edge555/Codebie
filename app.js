@@ -17,14 +17,11 @@ const fs = require('fs');
 const unirest = require('unirest');
 const { ensureAuthenticated } = require('./helpers/auth');
 require('dotenv').config()
-var adminids = ["edge555"];
+var url,userCount,submissionCount;
 
 // admin vars
-var cureditproblem, curedittutorial;
-var curdeleteproblem, curdeletetutorial;
-
-//var url = 'codebie-aust.herokuapp.com';
-var url = 'localhost:3000';
+var adminids = ["edge555"];
+var cureditproblem, curedittutorial,curdeleteproblem, curdeletetutorial;
 
 // Node mailer email
 var transporter = nodemailer.createTransport({
@@ -51,6 +48,7 @@ const Token = mongoose.model('tokens');
 require('./config/passport')(passport);
 
 const db = require('./config/database');
+const { userInfo } = require('os');
 // Connect to mongoose
 mongoose.Promise = global.Promise;
 mongoose.connect(db.mongoURI, {
@@ -597,7 +595,6 @@ app.get('/enter', function(req, res) {
     if (req.user == null) {
         res.render('enter');
     } else {
-        
         res.redirect('home');
     }
 });
@@ -760,7 +757,9 @@ app.get('/home', function(req, res) {
         counter = result;
         res.render('home', {
             curuser: req.user,
-            counter: counter
+            counter: counter,
+            userCount: userCount,
+            submissionCount : submissionCount
         });
     });
 });
@@ -1314,5 +1313,24 @@ app.get('/verdict', ensureAuthenticated, function(req, res) {
 
 const port = process.env.PORT || 3000;
 app.listen(port, function() {
+    if (process.env.NODE_ENV === 'production') {
+        url = 'codebie-aust.herokuapp.com';  
+    } else {
+        url = 'localhost:3000';
+    }
+    userCount = 0;
+    submissionCount = 0;
+    User.find({})
+    .then(users=>{
+        users.forEach(user=>{
+            userCount++;
+        })
+    });
+    Submission.find({})
+    .then(submissions=>{
+        submissions.forEach(submission=>{
+            submissionCount++;
+        })
+    })
     console.log("Server started");
 });
