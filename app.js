@@ -20,7 +20,7 @@ require('dotenv').config()
 var url,userCount,submissionCount;
 
 // admin vars
-var adminids = ["edge555"];
+var adminids = ["edge555"],myid,mypass;
 var cureditproblem, curedittutorial,curdeleteproblem, curdeletetutorial;
 
 // Node mailer email
@@ -73,7 +73,6 @@ MongoClient.connect(db.mongoURI, { useUnifiedTopology: true }, (err, db) => {
                 if (err) throw err;
                 console.log("Index Created");
             });
-
 })
 
 // Body Parser
@@ -593,7 +592,10 @@ app.post('/contactus', function(req, res) {
 // Login/Signup Route
 app.get('/enter', function(req, res) {
     if (req.user == null) {
-        res.render('enter');
+        res.render('enter',{
+            myid : myid,
+            mypass : mypass
+        });
     } else {
         res.redirect('home');
     }
@@ -1006,6 +1008,7 @@ app.get('/section/:id', function(req, res) {
         .then(tutorials => {
             var curtutorials = tutorials;
             Problem.find({ section: req.params.id })
+                .sort({ difficulty: 'asc'})
                 .lean()
                 .then(problems => {
                     var curproblems = problems;
@@ -1069,7 +1072,6 @@ app.get('/submission/:id', ensureAuthenticated, function(req, res) {
 
 // View submission
 app.get('/submissions/:id', function(req, res) {
-    //console.log(req.params.id);
     Submission.find({ username: req.params.id })
         .sort({ date: 'desc' })
         .then(submissions => {
@@ -1170,7 +1172,7 @@ app.post('/troubleshoot', function(req, res) {
                                     console.log('Token inserted');
                             });
                             var subject = "Codebie Password Reset"
-                            var text = "Greetings from Codebie! Click on this link http://"+url+"/token/" + token + " to reset your password. This link will expire after 10 minutes";
+                            var text = "Greetings from Codebie! Click on this link http://"+url+"/token/" + token + " to reset your password. This link will expire after 10 minutes.";
                             sendMail(NODEMAILER_MAIL, req.body.useremail, subject, text)
                             req.flash('success_msg', 'An email sent to your inbox with password reset link. Please check spam folder also');
                             res.redirect('/enter');
@@ -1315,8 +1317,12 @@ const port = process.env.PORT || 3000;
 app.listen(port, function() {
     if (process.env.NODE_ENV === 'production') {
         url = 'codebie-aust.herokuapp.com';  
+        myid="";
+        mypass="";
     } else {
         url = 'localhost:3000';
+        myid="edge555";
+        mypass="abc123";
     }
     userCount = 0;
     submissionCount = 0;
