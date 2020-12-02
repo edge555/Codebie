@@ -741,7 +741,7 @@ app.post('/register', function(req, res) {
             req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
             res.redirect('/enter');
         }
-    }, 5000);
+    }, 4000);
 });
 
 // FAQ Route 
@@ -827,7 +827,7 @@ app.post('/problem', ensureAuthenticated, function(req, res) {
                     req.session.curverdicts.push(tv.substring(2));
                 })
                 res.redirect('verdict'); 
-            }, 10000); 
+            }, 8500); 
         }
     } else {
         req.flash('error_msg', 'You must be logged in to submit');
@@ -947,7 +947,7 @@ app.get('/ranklist', function(req, res) {
 app.get('/recent', function(req, res) {
     Submission.find({})
         .sort({ date: 'desc' })
-        .limit(30)
+        .limit(20)
         .then(submissions => {
             res.render('recent', {
                 curuser: req.user,
