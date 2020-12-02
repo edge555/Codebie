@@ -69,7 +69,7 @@
         <div class="vl" style="float: left;margin-left:4%;"></div>
         <div style="float:left;margin-left:5%;margin-top: 7px">
           <p>
-          <h6>Time Limit : {{curproblem.timelimit}}s</h5>
+           <h6>Time Limit : {{curproblem.timelimit}}s</h6>
           </p>
         </div>
       </div>
@@ -99,23 +99,23 @@
                   aria-labelledby="pills-problem-tab">
                   <div class="problemstatement" style="padding-left:2%;">
                     <br>
-                    <h5>Statement</h5>
+                    <h5 style="color:#1e90ff;">Statement</h5>
                     <p>{{breaklines curproblem.statement}}</p>
-                    <h5>Input Format</h5>
+                    <h5 style="color:#1e90ff;">Input Format</h5>
                     <p>{{breaklines curproblem.inputformat}}</p>
-                    <h5>Constraints</h5>
+                    <h5 style="color:#1e90ff;">Constraints</h5>
                     <p>{{breaklines curproblem.constraints}}</p>
-                    <h5>Output Format</h5>
+                    <h5 style="color:#1e90ff;">Output Format</h5>
                     <p>{{breaklines curproblem.outputformat}}</p>
+                    <hr style="border-top: 3px dashed grey">
                     
                     {{#each sampleio}}
-                      <br>
-                      <h5>Sample Input {{math @index "+" 1}}</h5>
-                      <p>{{this.[0]}}</p>
-                      <h5>Sample Output {{math @index "+" 1}}</h5>
-                      <p>{{this.[1]}}</p>
-                    
+                      <h5 style="color:#1e90ff;">Sample Input {{math @index "+" 1}}</h5>
+                      <p>{{breaklines this.[0]}}</p>
+                      <h5 style="color:#1e90ff;">Sample Output {{math @index "+" 1}}</h5>
+                      <p>{{breaklines this.[1]}}</p>
                     {{/each}}
+
                   </div>
                 </div>
                 <div class="tab-pane fade" id="pills-mysubmissions" role="tabpanel"

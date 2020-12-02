@@ -43,6 +43,8 @@ require('./models/Submission');
 const Submission = mongoose.model('submissions');
 require('./models/Token');
 const Token = mongoose.model('tokens');
+require('./models/Global');
+const Global = mongoose.model('globals');
 
 // Passport config
 require('./config/passport')(passport);
@@ -303,7 +305,7 @@ function gettoken(req,submission, input,output,timelimit, callback) {
     req.end(function(res) {
         if (res.error){
             console.log(res.body);
-            //throw new Error(res.error);
+            throw new Error(res.error);
         }
         var temp=[];
         temp.push(res.body.token);
@@ -376,6 +378,7 @@ function sendMail(sender, receiver, subject, text) {
     transporter.sendMail(mailOptions, function(error, info) {
         if (error) {
             console.log(error);
+            throw new Error(error);
         }
     });
 }
@@ -567,6 +570,20 @@ app.post('/admin/edittutorial', ensureAuthenticated, function(req, res) {
 
 // Index route
 app.get('/', function(req, res) {
+    userCount = 0;
+    submissionCount = 0;
+    User.find({})
+    .then(users=>{
+        users.forEach(user=>{
+            userCount++;
+        })
+    });
+    Submission.find({})
+    .then(submissions=>{
+        submissions.forEach(submission=>{
+            submissionCount++;
+        })
+    });
     if (req.user == null) {
         res.render('index');
     } else {
@@ -1320,19 +1337,5 @@ app.listen(port, function() {
     } else {
         url = 'localhost:3000';
     }
-    userCount = 0;
-    submissionCount = 0;
-    User.find({})
-    .then(users=>{
-        users.forEach(user=>{
-            userCount++;
-        })
-    });
-    Submission.find({})
-    .then(submissions=>{
-        submissions.forEach(submission=>{
-            submissionCount++;
-        })
-    })
     console.log("Server started");
 });
