@@ -20,7 +20,7 @@ require('dotenv').config()
 var url,userCount,submissionCount;
 
 // admin vars
-var adminids = ["edge555"],myid,mypass;
+var adminids = ["edge555"];
 var cureditproblem, curedittutorial,curdeleteproblem, curdeletetutorial;
 
 // Node mailer email
@@ -68,7 +68,7 @@ MongoClient.connect(db.mongoURI, { useUnifiedTopology: true }, (err, db) => {
     //Retrieve your chosen database and collection (table)
     dbo = db.db("codebie");
     dbo.collection("tokens")
-        .createIndex({ "createdAt": 1 }, { expireAfterSeconds: 600 },
+        .createIndex({ "createdAt": 1 }, { expireAfterSeconds: 300 },
             (err, dbResult) => {
                 if (err) throw err;
                 console.log("Index Created");
@@ -283,7 +283,6 @@ function gettoken(req,submission, input,output,timelimit, callback) {
     Python (3.8.1) : 71
     */
     var lang_id;
-    //curlang = submission.language;
     if (submission.language == "c") {
         lang_id = 50;
     } else if (submission.language == "cpp") {
@@ -442,7 +441,9 @@ app.post('/admin/addproblem', ensureAuthenticated, function(req, res) {
         code: req.body.code,
         difficulty: req.body.difficulty,
         statement: req.body.statement,
+        inputformat: req.body.inputformat,
         constraints: req.body.constraints,
+        outputformat: req.body.outputformat,
         timelimit: req.body.timelimit,
         testcasecount: req.body.testcasecount,
         samplecount: req.body.samplecount,
@@ -492,7 +493,9 @@ app.post('/admin/editproblem', ensureAuthenticated, function(req, res) {
             problems.code = req.body.code;
             problems.difficulty = req.body.difficulty;
             problems.statement = req.body.statement;
+            problems.inputformat = req.body.inputformat,
             problems.constraints = req.body.constraints;
+            problems.outputformat = req.body.outputformat,
             problems.timelimit = req.body.timelimit;
             problems.testcasecount = req.body.testcasecount;
             problems.samplecount = req.body.samplecount;
@@ -592,10 +595,7 @@ app.post('/contactus', function(req, res) {
 // Login/Signup Route
 app.get('/enter', function(req, res) {
     if (req.user == null) {
-        res.render('enter',{
-            myid : myid,
-            mypass : mypass
-        });
+        res.render('enter');
     } else {
         res.redirect('home');
     }
@@ -736,7 +736,7 @@ app.post('/register', function(req, res) {
                     console.log('Token inserted');
             });
             var subject = "Codebie Registration"
-            var text = "Welcome to Codebie! Please click on this link http://"+url+"/token/" + token + " to activate your account. This link will expire after 10 minutes";
+            var text = "Welcome to Codebie! Please click on this link http://"+url+"/token/" + token + " to activate your account. This link will expire after 5 minutes";
             sendMail(process.env.NODEMAILER_MAIL, req.body.signupemail, subject, text)
             req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
             res.redirect('/enter');
@@ -1317,12 +1317,8 @@ const port = process.env.PORT || 3000;
 app.listen(port, function() {
     if (process.env.NODE_ENV === 'production') {
         url = 'codebie-aust.herokuapp.com';  
-        myid="";
-        mypass="";
     } else {
         url = 'localhost:3000';
-        myid="edge555";
-        mypass="abc123";
     }
     userCount = 0;
     submissionCount = 0;

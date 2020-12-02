@@ -64,12 +64,12 @@
       <div class="top-content-wrapper col col-lg-6 col-md-6 col-sm-6">
         <div class="problem-title large-20 darker content" id="problem-title"
           style="margin-left:4.5%;margin-top:10px;float:left;">
-          <h3 style="font-size:150%;">&nbsp;&nbsp;{{curproblem.name}}</h3>
+          <h3 style="font-size:150%;">&nbsp;&nbsp;&nbsp;{{curproblem.name}}</h3>
         </div>
         <div class="vl" style="float: left;margin-left:4%;"></div>
         <div style="float:left;margin-left:5%;margin-top: 7px">
           <p>
-          <h6>Code : {{curproblem.code}}</h6>
+          <h6>Time Limit : {{curproblem.timelimit}}s</h5>
           </p>
         </div>
       </div>
@@ -101,17 +101,20 @@
                     <br>
                     <h5>Statement</h5>
                     <p>{{breaklines curproblem.statement}}</p>
+                    <h5>Input Format</h5>
+                    <p>{{breaklines curproblem.inputformat}}</p>
                     <h5>Constraints</h5>
                     <p>{{breaklines curproblem.constraints}}</p>
-                    <h5>Time Limit</h5>
-                    <p>{{curproblem.timelimit}}s</p>
+                    <h5>Output Format</h5>
+                    <p>{{breaklines curproblem.outputformat}}</p>
+                    
                     {{#each sampleio}}
                       <br>
                       <h5>Sample Input {{math @index "+" 1}}</h5>
                       <p>{{this.[0]}}</p>
                       <h5>Sample Output {{math @index "+" 1}}</h5>
                       <p>{{this.[1]}}</p>
-                      
+                    
                     {{/each}}
                   </div>
                 </div>

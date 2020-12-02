@@ -17,12 +17,18 @@ const ProblemSchema = new Schema({
     statement: {
         type: String
     },
+    inputformat:{
+        type: String
+    },
     constraints: {
         type: String
     },
     timelimit: {
         type: Number,
         default: 1
+    },
+    outputformat:{
+        type: String
     },
     testcasecount: {
         type: Number,
@@ -50,11 +56,18 @@ const ProblemSchema = new Schema({
     tags: {
         type: String
     },
+    multipleParts :{
+        type : Number,
+        default : 0
+    },
     editorial: {
         statement: {
             type: String
         },
         authorUsername: {
+            type: String
+        },
+        authorSolution: {
             type: String
         }
     },
