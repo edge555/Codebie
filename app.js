@@ -20,7 +20,7 @@ require('dotenv').config()
 var url,userCount,submissionCount;
 
 // admin vars
-var adminids = ["edge555"];
+var adminids = ["edge555"],myid,mypass;
 var cureditproblem, curedittutorial,curdeleteproblem, curdeletetutorial;
 
 // Node mailer email
@@ -190,6 +190,8 @@ app.engine('handlebars', exphbs({
                     return "Time Limit";
                 case 'RT':
                     return "Runtime Error";
+                case 'CE':
+                    return "Compilation Error";
                 default:
                     return lang;
             }
@@ -304,9 +306,10 @@ function gettoken(req,submission, input,output,timelimit, callback) {
     });
     req.end(function(res) {
         if (res.error){
-            console.log(res.body);
+            console.log(res.error);
             throw new Error(res.error);
         }
+        //console.log(res.body);
         var temp=[];
         temp.push(res.body.token);
         temp.push(submission.language);
@@ -327,6 +330,14 @@ function getverdict(req,submission, input, output,tc, callback) {
     setTimeout(function() {
         //console.log(submissiontoken);
         var check = getoutput(submissiontoken, function(result) {
+            /*
+            result.status ids
+            3 = AC
+            4 = WA
+            5 = TLE
+            6 = CE
+            7 - 12 = RTE
+            */
             if (req.session.section != "algo" && req.session.section != "ds" && req.session.section != submission.language) {
                 tempverdict = tc+" LR";
                 temp2.push(result);
@@ -335,9 +346,13 @@ function getverdict(req,submission, input, output,tc, callback) {
                     temp2.push(null);
                     tempverdict = tc+" "+result;
                 } else {
-                    if (result.time > req.session.curproblem.timelimit) {
+                    if (result.status.id==6){
+                        tempverdict = tc+" CE";
+                    } else if (result.status.id == 5) {
                         tempverdict = tc+" TL";
-                    } else if (result.stdout == output) {
+                    } else if(result.status.id>=7 && result.status.id<=12){
+                        tempverdict = tc+" RE";
+                    } else if (result.status.id == 3) {
                         tempverdict = tc+" AC";
                     } else {
                         tempverdict = tc+" WA";
@@ -570,20 +585,6 @@ app.post('/admin/edittutorial', ensureAuthenticated, function(req, res) {
 
 // Index route
 app.get('/', function(req, res) {
-    userCount = 0;
-    submissionCount = 0;
-    User.find({})
-    .then(users=>{
-        users.forEach(user=>{
-            userCount++;
-        })
-    });
-    Submission.find({})
-    .then(submissions=>{
-        submissions.forEach(submission=>{
-            submissionCount++;
-        })
-    });
     if (req.user == null) {
         res.render('index');
     } else {
@@ -612,7 +613,10 @@ app.post('/contactus', function(req, res) {
 // Login/Signup Route
 app.get('/enter', function(req, res) {
     if (req.user == null) {
-        res.render('enter');
+        res.render('enter',{
+            myid: myid,
+            mypass: mypass
+        });
     } else {
         res.redirect('home');
     }
@@ -1334,8 +1338,12 @@ const port = process.env.PORT || 3000;
 app.listen(port, function() {
     if (process.env.NODE_ENV === 'production') {
         url = 'codebie-aust.herokuapp.com';  
+        myid="";
+        mypass="";
     } else {
         url = 'localhost:3000';
+        myid="edge555";
+        mypass="abc123";
     }
     console.log("Server started");
 });
