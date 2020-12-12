@@ -137,7 +137,12 @@
                           {{#each curmysub}}
                         <tr>
                           <th scope="row">{{math @index "+" 1}}</th>
-                          <td>{{verdict}}</td>
+                          {{#ifCond verdict '==' 'Accepted'}}
+                             <td> <font color="#008000">{{verdict}}</font></td>
+                          {{else}}
+                             <td> <font color="#ff0000">{{verdict}}</font></td>
+                          {{/ifCond}}
+                          
                           {{#ifCond verdict '==' 'Compilation Error'}}
                             <td>&nbsp;&nbsp;---</td>
                           {{else}}
@@ -180,7 +185,11 @@
                           <td>
                             <a href="/profile/{{username}}" value="{{username}}">{{username}}</a>
                           </td>
-                          <td>{{verdict}}</td>
+                          {{#ifCond verdict '==' 'Accepted'}}
+                             <td> <font color="#008000">{{verdict}}</font></td>
+                          {{else}}
+                             <td> <font color="#ff0000">{{verdict}}</font></td>
+                          {{/ifCond}}
                           {{#ifCond verdict '==' 'Compilation Error'}}
                             <td>&nbsp;&nbsp;---</td>
                           {{else}}
@@ -223,10 +232,10 @@
               </div>
               &nbsp;&nbsp;&nbsp;
               <form style="padding-top: 8px;padding-left:37.5%;">
-                <select name="language" id="language" style="width: 200px;height: 30px;float: right">
+                <select name="language" style="width: 200px;height: 30px;float: right">
                   <option value="c" {{selected.c}}>C</option>
                   <option value="cpp" {{selected.cpp}}>C++</option>
-                  <option value="python" {{selected.py}}>Python</option>
+                  <option value="py" {{selected.py}}>Python</option>
                   <option value="java" {{selected.java}}>Java</option>
                 </select>
               </form>

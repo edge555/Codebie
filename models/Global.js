@@ -23,6 +23,18 @@ const GlobalSchema = new Schema({
         ans: {
             type: String
         }
+    }],
+    update: [{
+        title: {
+            type: String
+        },
+        body: {
+            type: String
+        },
+        dateAdded: {
+            type: Date,
+            default: Date.now
+        }
     }]
 });
 mongoose.model('globals', GlobalSchema);
