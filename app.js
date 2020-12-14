@@ -70,7 +70,7 @@ MongoClient.connect(db.mongoURI, { useUnifiedTopology: true }, (err, db) => {
     //Retrieve your chosen database and collection (table)
     dbo = db.db("codebie");
     dbo.collection("tokens")
-        .createIndex({ "createdAt": 1 }, { expireAfterSeconds: 300 },
+        .createIndex({ "createdAt": 1 }, { expireAfterSeconds: 600 },
             (err, dbResult) => {
                 if (err) throw err;
                 console.log("Index Created");
@@ -257,7 +257,7 @@ function getoutput(submissiontoken, callback) {
     var req = unirest("GET", "https://judge0.p.rapidapi.com/submissions/" + submissiontoken);
     req.headers({
         "x-rapidapi-host": "judge0.p.rapidapi.com",
-        "x-rapidapi-key": "f29463abbdmsh6850c751a0bc89fp11dfc2jsn113becd1a344",
+        "x-rapidapi-key": process.env.X_RAPIDAPI_KEY,
         "useQueryString": true
     });
     req.end(function (res) {
@@ -277,7 +277,7 @@ function gettoken(req, submission, input, output, timelimit, callback) {
     var req = unirest("POST", "https://judge0.p.rapidapi.com/submissions");
     req.headers({
         "x-rapidapi-host": "judge0.p.rapidapi.com",
-        "x-rapidapi-key": "f29463abbdmsh6850c751a0bc89fp11dfc2jsn113becd1a344",
+        "x-rapidapi-key": process.env.X_RAPIDAPI_KEY,
         "content-type": "application/json",
         "accept": "application/json",
         "useQueryString": true
@@ -376,7 +376,7 @@ function getverdict(req, submission, input, output, tc, callback) {
             temp.push(tempverdict, temp2);
             callback(temp);
         });
-    }, 5000);
+    }, 7000);
 }
 
 // Valid checking regex
@@ -774,7 +774,7 @@ app.post('/register', function (req, res) {
             req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
             res.redirect('/enter');
         }
-    }, 4000);
+    }, 8000);
 });
 
 // FAQ Route 
@@ -866,7 +866,7 @@ app.post('/problem', ensureAuthenticated, function (req, res) {
                     req.session.curtls.push(tv.substring(4));
                 })
                 res.redirect('verdict');
-            }, 9000);
+            }, 10000);
         }
     } else {
         req.flash('error_msg', 'You must be logged in to submit');
@@ -1216,8 +1216,8 @@ app.post('/troubleshoot', function (req, res) {
                             });
                             var subject = "Codebie Password Reset"
                             var text = "Greetings from Codebie! Click on this link http://" + url + "/token/" + token + " to reset your password. This link will expire after 10 minutes.";
-                            sendMail(NODEMAILER_MAIL, req.body.useremail, subject, text)
-                            req.flash('success_msg', 'An email sent to your inbox with password reset link. Please check spam folder also');
+                            sendMail(process.env.NODEMAILER_MAIL, req.body.useremail, subject, text)
+                            req.flash('success_msg', 'An email sent to your inbox with password reset link. Please check spam folder also. This link will expire after 10 minutes.');
                             res.redirect('/enter');
                         }
                     });
@@ -1373,7 +1373,7 @@ app.get('/verdict', ensureAuthenticated, function (req, res) {
             maxtl : maxtl,
             color: color
         });
-    }, 5000);
+    }, 7000);
 });
 
 const port = process.env.PORT || 3000;
