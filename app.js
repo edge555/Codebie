@@ -341,13 +341,14 @@ function getverdict(req, submission, input, output, tc, callback) {
             6 = CE
             7 - 12 = RTE
             */
+           //console.log(result);
             if (req.session.section != "algo" && req.session.section != "ds" && req.session.section != submission.language) {
                 tempverdict = tc + " LR";
                 temp2.push(result);
             } else {
                 if (result == "CE") {
                     temp2.push(null);
-                    tempverdict = tc + " " + result;
+                    tempverdict = tc + " CE";
                 } else {
                     if (result.status.id == 6) {
                         tempverdict = tc + " CE";
@@ -826,7 +827,6 @@ app.post('/problem', ensureAuthenticated, function (req, res) {
             res.redirect('verdict');
         } else {
             req.session.cursubmittedcode = req.body.submittedcode;
-            //console.log(req.body);
             var submission = {
                 code: req.body.submittedcode,
                 language: req.body.language
@@ -834,11 +834,14 @@ app.post('/problem', ensureAuthenticated, function (req, res) {
             var testcasecount = req.session.curproblem.testcasecount;
             var inputs = req.session.curproblem.inputs;
             var outputs = req.session.curproblem.outputs;
-            var temp;
-            var tempverdicts = [];
+            var temp,tempverdicts = [];
             for (var i = 0; i < testcasecount; i++) {
                 var verdict1 = getverdict(req, submission, inputs[i], outputs[i], i, function (result) {
-                    tempverdicts.push(result[0]);
+                    if(result[1][2].time!=null){
+                        tempverdicts.push(result[0]+" "+result[1][2].time.toString());
+                    } else {
+                        tempverdicts.push(result[0]+" 0");
+                    }
                     temp = result[1];
                 });
             }
@@ -848,11 +851,13 @@ app.post('/problem', ensureAuthenticated, function (req, res) {
                 req.session.curoutput = temp[2];
                 tempverdicts.sort();
                 req.session.curverdicts = [];
+                req.session.curtls=[];
                 tempverdicts.forEach(tv => {
-                    req.session.curverdicts.push(tv.substring(2));
+                    req.session.curverdicts.push(tv.substring(2,4));
+                    req.session.curtls.push(tv.substring(4));
                 })
                 res.redirect('verdict');
-            }, 8500);
+            }, 9000);
         }
     } else {
         req.flash('error_msg', 'You must be logged in to submit');
@@ -865,6 +870,8 @@ app.get('/problems/:id', function (req, res) {
     Problem.findOne({ code: req.params.id })
         .lean()
         .then(problem => {
+            //console.log(problem);
+            req.session.section = problem.section;
             var curmysub = [];
             var sampleio = [];
             req.session.curproblem = problem;
@@ -1231,6 +1238,7 @@ app.get('/tutorials/:id', function (req, res) {
 
 // Verdict route
 app.get('/verdict', ensureAuthenticated, function (req, res) {
+    var maxtl=0;
     if (req.session.curoutput == null) {
         if (req.session.curtoken) {
             req.session.verdict = "Compilation Error";
@@ -1314,13 +1322,22 @@ app.get('/verdict', ensureAuthenticated, function (req, res) {
                             problems.save()
                         });
                 }
+                var nowverdicts=[];
+                for(var i=0;i<req.session.curverdicts.length;i++){
+                    const newVerd= {
+                        verdict : req.session.curverdicts[i],
+                        time : req.session.curtls[i]
+                    }
+                    maxtl=Math.max(maxtl,req.session.curtls[i]);
+                    nowverdicts.push(newVerd);
+                }
                 const newSubmission = {
                     username: req.user.username,
                     problemcode: req.session.curproblem.code,
                     token: req.session.curtoken,
                     verdict: req.session.verdict,
-                    verdicts: req.session.curverdicts,
-                    time: req.session.curoutput.time,
+                    verdicts: nowverdicts,
+                    time: maxtl,
                     section: req.session.section,
                     stdin: req.session.cursubmittedcode,
                     lang: req.session.curlang
@@ -1338,7 +1355,9 @@ app.get('/verdict', ensureAuthenticated, function (req, res) {
             curuser: req.user,
             verdict: req.session.verdict,
             curverdicts: req.session.curverdicts,
+            curtls : req.session.curtls,
             curoutput: req.session.curoutput,
+            maxtl : maxtl,
             color: color
         });
     }, 5000);

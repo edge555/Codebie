@@ -98,25 +98,30 @@
             {{#ifCond submission.verdict '==' 'Compilation Error'}}
                 
             {{else}}
-                <table class="table table-striped" style="padding-top: 3%">
-                    <tr>
-                    <th>Test Case</th>
-                    <th>Verdict</th>
-                    </tr>
-                    {{#each submission.verdicts}}
-                    <tr>
-                    <td>{{math @index "+" 1}}</td>
-                    <td>
-                    {{#ifCond this '==' 'AC'}}
-                        <font color="#008000">
-                    {{else}}
-                        <font color="#ff0000">
-                    {{/ifCond}}
-                    {{fullLang this}}</font>
-                    </td>
-                    </tr>
-                    {{/each}}
-                </table>
+
+                {{#ifCond submission.verdict '==' 'Language Rejected'}}
+                
+                {{else}}
+                    <table class="table table-striped" style="padding-top: 3%">
+                        <tr>
+                        <th>Test Case</th>
+                        <th>Verdict</th>
+                        </tr>
+                        {{#each submission.verdicts}}
+                        <tr>
+                        <td>{{math @index "+" 1}}</td>
+                        <td>
+                        {{#ifCond this.verdict '==' 'AC'}}
+                            <font color="#008000">
+                        {{else}}
+                            <font color="#ff0000">
+                        {{/ifCond}}
+                        {{fullLang this.verdict}}</font>
+                        </td>
+                        </tr>
+                        {{/each}}
+                    </table>
+                {{/ifCond}}
             {{/ifCond}}
         </div>
             
