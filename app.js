@@ -331,7 +331,6 @@ function getverdict(req, submission, input, output, tc, callback) {
         temp2.push(submissiontoken);
     });
     setTimeout(function () {
-        //console.log(submissiontoken);
         var check = getoutput(submissiontoken, function (result) {
             /*
             result.status ids
@@ -341,13 +340,22 @@ function getverdict(req, submission, input, output, tc, callback) {
             6 = CE
             7 - 12 = RTE
             */
-           //console.log(result);
             if (req.session.section != "algo" && req.session.section != "ds" && req.session.section != submission.language) {
                 tempverdict = tc + " LR";
                 temp2.push(result);
             } else {
                 if (result == "CE") {
-                    temp2.push(null);
+                    const dummyVerd = {
+                        stdout: '',
+                        time: '0',
+                        memory: 0,
+                        stderr: null,
+                        token: temp2[1],
+                        compile_output: null,
+                        message: null,
+                        status: { id: 6, description: 'Runtime Error' }
+                      }
+                    temp2.push(dummyVerd);
                     tempverdict = tc + " CE";
                 } else {
                     if (result.status.id == 6) {
@@ -837,6 +845,7 @@ app.post('/problem', ensureAuthenticated, function (req, res) {
             var temp,tempverdicts = [];
             for (var i = 0; i < testcasecount; i++) {
                 var verdict1 = getverdict(req, submission, inputs[i], outputs[i], i, function (result) {
+                    //console.log(result);
                     if(result[1][2].time!=null){
                         tempverdicts.push(result[0]+" "+result[1][2].time.toString());
                     } else {
@@ -1239,15 +1248,18 @@ app.get('/tutorials/:id', function (req, res) {
 // Verdict route
 app.get('/verdict', ensureAuthenticated, function (req, res) {
     var maxtl=0;
+    var nowverdicts=[];
     if (req.session.curoutput == null) {
         if (req.session.curtoken) {
             req.session.verdict = "Compilation Error";
             const newSubmission = {
                 username: req.user.username,
+                problemname: req.session.curproblem.name,
                 problemcode: req.session.curproblem.code,
                 token: req.session.curtoken,
                 time: 0,
                 verdict: req.session.verdict,
+                verdicts: nowverdicts,
                 section: req.session.section,
                 stdin: req.session.cursubmittedcode,
                 lang: req.session.curlang
@@ -1322,7 +1334,7 @@ app.get('/verdict', ensureAuthenticated, function (req, res) {
                             problems.save()
                         });
                 }
-                var nowverdicts=[];
+                
                 for(var i=0;i<req.session.curverdicts.length;i++){
                     const newVerd= {
                         verdict : req.session.curverdicts[i],
@@ -1333,6 +1345,7 @@ app.get('/verdict', ensureAuthenticated, function (req, res) {
                 }
                 const newSubmission = {
                     username: req.user.username,
+                    problemname: req.session.curproblem.name,
                     problemcode: req.session.curproblem.code,
                     token: req.session.curtoken,
                     verdict: req.session.verdict,

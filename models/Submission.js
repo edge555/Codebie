@@ -6,6 +6,9 @@ const SubmissionSchema = new Schema({
         type: String,
         required: true
     },
+    problemname: {
+        type: String
+    },
     problemcode: {
         type: String,
         required: true
