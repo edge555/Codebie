@@ -192,8 +192,6 @@ app.engine('handlebars', exphbs({
                     return "Runtime Error";
                 case 'CE':
                     return "Compilation Error";
-                case 'LR':
-                    return "Language Rejected";
                 default:
                     return lang;
             }
@@ -340,38 +338,35 @@ function getverdict(req, submission, input, output, tc, callback) {
             6 = CE
             7 - 12 = RTE
             */
-            if (req.session.section != "algo" && req.session.section != "ds" && req.session.section != submission.language) {
-                tempverdict = tc + " LR";
-                temp2.push(result);
-            } else {
-                if (result == "CE") {
-                    const dummyVerd = {
-                        stdout: '',
-                        time: '0',
-                        memory: 0,
-                        stderr: null,
-                        token: temp2[1],
-                        compile_output: null,
-                        message: null,
-                        status: { id: 6, description: 'Runtime Error' }
-                      }
-                    temp2.push(dummyVerd);
-                    tempverdict = tc + " CE";
-                } else {
-                    if (result.status.id == 6) {
-                        tempverdict = tc + " CE";
-                    } else if (result.status.id == 5) {
-                        tempverdict = tc + " TL";
-                    } else if (result.status.id >= 7 && result.status.id <= 12) {
-                        tempverdict = tc + " RE";
-                    } else if (result.status.id == 3) {
-                        tempverdict = tc + " AC";
-                    } else {
-                        tempverdict = tc + " WA";
-                    }
-                    temp2.push(result);
+          
+            if (result == "CE") {
+                const dummyVerd = {
+                    stdout: '',
+                    time: '0',
+                    memory: 0,
+                    stderr: null,
+                    token: temp2[1],
+                    compile_output: null,
+                    message: null,
+                    status: { id: 6, description: 'Runtime Error' }
                 }
+                temp2.push(dummyVerd);
+                tempverdict = tc + " CE";
+            } else {
+                if (result.status.id == 6) {
+                    tempverdict = tc + " CE";
+                } else if (result.status.id == 5) {
+                    tempverdict = tc + " TL";
+                } else if (result.status.id >= 7 && result.status.id <= 12) {
+                    tempverdict = tc + " RE";
+                } else if (result.status.id == 3) {
+                    tempverdict = tc + " AC";
+                } else {
+                    tempverdict = tc + " WA";
+                }
+                temp2.push(result);
             }
+            
             var temp = [];
             temp.push(tempverdict, temp2);
             callback(temp);
@@ -769,7 +764,7 @@ app.post('/register', function (req, res) {
                     console.log('Token inserted');
             });
             var subject = "Codebie Registration"
-            var text = "Welcome to Codebie! Please click on this link http://" + url + "/token/" + token + " to activate your account. This link will expire after 5 minutes";
+            var text = "Welcome to Codebie! Please click on this link http://" + url + "/token/" + token + " to activate your account. This link will expire after 10 minutes";
             sendMail(process.env.NODEMAILER_MAIL, req.body.signupemail, subject, text)
             req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
             res.redirect('/enter');
@@ -834,10 +829,15 @@ app.post('/problem', ensureAuthenticated, function (req, res) {
             req.session.curoutput = null;
             res.redirect('verdict');
         } else {
+            //console.log(req.body);
+            var tempLang=req.session.curproblem.section;
+            if(req.session.curproblem.section=='ds' || req.session.curproblem.section=='algo'){
+                tempLang=req.body.language;
+            }
             req.session.cursubmittedcode = req.body.submittedcode;
             var submission = {
                 code: req.body.submittedcode,
-                language: req.body.language
+                language: tempLang
             }
             var testcasecount = req.session.curproblem.testcasecount;
             var inputs = req.session.curproblem.inputs;
@@ -918,6 +918,7 @@ app.get('/problems/:id', function (req, res) {
                     } else {
                         selected.cpp = "selected";
                     }
+                    //console.log(req.session.curproblem);
                     res.render('problem', {
                         curproblem: req.session.curproblem,
                         defaultCode: defaultCode,
