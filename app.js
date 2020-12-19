@@ -338,7 +338,7 @@ function getverdict(req, submission, input, output, tc, callback) {
             6 = CE
             7 - 12 = RTE
             */
-          
+            console.log(result);
             if (result == "CE") {
                 const dummyVerd = {
                     stdout: '',
@@ -822,6 +822,7 @@ app.get('/problem', function (req, res) {
 });
 
 app.post('/problem', ensureAuthenticated, function (req, res) {
+    //console.log(req.params.id);
     if (req.user) {
         if (req.body.submittedcode.length == 0) {
             req.session.verdict = "Compilation Error";
@@ -829,44 +830,49 @@ app.post('/problem', ensureAuthenticated, function (req, res) {
             req.session.curoutput = null;
             res.redirect('verdict');
         } else {
-            //console.log(req.body);
-            var tempLang=req.session.curproblem.section;
-            if(req.session.curproblem.section=='ds' || req.session.curproblem.section=='algo'){
-                tempLang=req.body.language;
-            }
-            req.session.cursubmittedcode = req.body.submittedcode;
-            var submission = {
-                code: req.body.submittedcode,
-                language: tempLang
-            }
-            var testcasecount = req.session.curproblem.testcasecount;
-            var inputs = req.session.curproblem.inputs;
-            var outputs = req.session.curproblem.outputs;
-            var temp,tempverdicts = [];
-            for (var i = 0; i < testcasecount; i++) {
-                var verdict1 = getverdict(req, submission, inputs[i], outputs[i], i, function (result) {
-                    //console.log(result);
-                    if(result[1][2].time!=null){
-                        tempverdicts.push(result[0]+" "+result[1][2].time.toString());
-                    } else {
-                        tempverdicts.push(result[0]+" 0");
-                    }
-                    temp = result[1];
-                });
-            }
-            setTimeout(function () {
-                req.session.curlang = temp[0];
-                req.session.curtoken = temp[1];
-                req.session.curoutput = temp[2];
-                tempverdicts.sort();
-                req.session.curverdicts = [];
-                req.session.curtls=[];
-                tempverdicts.forEach(tv => {
-                    req.session.curverdicts.push(tv.substring(2,4));
-                    req.session.curtls.push(tv.substring(4));
-                })
-                res.redirect('verdict');
-            }, 10000);
+            Problem.findOne({ code: req.body.probcode })
+            .lean()
+            .then(problem => {
+                req.session.curproblem = problem;
+                req.session.section = problem.section;
+                var tempLang=req.session.curproblem.section;
+                if(req.session.curproblem.section=='ds' || req.session.curproblem.section=='algo'){
+                    tempLang=req.body.language;
+                }
+                req.session.cursubmittedcode = req.body.submittedcode;
+                var submission = {
+                    code: req.body.submittedcode,
+                    language: tempLang
+                }
+                var testcasecount = req.session.curproblem.testcasecount;
+                var inputs = req.session.curproblem.inputs;
+                var outputs = req.session.curproblem.outputs;
+                var temp,tempverdicts = [];
+                for (var i = 0; i < testcasecount; i++) {
+                    var verdict1 = getverdict(req, submission, inputs[i], outputs[i], i, function (result) {
+                        //console.log(result);
+                        if(result[1][2].time!=null){
+                            tempverdicts.push(result[0]+" "+result[1][2].time.toString());
+                        } else {
+                            tempverdicts.push(result[0]+" 0");
+                        }
+                        temp = result[1];
+                    });
+                }
+                setTimeout(function () {
+                    req.session.curlang = temp[0];
+                    req.session.curtoken = temp[1];
+                    req.session.curoutput = temp[2];
+                    tempverdicts.sort();
+                    req.session.curverdicts = [];
+                    req.session.curtls=[];
+                    tempverdicts.forEach(tv => {
+                        req.session.curverdicts.push(tv.substring(2,4));
+                        req.session.curtls.push(tv.substring(4));
+                    })
+                    res.redirect('verdict');
+                }, 10000);
+            });
         }
     } else {
         req.flash('error_msg', 'You must be logged in to submit');
