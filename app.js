@@ -376,7 +376,7 @@ function getverdict(req, submission, input, output, tc, callback) {
 
 // Valid checking regex
 function isValid(text) {
-    return /^[0-9a-zA-Z_.-]+$/.test(text);
+    return /^[0-9a-z_.-]+$/.test(text);
 }
 
 // Generate alphanumaric string
