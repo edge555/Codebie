@@ -25,7 +25,7 @@ var cureditproblem, curedittutorial, curdeleteproblem, curdeletetutorial;
 
 // Node mailer email
 var transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: 'yahoo',
     auth: {
         user: process.env.NODEMAILER_MAIL,
         pass: process.env.NODEMAILER_PASS
