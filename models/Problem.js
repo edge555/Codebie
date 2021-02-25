@@ -17,7 +17,7 @@ const ProblemSchema = new Schema({
     statement: {
         type: String
     },
-    inputformat:{
+    inputformat: {
         type: String
     },
     constraints: {
@@ -27,7 +27,7 @@ const ProblemSchema = new Schema({
         type: Number,
         default: 1
     },
-    outputformat:{
+    outputformat: {
         type: String
     },
     testcasecount: {
@@ -56,9 +56,9 @@ const ProblemSchema = new Schema({
     tags: {
         type: String
     },
-    multipleParts :{
-        type : Number,
-        default : 0
+    multipleParts: {
+        type: Number,
+        default: 0
     },
     editorial: {
         statement: {
@@ -72,8 +72,7 @@ const ProblemSchema = new Schema({
         }
     },
     dateAdded: {
-        type: Date,
-        default: Date.now
+        type: Date
     }
 });
 mongoose.model('problems', ProblemSchema);

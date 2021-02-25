@@ -10,6 +10,7 @@ const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
 const nodemailer = require('nodemailer');
+var moment = require('moment-timezone');
 const app = express();
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access');
 const { exec } = require("child_process");
@@ -252,9 +253,9 @@ function getCounter(callback) {
 // Judge0 API call to get execution info
 function getoutput(submissiontoken, callback) {
     console.log(submissiontoken);
-    var req = unirest("GET", "https://judge0.p.rapidapi.com/submissions/" + submissiontoken);
+    var req = unirest("GET", "https://judge0-ce.p.rapidapi.com/submissions/" + submissiontoken);
     req.headers({
-        "x-rapidapi-host": "judge0.p.rapidapi.com",
+        "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
         "x-rapidapi-key": process.env.X_RAPIDAPI_KEY,
         "useQueryString": true
     });
@@ -272,9 +273,9 @@ function getoutput(submissiontoken, callback) {
 // Judge0 API call for submitting code
 function gettoken(req, submission, input, output, timelimit, callback) {
     // Judge0 API for submitting code
-    var req = unirest("POST", "https://judge0.p.rapidapi.com/submissions");
+    var req = unirest("POST", "https://judge0-ce.p.rapidapi.com/submissions");
     req.headers({
-        "x-rapidapi-host": "judge0.p.rapidapi.com",
+        "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
         "x-rapidapi-key": process.env.X_RAPIDAPI_KEY,
         "content-type": "application/json",
         "accept": "application/json",
@@ -310,7 +311,7 @@ function gettoken(req, submission, input, output, timelimit, callback) {
             console.log(res.error);
             throw new Error(res.error);
         }
-        //console.log(res.body);
+        console.log(res.body);
         var temp = [];
         temp.push(res.body.token);
         temp.push(submission.language);
@@ -366,7 +367,7 @@ function getverdict(req, submission, input, output, tc, callback) {
                 }
                 temp2.push(result);
             }
-            
+
             var temp = [];
             temp.push(tempverdict, temp2);
             callback(temp);
@@ -377,6 +378,20 @@ function getverdict(req, submission, input, output, tc, callback) {
 // Valid checking regex
 function isValid(text) {
     return /^[0-9a-z_.-]+$/.test(text);
+}
+
+function isValidPass(text) {
+    for (var i = 0; i < text.length; i++) {
+        if (text[i] == ' ') {
+            return false;
+        }
+    }
+    return true;
+}
+
+function getBDTime() {
+    var time = moment.tz('Asia/Dhaka');
+    return new Date(time);
 }
 
 // Generate alphanumaric string
@@ -476,7 +491,8 @@ app.post('/admin/addproblem', ensureAuthenticated, function (req, res) {
         outputs: outputs,
         section: req.body.section,
         tags: req.body.tags,
-        solvecount: 0
+        solvecount: 0,
+        dateAdded: getBDTime()
     };
     new Problem(newProblem)
         .save()
@@ -730,7 +746,7 @@ app.post('/register', function (req, res) {
     if (req.body.signupusername.length < 6) {
         errors.push({ text: "Username too short, Minimum 6 characters" });
     }
-    if (!isValid(req.body.signuppass)) {
+    if (!isValidPass(req.body.signuppass)) {
         errors.push({ text: "Invalid password" });
     }
     if (req.body.signuppass.length < 6) {
@@ -764,9 +780,9 @@ app.post('/register', function (req, res) {
                     console.log('Token inserted');
             });
             var subject = "Codebie Registration"
-            var text = "Welcome to Codebie! Please click on this link http://" + url + "/token/" + token + " to activate your account. This link will expire after 10 minutes";
+            var text = "Welcome to Codebie! Please click on this link http://" + url + "/token/" + token + " to activate your account. This link will expire after 10 minutes.";
             sendMail(process.env.NODEMAILER_MAIL, req.body.signupemail, subject, text)
-            req.flash('success_msg', 'Registration Successful. An email sent to your inbox with activation link.');
+            req.flash('success_msg', 'Registration Successful. An email will be sent to your inbox with activation link within 3 minutes.');
             res.redirect('/enter');
         }
     }, 8000);
@@ -831,48 +847,48 @@ app.post('/problem', ensureAuthenticated, function (req, res) {
             res.redirect('verdict');
         } else {
             Problem.findOne({ code: req.body.probcode })
-            .lean()
-            .then(problem => {
-                req.session.curproblem = problem;
-                req.session.section = problem.section;
-                var tempLang=req.session.curproblem.section;
-                if(req.session.curproblem.section=='ds' || req.session.curproblem.section=='algo'){
-                    tempLang=req.body.language;
-                }
-                req.session.cursubmittedcode = req.body.submittedcode;
-                var submission = {
-                    code: req.body.submittedcode,
-                    language: tempLang
-                }
-                var testcasecount = req.session.curproblem.testcasecount;
-                var inputs = req.session.curproblem.inputs;
-                var outputs = req.session.curproblem.outputs;
-                var temp,tempverdicts = [];
-                for (var i = 0; i < testcasecount; i++) {
-                    var verdict1 = getverdict(req, submission, inputs[i], outputs[i], i, function (result) {
-                        //console.log(result);
-                        if(result[1][2].time!=null){
-                            tempverdicts.push(result[0]+" "+result[1][2].time.toString());
-                        } else {
-                            tempverdicts.push(result[0]+" 0");
-                        }
-                        temp = result[1];
-                    });
-                }
-                setTimeout(function () {
-                    req.session.curlang = temp[0];
-                    req.session.curtoken = temp[1];
-                    req.session.curoutput = temp[2];
-                    tempverdicts.sort();
-                    req.session.curverdicts = [];
-                    req.session.curtls=[];
-                    tempverdicts.forEach(tv => {
-                        req.session.curverdicts.push(tv.substring(2,4));
-                        req.session.curtls.push(tv.substring(4));
-                    })
-                    res.redirect('verdict');
-                }, 10000);
-            });
+                .lean()
+                .then(problem => {
+                    req.session.curproblem = problem;
+                    req.session.section = problem.section;
+                    var tempLang = req.session.curproblem.section;
+                    if (req.session.curproblem.section == 'ds' || req.session.curproblem.section == 'algo') {
+                        tempLang = req.body.language;
+                    }
+                    req.session.cursubmittedcode = req.body.submittedcode;
+                    var submission = {
+                        code: req.body.submittedcode,
+                        language: tempLang
+                    }
+                    var testcasecount = req.session.curproblem.testcasecount;
+                    var inputs = req.session.curproblem.inputs;
+                    var outputs = req.session.curproblem.outputs;
+                    var temp, tempverdicts = [];
+                    for (var i = 0; i < testcasecount; i++) {
+                        var verdict1 = getverdict(req, submission, inputs[i], outputs[i], i, function (result) {
+                            //console.log(result);
+                            if (result[1][2].time != null) {
+                                tempverdicts.push(result[0] + " " + result[1][2].time.toString());
+                            } else {
+                                tempverdicts.push(result[0] + " 0");
+                            }
+                            temp = result[1];
+                        });
+                    }
+                    setTimeout(function () {
+                        req.session.curlang = temp[0];
+                        req.session.curtoken = temp[1];
+                        req.session.curoutput = temp[2];
+                        tempverdicts.sort();
+                        req.session.curverdicts = [];
+                        req.session.curtls = [];
+                        tempverdicts.forEach(tv => {
+                            req.session.curverdicts.push(tv.substring(2, 4));
+                            req.session.curtls.push(tv.substring(4));
+                        })
+                        res.redirect('verdict');
+                    }, 10000);
+                });
         }
     } else {
         req.flash('error_msg', 'You must be logged in to submit');
@@ -1162,6 +1178,7 @@ app.get('/token/:id', function (req, res) {
                                     throw err;
                                 } else {
                                     newUser.password = hash;
+                                    newUser.dateJoined = getBDTime();
                                     newUser
                                         .save()
                                         .then((user) => {
@@ -1254,8 +1271,8 @@ app.get('/tutorials/:id', function (req, res) {
 
 // Verdict route
 app.get('/verdict', ensureAuthenticated, function (req, res) {
-    var maxtl=0;
-    var nowverdicts=[];
+    var maxtl = 0;
+    var nowverdicts = [];
     if (req.session.curoutput == null) {
         if (req.session.curtoken) {
             req.session.verdict = "Compilation Error";
@@ -1269,7 +1286,8 @@ app.get('/verdict', ensureAuthenticated, function (req, res) {
                 verdicts: nowverdicts,
                 section: req.session.section,
                 stdin: req.session.cursubmittedcode,
-                lang: req.session.curlang
+                lang: req.session.curlang,
+                date: getBDTime()
             }
             new Submission(newSubmission).save()
         }
@@ -1341,15 +1359,16 @@ app.get('/verdict', ensureAuthenticated, function (req, res) {
                             problems.save()
                         });
                 }
-                
-                for(var i=0;i<req.session.curverdicts.length;i++){
-                    const newVerd= {
-                        verdict : req.session.curverdicts[i],
-                        time : req.session.curtls[i]
+
+                for (var i = 0; i < req.session.curverdicts.length; i++) {
+                    const newVerd = {
+                        verdict: req.session.curverdicts[i],
+                        time: req.session.curtls[i]
                     }
-                    maxtl=Math.max(maxtl,req.session.curtls[i]);
+                    maxtl = Math.max(maxtl, req.session.curtls[i]);
                     nowverdicts.push(newVerd);
                 }
+
                 const newSubmission = {
                     username: req.user.username,
                     problemname: req.session.curproblem.name,
@@ -1360,7 +1379,8 @@ app.get('/verdict', ensureAuthenticated, function (req, res) {
                     time: maxtl,
                     section: req.session.section,
                     stdin: req.session.cursubmittedcode,
-                    lang: req.session.curlang
+                    lang: req.session.curlang,
+                    date: getBDTime()
                 }
                 new Submission(newSubmission).save();
             });
@@ -1375,9 +1395,9 @@ app.get('/verdict', ensureAuthenticated, function (req, res) {
             curuser: req.user,
             verdict: req.session.verdict,
             curverdicts: req.session.curverdicts,
-            curtls : req.session.curtls,
+            curtls: req.session.curtls,
             curoutput: req.session.curoutput,
-            maxtl : maxtl,
+            maxtl: maxtl,
             color: color
         });
     }, 7000);

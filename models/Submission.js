@@ -17,7 +17,7 @@ const SubmissionSchema = new Schema({
         type: String,
         required: true
     },
-    verdict:{
+    verdict: {
         type: String
     },
     verdicts: [{

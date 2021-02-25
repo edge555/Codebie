@@ -58,8 +58,7 @@ const UserSchema = new Schema({
         }
     }],
     dateJoined: {
-        type: Date,
-        default: Date.now
+        type: Date
     }
 });
 mongoose.model('users', UserSchema);

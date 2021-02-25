@@ -32,8 +32,7 @@ const GlobalSchema = new Schema({
             type: String
         },
         dateAdded: {
-            type: Date,
-            default: Date.now
+            type: Date
         }
     }]
 });
