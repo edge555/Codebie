@@ -73,8 +73,9 @@ MongoClient.connect(db.mongoURI, { useUnifiedTopology: true }, (err, db) => {
     dbo.collection("tokens")
         .createIndex({ "createdAt": 1 }, { expireAfterSeconds: 600 },
             (err, dbResult) => {
-                if (err) throw err;
-                console.log("Index Created");
+                if (!err){
+                    console.log("Index Created");
+                }
             });
 })
 
@@ -309,13 +310,13 @@ function gettoken(req, submission, input, output, timelimit, callback) {
     req.end(function (res) {
         if (res.error) {
             console.log(res.error);
-            throw new Error(res.error);
+        } else{
+            console.log(res.body);
+            var temp = [];
+            temp.push(res.body.token);
+            temp.push(submission.language);
+            callback(temp);
         }
-        console.log(res.body);
-        var temp = [];
-        temp.push(res.body.token);
-        temp.push(submission.language);
-        callback(temp);
     });
 }
 
@@ -415,7 +416,6 @@ function sendMail(sender, receiver, subject, text) {
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             console.log(error);
-            throw new Error(error);
         }
     });
 }
@@ -1175,7 +1175,7 @@ app.get('/token/:id', function (req, res) {
                         bcrypt.genSalt(10, function (err, salt) {
                             bcrypt.hash(newUser.password, salt, function (err, hash) {
                                 if (err) {
-                                    throw err;
+                                    continue;
                                 } else {
                                     newUser.password = hash;
                                     newUser.dateJoined = getBDTime();

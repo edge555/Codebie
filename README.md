@@ -27,7 +27,7 @@ An online judge to practise problems
 
  * C (GCC 9.2.0)
  * C++ (GCC 7.4.0)
- * Java (OpenJDK 8)
+ * Java (OpenJDK 13.0.1)
  * Python (3.8.1)
 
 ## Hosted at
