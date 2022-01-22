@@ -1175,7 +1175,7 @@ app.get('/token/:id', function (req, res) {
                         bcrypt.genSalt(10, function (err, salt) {
                             bcrypt.hash(newUser.password, salt, function (err, hash) {
                                 if (err) {
-                                    continue;
+                                    throw new err;
                                 } else {
                                     newUser.password = hash;
                                     newUser.dateJoined = getBDTime();
