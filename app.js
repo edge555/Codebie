@@ -788,6 +788,13 @@ app.post('/register', function (req, res) {
     }, 8000);
 });
 
+// Error Route 
+app.get('/error', function (req, res) {
+    res.render('error', {
+        curuser: req.user
+    });
+});
+
 // FAQ Route 
 app.get('/faq', function (req, res) {
     // Store number of problems in each sections
