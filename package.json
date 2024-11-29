@@ -31,7 +31,7 @@
         "mongoose": "^5.9.25",
         "nodemailer": "^6.4.16",
         "nodemon": "^2.0.20",
-        "passport": "^0.4.1",
+        "passport": "^0.6.0",
         "passport-local": "^1.0.0",
         "unirest": "^0.6.0"
     }
