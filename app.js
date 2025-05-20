@@ -18,20 +18,19 @@ const fs = require('fs');
 const unirest = require('unirest');
 const { ensureAuthenticated } = require('./helpers/auth');
 require('dotenv').config()
-var url, userCount, submissionCount;
 
-// admin vars
-var adminids = ["edge555"], myid, mypass;
-var cureditproblem, curedittutorial, curdeleteproblem, curdeletetutorial;
+// Import configurations
+const { adminConfig, handlebarsConfig, sessionConfig, mongoConfig, emailConfig } = require('./config/app');
 
-// Node mailer email
-var transporter = nodemailer.createTransport({
-    service: 'yahoo',
-    auth: {
-        user: process.env.NODEMAILER_MAIL,
-        pass: process.env.NODEMAILER_PASS
-    }
-});
+// Import helpers
+const handlebarsHelpers = require('./helpers/handlebarsHelpers');
+const judge0Api = require('./helpers/judge0Api');
+const getCounter = require('./helpers/counter');
+const utils = require('./helpers/utils');
+const mailService = require('./helpers/mailService');
+
+// Import middleware
+const flashMessages = require('./middleware/flash');
 
 // Load Models
 require('./models/User');
@@ -54,12 +53,20 @@ const db = require('./config/database');
 const { userInfo } = require('os');
 // Connect to mongoose
 mongoose.Promise = global.Promise;
-mongoose.connect(db.mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-    .then((err, db) => {
-        console.log('MongoDB Connected')
+mongoose.connect(db.mongoURI, mongoConfig)
+    .then(() => {
+        console.log('MongoDB Connected');
+        // Import routes after successful connection
+        const authRoutes = require('./routes/auth');
+        const problemRoutes = require('./routes/problems');
+        const submissionRoutes = require('./routes/submissions');
+        const contactRoutes = require('./routes/contact');
+
+        // Use routes
+        app.use('/', authRoutes);
+        app.use('/', problemRoutes);
+        app.use('/', submissionRoutes);
+        app.use('/', contactRoutes);
     })
     .catch(err => console.log(err));
 
@@ -68,7 +75,6 @@ var dbo;
 MongoClient.connect(db.mongoURI, { useUnifiedTopology: true }, (err, db) => {
     if (err)
         throw err;
-    //Retrieve your chosen database and collection (table)
     dbo = db.db("codebie");
     dbo.collection("tokens")
         .createIndex({ "createdAt": 1 }, { expireAfterSeconds: 600 },
@@ -84,11 +90,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Express session
-app.use(session({
-    secret: 'secret',
-    resave: true,
-    saveUninitialized: true
-}));
+app.use(session(sessionConfig));
 
 // Passport middleware
 app.use(passport.initialize());
@@ -97,159 +99,16 @@ app.use(passport.session());
 app.use(flash());
 
 // Handlebars Middleware
-app.engine('handlebars', exphbs({
-    defaultLayout: 'main',
-    handlebars: allowInsecurePrototypeAccess(Handlebars),
-    helpers: {
-        // Function to do basic mathematical operation in handlebar
-        math: function (lvalue, operator, rvalue) {
-            lvalue = parseFloat(lvalue);
-            rvalue = parseFloat(rvalue);
-            return {
-                "+": lvalue + rvalue,
-                "-": lvalue - rvalue,
-                "*": lvalue * rvalue,
-                "/": lvalue / rvalue,
-                "%": lvalue % rvalue,
-                "x": (lvalue * 100) / rvalue
-            }[operator];
-        },
-        // To formate Js Date
-        prettifyDate: function (timestamp, check) {
-            function addZero(i) {
-                if (i < 10) {
-                    i = "0" + i;
-                }
-                return i;
-            }
-            temp = "AM";
-            var curr_date = timestamp.getDate();
-            var curr_month = timestamp.getMonth();
-            curr_month++;
-            var curr_year = timestamp.getFullYear() % 100;
-            var curr_hour = timestamp.getHours();
-            if (curr_hour > 12) {
-                curr_hour -= 12;
-                temp = "PM";
-            } else if (curr_hour == 0) {
-                curr_hour = 12;
-            }
-            var curr_minutes = timestamp.getMinutes();
-            if (check == 1) {
-                result = addZero(curr_hour) + ':' + addZero(curr_minutes) + ' ' + temp + ' ' +
-                    addZero(curr_date) + "/" + addZero(curr_month) + "/" + addZero(curr_year);
-            } else {
-                result = addZero(curr_date) + "/" + addZero(curr_month) + "/" + addZero(curr_year);
-            }
-            return result;
-        },
-        // Comparing object
-        ifCond: function (v1, operator, v2, options) {
-            switch (operator) {
-                case '==':
-                    return (v1 == v2) ? options.fn(this) : options.inverse(this);
-                case '===':
-                    return (v1 === v2) ? options.fn(this) : options.inverse(this);
-                case '!=':
-                    return (v1 != v2) ? options.fn(this) : options.inverse(this);
-                case '!==':
-                    return (v1 !== v2) ? options.fn(this) : options.inverse(this);
-                case '<':
-                    return (v1 < v2) ? options.fn(this) : options.inverse(this);
-                case '<=':
-                    return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-                case '>':
-                    return (v1 > v2) ? options.fn(this) : options.inverse(this);
-                case '>=':
-                    return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-                case '&&':
-                    return (v1 && v2) ? options.fn(this) : options.inverse(this);
-                case '||':
-                    return (v1 || v2) ? options.fn(this) : options.inverse(this);
-                default:
-                    return options.inverse(this);
-            }
-        },
-        fullLang: function (lang) {
-            switch (lang) {
-                case 'c':
-                    return "C";
-                case 'cpp':
-                    return "C++";
-                case 'java':
-                    return "Java";
-                case 'py':
-                    return "Python";
-                case 'ds':
-                    return "Data Structure"
-                case 'algo':
-                    return "Algorithm";
-                case 'AC':
-                    return "Accepted";
-                case 'WA':
-                    return "Wrong Answer";
-                case 'TL':
-                    return "Time Limit";
-                case 'RE':
-                    return "Runtime Error";
-                case 'CE':
-                    return "Compilation Error";
-                default:
-                    return lang;
-            }
-        },
-        breaklines: function (text) {
-            text = Handlebars.Utils.escapeExpression(text);
-            text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
-            return new Handlebars.SafeString(text);
-        }
-    }
-}));
-
+app.engine('handlebars', exphbs(handlebarsConfig));
 app.set('view engine', 'handlebars');
+
 // To use public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Middleware
-app.use(function (req, res, next) {
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    res.locals.error = req.flash('error');
-    next();
-});
+// Flash messages middleware
+app.use(flashMessages);
 
 // Counter for problem sections
-function getCounter(callback) {
-    counter = {
-        ccnt: 0,
-        cppcnt: 0,
-        javacnt: 0,
-        pycnt: 0,
-        dscnt: 0,
-        algocnt: 0,
-        totalcnt: 0
-    }
-    Problem.find({})
-        .then(problems => {
-            problems.forEach(problem => {
-                if (problem.section == "c") {
-                    counter.ccnt++;
-                } else if (problem.section == "cpp") {
-                    counter.cppcnt++;
-                } else if (problem.section == "java") {
-                    counter.javacnt++;
-                } else if (problem.section == "py") {
-                    counter.pycnt++;
-                } else if (problem.section == "ds") {
-                    counter.dscnt++;
-                } else if (problem.section == "algo") {
-                    counter.algocnt++;
-                }
-                counter.totalcnt++
-            });
-            callback(counter);
-        });
-}
 
 // Judge0 API call to get execution info
 function getoutput(submissiontoken, callback) {
@@ -429,7 +288,7 @@ app.get('/aboutus', function (req, res) {
 
 // Admin access
 app.get('/admin', ensureAuthenticated, function (req, res) {
-    if (adminids.includes(req.user.username)) {
+    if (adminConfig.development.adminIds.includes(req.user.username)) {
         res.render('admin/admin');
     } else {
         res.render('accessdenied');
@@ -460,7 +319,7 @@ app.post('/admin', ensureAuthenticated, function (req, res) {
 
 // To add problems
 app.get('/admin/addproblem', ensureAuthenticated, function (req, res) {
-    if (adminids.includes(req.user.username)) {
+    if (adminConfig.development.adminIds.includes(req.user.username)) {
         res.render('admin/addproblem');
     } else {
         res.render('accessdenied');
@@ -503,7 +362,7 @@ app.post('/admin/addproblem', ensureAuthenticated, function (req, res) {
 
 // To edit problems
 app.get('/admin/editproblem', ensureAuthenticated, function (req, res) {
-    if (adminids.includes(req.user.username)) {
+    if (adminConfig.development.adminIds.includes(req.user.username)) {
         Problem.findOne({ code: cureditproblem })
             .lean()
             .then(problem => {
@@ -554,7 +413,7 @@ app.post('/admin/editproblem', ensureAuthenticated, function (req, res) {
 
 // To add tutorial
 app.get('/admin/addtutorial', ensureAuthenticated, function (req, res) {
-    if (adminids.includes(req.user.username)) {
+    if (adminConfig.development.adminIds.includes(req.user.username)) {
         res.render('admin/addtutorial');
     } else {
         res.render('accessdenied');
@@ -577,7 +436,7 @@ app.post('/admin/addtutorial', ensureAuthenticated, function (req, res) {
 
 // To edit tutorial
 app.get('/admin/edittutorial', ensureAuthenticated, function (req, res) {
-    if (adminids.includes(req.user.username)) {
+    if (adminConfig.development.adminIds.includes(req.user.username)) {
         Tutorial.findOne({ code: curedittutorial })
             .then(tutorials => {
                 res.render('admin/edittutorial', {
@@ -637,8 +496,8 @@ app.post('/contactus', function (req, res) {
 app.get('/enter', function (req, res) {
     if (req.user == null) {
         res.render('enter', {
-            myid: myid,
-            mypass: mypass
+            myid: adminConfig.development.myId,
+            mypass: adminConfig.development.myPass
         });
     } else {
         res.redirect('home');
@@ -804,17 +663,23 @@ app.get('/faq', function (req, res) {
 });
 
 // Home Route
-app.get('/home', function (req, res) {
-    // Store number of problems in each sections
-    var tempCounter = getCounter(function (result) {
-        counter = result;
+app.get('/home', async function (req, res) {
+    try {
+        const counter = await new Promise((resolve) => {
+            getCounter(resolve);
+        });
+
         res.render('home', {
             curuser: req.user,
             counter: counter,
             userCount: userCount,
             submissionCount: submissionCount
         });
-    });
+    } catch (error) {
+        console.error('Error in home route:', error);
+        req.flash('error_msg', 'An error occurred while loading the home page');
+        res.redirect('/');
+    }
 });
 
 app.post('/home', function (req, res) {
@@ -1418,8 +1283,8 @@ app.listen(port, function () {
         mypass = "";
     } else {
         url = 'localhost:3000';
-        myid = "edge555";
-        mypass = "abc123";
+        myid = adminConfig.development.myId;
+        mypass = adminConfig.development.myPass;
     }
     console.log("Server started");
 });
