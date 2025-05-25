@@ -61,4 +61,5 @@ const UserSchema = new Schema({
         type: Date
     }
 });
-mongoose.model('users', UserSchema);
+
+module.exports = mongoose.model('users', UserSchema);

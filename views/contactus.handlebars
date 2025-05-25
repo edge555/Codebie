@@ -60,6 +60,16 @@
                         </p>
                     </button>
                 </div>
+                {{#if error_msg}}
+                <div class="alert alert-danger" role="alert" style="margin: 10px;">
+                    {{error_msg}}
+                </div>
+                {{/if}}
+                {{#if success_msg}}
+                <div class="alert alert-success" role="alert" style="margin: 10px;">
+                    {{success_msg}}
+                </div>
+                {{/if}}
                 <form class="input-group" action="/contactus" method="post">
                     <div class="input-group mb-4 text-white" style="padding-left:10px;padding-right:10px;">
                         <input type="text" class="form-control " name="username" placeholder="Name"

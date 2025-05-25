@@ -2,6 +2,7 @@ const Submission = require('../models/Submission');
 const User = require('../models/User');
 const Problem = require('../models/Problem');
 const utils = require('../helpers/utils');
+const logger = require('../helpers/logger');
 
 // Create new submission
 const createSubmission = async (submissionData) => {
@@ -88,12 +89,54 @@ const canViewSubmission = (submission, user) => {
     return user.solved.some(solve => solve.code === submission.problemcode);
 };
 
-module.exports = {
-    createSubmission,
-    getSubmissionByToken,
-    getUserSubmissions,
-    getRecentSubmissions,
-    updateUserStats,
-    getVerdictDetails,
-    canViewSubmission
-}; 
+class SubmissionController {
+    async getSubmission(req, res) {
+        try {
+            const submission = await Submission.findOne({ token: req.params.id });
+            if (!submission) {
+                req.flash('error_msg', 'Submission not found');
+                return res.redirect('/home');
+            }
+
+            let canSee = false;
+            if (submission.username === req.user.username) {
+                canSee = true;
+            } else {
+                req.user.solved.forEach(solve => {
+                    if (solve.code === submission.problemcode) {
+                        canSee = true;
+                    }
+                });
+            }
+
+            res.render('submission', {
+                curuser: req.user,
+                submission: submission,
+                canSee: canSee
+            });
+        } catch (error) {
+            logger.error('Submission view error:', error);
+            req.flash('error_msg', 'An error occurred while loading the submission');
+            res.redirect('/home');
+        }
+    }
+
+    async getRecentSubmissions(req, res) {
+        try {
+            const submissions = await Submission.find({})
+                .sort({ date: 'desc' })
+                .limit(20);
+
+            res.render('recent', {
+                curuser: req.user,
+                submission: submissions
+            });
+        } catch (error) {
+            logger.error('Recent submissions error:', error);
+            req.flash('error_msg', 'An error occurred while loading recent submissions');
+            res.redirect('/home');
+        }
+    }
+}
+
+module.exports = new SubmissionController(); 
